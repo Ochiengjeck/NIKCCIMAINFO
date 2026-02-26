@@ -1,57 +1,53 @@
 <x-layouts::auth>
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
+        <x-auth-header :title="__('Set new password')" :description="__('Choose a strong password for your account')" />
 
         <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+        <x-auth-session-status :status="session('status')" />
 
-        <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-6">
+        <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-5">
             @csrf
-            <!-- Token -->
             <input type="hidden" name="token" value="{{ request()->route('token') }}">
 
-            <!-- Email Address -->
             <flux:input
                 name="email"
                 value="{{ request('email') }}"
-                :label="__('Email')"
+                :label="__('Email address')"
                 type="email"
                 required
                 autocomplete="email"
             />
 
-            <!-- Password -->
             <flux:input
                 name="password"
-                :label="__('Password')"
+                :label="__('New password')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Password')"
+                :placeholder="__('Choose a strong password')"
                 viewable
             />
 
-            <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"
-                :label="__('Confirm password')"
+                :label="__('Confirm new password')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Confirm password')"
+                :placeholder="__('Repeat your new password')"
                 viewable
             />
 
-            <div class="flex items-center justify-end pt-1">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
-                    {{ __('Reset password') }}
-                </flux:button>
-            </div>
+            <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
+                {{ __('Update password') }}
+            </flux:button>
         </form>
 
-        <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center text-sm text-slate-600">
-            <span>{{ __('Remembered your password?') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+        <div class="rounded-xl border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-center text-sm text-zinc-400">
+            {{ __('Password already set?') }}
+            <a href="{{ route('login') }}"
+               class="ml-1 font-medium text-green-400 transition hover:text-green-300"
+               wire:navigate>{{ __('Sign in') }}</a>
         </div>
     </div>
 </x-layouts::auth>

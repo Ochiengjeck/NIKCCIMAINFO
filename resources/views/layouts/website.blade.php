@@ -13,6 +13,7 @@
         }
     }"
     :class="{ 'dark': darkMode }"
+    style="font-size: 75%"
 >
     <head>
         <meta charset="utf-8" />
@@ -41,14 +42,19 @@
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
 
                 {{-- Logo --}}
+                @php $siteLogo = \App\Models\SystemSetting::get('site_logo'); @endphp
                 <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-3 group">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm group-hover:bg-green-800 transition-colors">
-                        <span class="text-xs font-bold font-serif tracking-tight">NK</span>
-                    </div>
-                    <div class="hidden sm:block">
-                        <span class="block text-sm font-bold tracking-wide text-zinc-900 dark:text-zinc-50 font-serif">NiKCCIMA</span>
-                        <span class="block text-xs text-zinc-500 dark:text-zinc-400">Nigeria-Kenya Chamber</span>
-                    </div>
+                    @if($siteLogo)
+                        <img src="{{ Storage::disk('public')->url($siteLogo) }}" alt="NiKCCIMA" class="h-10 w-auto object-contain">
+                    @else
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm group-hover:bg-green-800 transition-colors">
+                            <span class="text-xs font-bold font-serif tracking-tight">NK</span>
+                        </div>
+                        <div class="hidden sm:block">
+                            <span class="block text-sm font-bold tracking-wide text-zinc-900 dark:text-zinc-50 font-serif">NiKCCIMA</span>
+                            <span class="block text-xs text-zinc-500 dark:text-zinc-400">Nigeria-Kenya Chamber</span>
+                        </div>
+                    @endif
                 </a>
 
                 {{-- -------- Desktop Navigation -------- --}}

@@ -28,16 +28,20 @@
             </div>
         @else
             {{-- PLACEHOLDER — upload banner_image via Admin → CMS → Pages → the pillar page --}}
-            <div class="absolute inset-0 bg-gradient-to-br from-green-900 to-green-800">
-                <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-green-800">
+                <svg class="absolute inset-0 h-full w-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <pattern id="dp" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                            <circle cx="2" cy="2" r="1.5" fill="white"/>
+                        <pattern id="dp-pillar" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
+                            <path d="M0 24h48M24 0v48" stroke="white" stroke-width="1" fill="none"/>
+                            <circle cx="24" cy="24" r="2" fill="white"/>
+                            <circle cx="0" cy="0" r="1.5" fill="white"/>
+                            <circle cx="48" cy="48" r="1.5" fill="white"/>
                         </pattern>
                     </defs>
-                    <rect width="100%" height="100%" fill="url(#dp)"/>
+                    <rect width="100%" height="100%" fill="url(#dp-pillar)"/>
                 </svg>
             </div>
+            <div class="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-white/5 blur-3xl"></div>
         @endif
 
         <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

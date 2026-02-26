@@ -4,9 +4,15 @@
 
 <title>{{ $title ?? config('app.name') }}</title>
 
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+@php $siteIcon = \App\Models\SystemSetting::get('site_icon'); @endphp
+@if($siteIcon)
+    <link rel="icon" href="{{ Storage::disk('public')->url($siteIcon) }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ Storage::disk('public')->url($siteIcon) }}">
+@else
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+@endif
 
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

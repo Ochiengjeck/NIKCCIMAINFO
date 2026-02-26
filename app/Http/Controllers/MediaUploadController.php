@@ -69,6 +69,7 @@ class MediaUploadController extends Controller
         return response()->json([
             'id' => $item->id,
             'url' => $url,
+            'path' => $path,
             'filename' => $filename,
             'original_filename' => $item->original_filename,
             'mime_type' => $mime,

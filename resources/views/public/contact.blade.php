@@ -22,16 +22,20 @@
             </div>
         @else
             {{-- PLACEHOLDER — upload banner_image via Admin → CMS → Pages → Contact --}}
-            <div class="absolute inset-0 bg-gradient-to-br from-green-900 to-green-800">
-                <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-green-800">
+                <svg class="absolute inset-0 h-full w-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <pattern id="dp" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                            <circle cx="2" cy="2" r="1.5" fill="white"/>
+                        <pattern id="dp-contact" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M0 20h40M20 0v40" stroke="white" stroke-width="0.8" fill="none"/>
+                            <circle cx="20" cy="20" r="1.5" fill="white"/>
+                            <circle cx="0" cy="0" r="1" fill="white"/>
+                            <circle cx="40" cy="40" r="1" fill="white"/>
                         </pattern>
                     </defs>
-                    <rect width="100%" height="100%" fill="url(#dp)"/>
+                    <rect width="100%" height="100%" fill="url(#dp-contact)"/>
                 </svg>
             </div>
+            <div class="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-white/5 blur-3xl"></div>
         @endif
         <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <span class="mb-4 inline-flex rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Reach Out</span>

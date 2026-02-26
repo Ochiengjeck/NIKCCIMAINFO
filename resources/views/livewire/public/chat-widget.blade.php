@@ -22,7 +22,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-        class="fixed bottom-24 right-6 z-50 flex w-80 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900 sm:w-96"
+        class="fixed bottom-24 right-6 z-50 flex w-80 flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl sm:w-96"
         style="max-height: 500px;">
 
         {{-- Header --}}
@@ -53,7 +53,7 @@
                     <div class="max-w-[78%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed
                         {{ $msg['role'] === 'user'
                             ? 'rounded-br-sm bg-green-700 text-white'
-                            : 'rounded-bl-sm bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200' }}">
+                            : 'rounded-bl-sm bg-zinc-800 text-zinc-200' }}">
                         <p>{{ $msg['text'] }}</p>
                         <p class="mt-1 text-right text-[10px] opacity-50">{{ $msg['time'] }}</p>
                     </div>
@@ -62,24 +62,24 @@
 
             {{-- Typing indicator --}}
             <div wire:loading wire:target="send" class="flex justify-start">
-                <div class="rounded-2xl rounded-bl-sm bg-zinc-100 px-4 py-3 dark:bg-zinc-800">
+                <div class="rounded-2xl rounded-bl-sm bg-zinc-800 px-4 py-3">
                     <span class="flex items-center gap-1">
-                        <span class="h-2 w-2 animate-bounce rounded-full bg-zinc-400 dark:bg-zinc-500" style="animation-delay:0ms"></span>
-                        <span class="h-2 w-2 animate-bounce rounded-full bg-zinc-400 dark:bg-zinc-500" style="animation-delay:150ms"></span>
-                        <span class="h-2 w-2 animate-bounce rounded-full bg-zinc-400 dark:bg-zinc-500" style="animation-delay:300ms"></span>
+                        <span class="h-2 w-2 animate-bounce rounded-full bg-zinc-500" style="animation-delay:0ms"></span>
+                        <span class="h-2 w-2 animate-bounce rounded-full bg-zinc-500" style="animation-delay:150ms"></span>
+                        <span class="h-2 w-2 animate-bounce rounded-full bg-zinc-500" style="animation-delay:300ms"></span>
                     </span>
                 </div>
             </div>
         </div>
 
         {{-- Input --}}
-        <div class="border-t border-zinc-100 px-3 py-3 dark:border-zinc-800">
+        <div class="border-t border-zinc-800 px-3 py-3">
             <div class="flex items-center gap-2">
                 <input wire:model="input"
                     wire:keydown.enter="send"
                     type="text"
                     placeholder="Ask about membership, trade..."
-                    class="flex-1 rounded-xl border border-zinc-300 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-green-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500">
+                    class="flex-1 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20">
                 <button wire:click="send"
                     wire:loading.attr="disabled"
                     class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-700 text-white transition hover:bg-green-800 disabled:opacity-50">

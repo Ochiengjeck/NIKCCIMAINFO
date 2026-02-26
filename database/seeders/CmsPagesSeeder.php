@@ -17,9 +17,8 @@ class CmsPagesSeeder extends Seeder
                 'sections' => [
                     'hero_title' => 'Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture',
                     'hero_subtitle' => 'Driving AfCFTA corridor execution between Nigeria and Kenya — trade, investment, and policy, delivered.',
-                    'hero_cta_label' => 'Learn More',
-                    'intro_heading' => 'About NiKCCIMA',
-                    'intro_body' => 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines and Agriculture (NiKCCIMA) is a bilateral trade institution established to operationalise the African Continental Free Trade Area (AfCFTA) corridor between Nigeria and Kenya.',
+                    'about_heading' => 'About NiKCCIMA',
+                    'about_body' => 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines and Agriculture (NiKCCIMA) is a bilateral trade institution established to operationalise the African Continental Free Trade Area (AfCFTA) corridor between Nigeria and Kenya.',
                 ],
             ],
             [
@@ -27,24 +26,13 @@ class CmsPagesSeeder extends Seeder
                 'title' => 'About',
                 'is_published' => true,
                 'sections' => [
-                    'about_heading' => 'About NiKCCIMA',
+                    'hero_title' => 'About NiKCCIMA',
+                    'hero_subtitle' => 'The premier bilateral trade chamber for Nigeria-Kenya corridor execution under the AfCFTA.',
                     'mission_heading' => 'Our Mission',
                     'mission_body' => 'To facilitate bilateral trade and investment between Nigeria and Kenya through structured corridor execution under the AfCFTA framework.',
                     'vision_heading' => 'Our Vision',
                     'vision_body' => 'To become the premier bilateral trade chamber driving measurable AfCFTA corridor outcomes across Africa.',
-                    'about_body_heading' => 'Our Story',
                     'about_body' => '<p>NiKCCIMA was established to bridge the trade gap between Nigeria and Kenya — two of Africa\'s largest economies — by providing institutional structure, governance, and execution capacity for bilateral corridor trade.</p>',
-                ],
-            ],
-            [
-                'slug' => 'mission-vision',
-                'title' => 'Mission & Vision',
-                'is_published' => true,
-                'sections' => [
-                    'page_heading' => 'Mission, Vision & Values',
-                    'mission_body' => 'To facilitate bilateral trade and investment between Nigeria and Kenya through structured corridor execution under the AfCFTA framework.',
-                    'vision_body' => 'To become the premier bilateral trade chamber driving measurable AfCFTA corridor outcomes across Africa.',
-                    'core_values' => 'Integrity. Transparency. Accountability. Pan-African Excellence.',
                 ],
             ],
             [
@@ -160,16 +148,6 @@ class CmsPagesSeeder extends Seeder
                 ],
             ],
             [
-                'slug' => 'policy-research',
-                'title' => 'Policy & Research',
-                'is_published' => true,
-                'sections' => [
-                    'hero_title' => 'Policy & Research',
-                    'hero_subtitle' => 'Evidence-based policy briefs, trade reports, NTB analysis, and AfCFTA corridor insights from NiKCCIMA.',
-                    'intro_body' => 'NiKCCIMA produces structured policy and research outputs that guide trade decisions and support AfCFTA corridor compliance.',
-                ],
-            ],
-            [
                 'slug' => 'chapter-nigeria',
                 'title' => 'Nigeria Chapter',
                 'is_published' => true,
@@ -223,13 +201,30 @@ class CmsPagesSeeder extends Seeder
         // array_merge($newKeys, $existing) — existing admin values always take precedence.
         $newKeys = [
             'homepage' => [
-                'hero_image' => '',          // Upload 1920×800 via Admin → CMS → Pages → Homepage → hero_image
+                'hero_image' => '',              // Upload 1920×1080 via Admin → CMS → Pages → Homepage
+                'feature_image' => '',           // Upload 800×600 — "Why NiKCCIMA" split section (right column)
+                'cta_background_image' => '',    // Upload 1920×500 — bottom CTA strip background
                 'hero_cta_primary' => 'Become a Member',
                 'hero_cta_secondary' => 'Explore Trade Opportunities',
+                'about_heading' => 'About NiKCCIMA',
+                'about_body' => 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines and Agriculture (NiKCCIMA) is a bilateral trade institution established to operationalise the African Continental Free Trade Area (AfCFTA) corridor between Nigeria and Kenya.',
+                'pillar1_title' => 'Executive & Institutional Leadership',
+                'pillar1_summary' => 'Governance, council oversight, and institutional direction for the chamber.',
+                'pillar2_title' => 'Trade, Investment & Business Development',
+                'pillar2_summary' => 'Corridor activation, B2B facilitation, anchor investor engagement, and deal pipeline management.',
+                'pillar3_title' => 'Policy, Research & Strategic Affairs',
+                'pillar3_summary' => 'NTB resolution, policy briefs, rules of origin guidance, and AfCFTA compliance.',
+                'pillar4_title' => 'Administration, Finance & Membership',
+                'pillar4_summary' => 'Membership services, secretariat operations, financial management, and KPI governance.',
+                'cta_heading' => 'Ready to Join NiKCCIMA?',
+                'cta_body' => 'Become part of the governed bilateral trade chamber connecting Nigeria and Kenya under the AfCFTA framework.',
             ],
             'about' => [
-                'banner_image' => '',        // Upload via Admin → CMS → Pages → About → banner_image
+                'banner_image' => '',        // Upload 1920×600 via Admin → CMS → Pages → About
+                'story_image' => '',         // Upload 800×600 — "Our Story" split section (right column)
                 'governance_structure' => '', // Org chart description or HTML
+                'hero_title' => 'About NiKCCIMA',
+                'hero_subtitle' => 'The premier bilateral trade chamber for Nigeria-Kenya corridor execution under the AfCFTA.',
             ],
             'pillars-overview' => [
                 'banner_image' => '',        // Upload via Admin → CMS → Pages → Our Four Pillars → banner_image
@@ -247,10 +242,12 @@ class CmsPagesSeeder extends Seeder
                 'banner_image' => '',
             ],
             'trade-investment' => [
-                'banner_image' => '',        // Upload via Admin → CMS → Pages → Trade & Investment → banner_image
+                'banner_image' => '',        // Upload 1920×600 via Admin → CMS → Pages → Trade & Investment
+                'trade_map_image' => '',     // Upload 1200×600 — Nigeria-Kenya corridor map/visual
             ],
             'membership' => [
-                'banner_image' => '',        // Upload via Admin → CMS → Pages → Membership → banner_image
+                'banner_image' => '',        // Upload 1920×600 via Admin → CMS → Pages → Membership
+                'benefits_image' => '',      // Upload 800×600 — membership benefits visual panel
                 'platinum_benefits' => "Direct access to bilateral trade corridor\nExclusive B2B matchmaking\nFull summit & mission participation\nGoverning Council observer status\nDedicated account manager",
                 'gold_benefits' => "Trade corridor facilitation\nB2B matchmaking\nEvents & summit access\nPolicy brief subscription",
                 'silver_benefits' => "Trade directory listing\nEvents & mission access\nMonthly newsletter",
@@ -259,15 +256,14 @@ class CmsPagesSeeder extends Seeder
             'events-missions' => [
                 'banner_image' => '',        // Upload via Admin → CMS → Pages → Events & Missions → banner_image
             ],
-            'policy-research' => [
-                'banner_image' => '',        // Upload via Admin → CMS → Pages → Policy & Research → banner_image
-            ],
             'chapter-nigeria' => [
-                'banner_image' => '',        // Upload via Admin → CMS → Pages → Nigeria Chapter → banner_image
+                'banner_image' => '',        // Upload 1920×600 via Admin → CMS → Pages → Nigeria Chapter
+                'chapter_photo' => '',       // Upload 800×600 — Nigeria chapter feature photo (office/city)
                 'office_hours' => 'Mon–Fri, 8am–5pm WAT',
             ],
             'chapter-kenya' => [
-                'banner_image' => '',        // Upload via Admin → CMS → Pages → Kenya Chapter → banner_image
+                'banner_image' => '',        // Upload 1920×600 via Admin → CMS → Pages → Kenya Chapter
+                'chapter_photo' => '',       // Upload 800×600 — Kenya chapter feature photo (office/city)
                 'office_hours' => 'Mon–Fri, 8am–5pm EAT',
             ],
             'contact' => [
@@ -280,6 +276,19 @@ class CmsPagesSeeder extends Seeder
             if ($page) {
                 // Existing admin values take precedence over new defaults
                 $page->update(['sections' => array_merge($keys, $page->sections ?? [])]);
+            }
+        }
+
+        // Remove deprecated keys from existing DB records (safe — only removes dead keys).
+        $cleanup = [
+            'homepage' => ['hero_cta_label', 'intro_heading', 'intro_body'],
+            'about'    => ['about_heading', 'about_body_heading'],
+        ];
+        foreach ($cleanup as $slug => $deadKeys) {
+            $p = CmsPage::where('slug', $slug)->first();
+            if ($p) {
+                $s = array_diff_key($p->sections ?? [], array_flip($deadKeys));
+                $p->update(['sections' => $s]);
             }
         }
 

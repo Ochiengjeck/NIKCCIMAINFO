@@ -64,6 +64,49 @@
         </section>
     @endif
 
+    {{-- ===================== BENEFITS VISUAL ===================== --}}
+    {{-- CMS: membership → benefits_image (upload 800×600) --}}
+    @if($page?->section('benefits_image'))
+        <section class="py-16 bg-zinc-50 dark:bg-zinc-900">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid items-center gap-12 lg:grid-cols-2">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">Why Join</span>
+                        <h2 class="mt-2 font-serif text-3xl font-bold text-zinc-900 dark:text-white lg:text-4xl">Membership Benefits</h2>
+                        <ul class="mt-6 space-y-4">
+                            @foreach([
+                                'Direct access to the Nigeria-Kenya bilateral trade corridor',
+                                'Structured B2B matchmaking and deal pipeline facilitation',
+                                'Policy advocacy, NTB resolution, and AfCFTA compliance support',
+                                'Flagship summit, trade mission, and networking event access',
+                                'Visibility across both countries through chamber directories',
+                            ] as $benefit)
+                                <li class="flex items-start gap-3">
+                                    <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
+                                        <svg class="h-3 w-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    </span>
+                                    <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ $benefit }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <a href="{{ route('membership.apply') }}" class="mt-8 inline-flex items-center gap-2 rounded-xl bg-green-700 px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-green-800">
+                            Apply Now
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        </a>
+                    </div>
+                    <div class="relative">
+                        <img
+                            src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('benefits_image')) }}"
+                            alt="NiKCCIMA Membership Benefits"
+                            class="w-full rounded-2xl shadow-2xl object-cover"
+                        />
+                        <div class="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl border-2 border-green-200 dark:border-green-800"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- ===================== MEMBERSHIP TIERS ===================== --}}
     <section class="py-20 bg-white dark:bg-zinc-950">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

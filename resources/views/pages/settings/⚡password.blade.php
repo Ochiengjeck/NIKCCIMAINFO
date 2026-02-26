@@ -4,9 +4,10 @@ use App\Concerns\PasswordValidationRules;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new class extends Component {
+new #[Layout('layouts.admin')] class extends Component {
     use PasswordValidationRules;
 
     public string $current_password = '';

@@ -36,6 +36,41 @@
         </div>
     </section>
 
+    {{-- ===================== CHAPTER PHOTO ===================== --}}
+    {{-- CMS: chapter-kenya → chapter_photo (upload 800×600 office/city photo) --}}
+    @if($page?->section('chapter_photo'))
+        <section class="py-16 bg-white dark:bg-zinc-950">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid items-center gap-12 lg:grid-cols-2">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">🇰🇪 Kenya Chapter</span>
+                        <h2 class="mt-2 font-serif text-3xl font-bold text-zinc-900 dark:text-white lg:text-4xl">
+                            {{ $page?->section('heading', 'Kenya Chapter') }}
+                        </h2>
+                        @if($page?->section('description'))
+                            <p class="mt-4 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                {{ $page->section('description') }}
+                            </p>
+                        @endif
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 rounded-xl bg-red-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-800">
+                                Contact Kenya Chapter
+                            </a>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <img
+                            src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('chapter_photo')) }}"
+                            alt="NiKCCIMA Kenya Chapter"
+                            class="w-full rounded-2xl shadow-2xl object-cover"
+                        />
+                        <div class="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl border-2 border-red-200 dark:border-red-900"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- Office Info --}}
     <section class="bg-white py-16 dark:bg-zinc-950">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

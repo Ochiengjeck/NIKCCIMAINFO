@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Events;
 
+use App\Models\Chapter;
 use App\Models\Event;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -30,6 +31,10 @@ class EventManager extends Component
 
     public string $status = 'draft';
 
+    public ?int $chapter_id = null;
+
+    public bool $canSelectChapter = false;
+
     protected function rules(): array
     {
         return [
@@ -41,12 +46,15 @@ class EventManager extends Component
             'ends_at' => 'required|date|after:starts_at',
             'max_capacity' => 'nullable|integer|min:1',
             'status' => 'required|in:draft,published,ongoing,completed,cancelled',
+            'chapter_id' => 'required|exists:chapters,id',
         ];
     }
 
     public function mount(): void
     {
         $this->authorize('events.view');
+        $this->canSelectChapter = auth()->user()->hasRole(['super-admin', 'global-secretariat', 'global-governing-council']);
+        $this->chapter_id = auth()->user()->chapter_id;
     }
 
     public function create(): void
@@ -59,6 +67,7 @@ class EventManager extends Component
     {
         $e = Event::findOrFail($id);
         $this->editingId = $e->id;
+        $this->chapter_id = $e->chapter_id;
         $this->title = $e->title;
         $this->type = $e->type;
         $this->description = $e->description ?? '';
@@ -73,8 +82,16 @@ class EventManager extends Component
     public function save(): void
     {
         $this->authorize('events.create');
+        if (! $this->canSelectChapter) {
+            $this->chapter_id = auth()->user()->chapter_id;
+        }
+
+        if (! $this->chapter_id) {
+            $this->addError('chapter_id', 'Please choose a chapter for this event.');
+            return;
+        }
+
         $data = $this->validate();
-        $data['chapter_id'] = auth()->user()->chapter_id;
         $data['organizer_id'] = auth()->id();
         if ($this->editingId) {
             Event::findOrFail($this->editingId)->update($data);
@@ -96,6 +113,7 @@ class EventManager extends Component
     private function resetForm(): void
     {
         $this->editingId = null;
+        $this->chapter_id = auth()->user()->chapter_id;
         $this->title = '';
         $this->type = 'flagship';
         $this->description = '';
@@ -110,6 +128,7 @@ class EventManager extends Component
     {
         return view('livewire.events.event-manager', [
             'events' => \App\Models\Event::forChapter()->with('organizer')->latest()->paginate(15),
+            'chapters' => $this->canSelectChapter ? Chapter::orderBy('name')->get() : collect(),
         ])->layout('layouts.admin');
     }
 }

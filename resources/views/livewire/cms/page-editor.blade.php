@@ -222,6 +222,50 @@
             </button>
         </div>
 
+        {{-- Upload zone (top of picker modal) --}}
+        <div class="flex-shrink-0 border-b border-zinc-800 bg-zinc-900/50 px-6 py-4"
+             x-data="{
+                 uploading: false,
+                 progress: 0,
+                 error: '',
+                 handleFile(file) {
+                     if (!file) return;
+                     this.uploading = true; this.progress = 0; this.error = '';
+                     const fd = new FormData();
+                     fd.append('file', file);
+                     fd.append('folder', 'cms/images');
+                     const tok = document.querySelector('meta[name=csrf-token]');
+                     if (!tok) { this.error = 'CSRF token missing'; this.uploading = false; return; }
+                     const xhr = new XMLHttpRequest();
+                     xhr.open('POST', '{{ route('admin.media.upload') }}');
+                     xhr.setRequestHeader('X-CSRF-TOKEN', tok.content);
+                     xhr.setRequestHeader('Accept', 'application/json');
+                     xhr.upload.onprogress = e => { if (e.lengthComputable) this.progress = Math.round(e.loaded/e.total*100); };
+                     xhr.onload = () => {
+                         this.uploading = false;
+                         if (xhr.status === 200) {
+                             const d = JSON.parse(xhr.responseText);
+                             $wire.selectImage(d.path);
+                         } else {
+                             this.error = 'Upload failed. Try again.';
+                         }
+                     };
+                     xhr.onerror = () => { this.uploading = false; this.error = 'Network error.'; };
+                     xhr.send(fd);
+                 }
+             }"
+             @dragover.prevent="$el.classList.add('border-green-500')"
+             @dragleave.prevent="$el.classList.remove('border-green-500')"
+             @drop.prevent="$el.classList.remove('border-green-500'); handleFile($event.dataTransfer.files[0])">
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed border-zinc-700 bg-zinc-800 px-4 py-3 transition hover:border-green-500">
+                <input type="file" accept="image/*" class="sr-only" @change="handleFile($event.target.files[0])">
+                <flux:icon name="arrow-up-tray" class="h-5 w-5 text-zinc-400" />
+                <span x-show="!uploading" class="text-sm text-zinc-400">Drop image here or <span class="text-green-400">click to upload</span></span>
+                <span x-show="uploading" class="text-sm text-green-400" x-cloak>Uploading… <span x-text="progress + '%'"></span></span>
+            </label>
+            <p x-show="error" class="mt-1.5 text-xs text-red-400" x-text="error" x-cloak></p>
+        </div>
+
         {{-- Image Grid --}}
         <div class="grid grid-cols-4 gap-3 overflow-y-auto p-6 md:grid-cols-6 lg:grid-cols-8">
             @foreach($pickerImages as $img)

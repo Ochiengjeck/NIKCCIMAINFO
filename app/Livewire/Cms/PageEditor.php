@@ -106,7 +106,8 @@ class PageEditor extends Component
 
     protected function fieldType(string $key): string
     {
-        if (str_ends_with($key, '_image') || in_array($key, ['banner_image', 'hero_image'])) {
+        if (str_ends_with($key, '_image') || str_ends_with($key, '_photo')
+            || in_array($key, ['banner_image', 'hero_image'])) {
             return 'image';
         }
         if (preg_match('/responsibilities|programs|kpis|initiatives|_benefits|core_values/', $key)) {
@@ -169,8 +170,19 @@ class PageEditor extends Component
             }
         }
 
+        $order = [
+            'homepage', 'sectors', 'about', 'pillars-overview', 'pillar-executive',
+            'pillar-trade', 'pillar-policy', 'pillar-admin', 'trade-investment',
+            'membership', 'events-missions', 'chapter-nigeria', 'chapter-kenya', 'contact',
+        ];
+
+        $pages = CmsPage::whereNotIn('slug', ['mission-vision', 'policy-research'])
+            ->get()
+            ->sortBy(fn ($p) => ($k = array_search($p->slug, $order)) !== false ? $k : 99)
+            ->values();
+
         return view('livewire.cms.page-editor', [
-            'pages'        => CmsPage::orderBy('title')->get(),
+            'pages'        => $pages,
             'fieldGroups'  => $fieldGroups,
             'pickerImages' => $pickerImages,
         ])->layout('layouts.admin');

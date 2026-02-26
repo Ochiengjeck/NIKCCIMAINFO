@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
@@ -27,6 +28,12 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'chapter_id',
+        'profile_photo_path',
+        'phone',
+        'job_title',
+        'bio',
+        'location',
+        'timezone',
     ];
 
     /**
@@ -75,5 +82,14 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    public function profilePhotoUrl(): ?string
+    {
+        if (! $this->profile_photo_path) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->profile_photo_path);
     }
 }

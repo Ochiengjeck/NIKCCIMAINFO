@@ -19,11 +19,23 @@
                 <div class="absolute inset-0 bg-gradient-to-br from-green-950/90 via-green-900/80 to-emerald-800/70"></div>
             </div>
         @else
-            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-emerald-800"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-emerald-800">
+                {{-- Diamond mesh pattern --}}
+                <svg class="absolute inset-0 h-full w-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <pattern id="dp-events-mesh" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M20 0L40 20L20 40L0 20Z" stroke="white" stroke-width="1" fill="none"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#dp-events-mesh)"/>
+                </svg>
+            </div>
+            {{-- Decorative blobs --}}
+            <div class="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-white/5 blur-3xl"></div>
         @endif
 
-        {{-- Dot pattern --}}
-        <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        {{-- Dot accent (always shown for visual texture) --}}
+        <svg class="absolute inset-0 h-full w-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
                 <pattern id="dp-events" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
                     <circle cx="2" cy="2" r="1.5" fill="white"/>

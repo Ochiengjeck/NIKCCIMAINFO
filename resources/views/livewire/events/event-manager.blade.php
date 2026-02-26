@@ -13,6 +13,18 @@
     <div class="mb-6 rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:heading size="lg" class="mb-4">{{ $editingId ? 'Edit Event' : 'New Event' }}</flux:heading>
         <form wire:submit="save" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            @if($canSelectChapter)
+            <flux:field>
+                <flux:label>Chapter</flux:label>
+                <flux:select wire:model="chapter_id">
+                    <option value="">Select chapter</option>
+                    @foreach($chapters as $chapter)
+                        <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
+                    @endforeach
+                </flux:select>
+                <flux:error name="chapter_id" />
+            </flux:field>
+            @endif
             <flux:field class="sm:col-span-2"><flux:label>Title</flux:label><flux:input wire:model="title" /><flux:error name="title" /></flux:field>
             <flux:field><flux:label>Type</flux:label><flux:select wire:model="type"><option value="flagship">Flagship</option><option value="trade-mission">Trade Mission</option><option value="sector-forum">Sector Forum</option></flux:select></flux:field>
             <flux:field><flux:label>Status</flux:label><flux:select wire:model="status"><option value="draft">Draft</option><option value="published">Published</option><option value="ongoing">Ongoing</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></flux:select></flux:field>

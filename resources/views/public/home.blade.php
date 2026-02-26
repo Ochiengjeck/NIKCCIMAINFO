@@ -44,62 +44,125 @@
         <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-green-700/20 blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-red-800/10 blur-3xl pointer-events-none"></div>
 
-        {{-- Hero content: vertically centered --}}
+        {{-- Hero content: vertically centered, split layout on lg+ --}}
         <div class="relative flex items-center" style="min-height: calc(100vh - 64px);">
             <div class="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-                <div class="max-w-3xl">
+                <div class="grid items-center gap-12 lg:grid-cols-5">
 
-                    {{-- AfCFTA badge pill --}}
-                    <div class="mb-6">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white shadow-sm">
-                            <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            AfCFTA Corridor Execution
-                        </span>
+                    {{-- Left: Text content (3/5 width on lg) --}}
+                    <div class="lg:col-span-3">
+
+                        {{-- AfCFTA badge pill --}}
+                        <div class="mb-6">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white shadow-sm">
+                                <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                AfCFTA Corridor Execution
+                            </span>
+                        </div>
+
+                        {{-- Main headline --}}
+                        <h1 class="font-['Playfair_Display',serif] font-serif text-5xl font-bold leading-[1.1] text-white lg:text-6xl xl:text-7xl">
+                            {{ $page?->section('hero_title', 'Driving Structured Trade Between Nigeria and Kenya.') }}
+                        </h1>
+
+                        {{-- Sub-paragraph --}}
+                        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-green-200">
+                            {{ $page?->section('hero_subtitle', 'NiKCCIMA is the premier bilateral trade chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable outcomes.') }}
+                        </p>
+
+                        {{-- CTA buttons --}}
+                        <div class="mt-10 flex flex-wrap gap-4">
+                            <a href="{{ route('membership.apply') }}"
+                                class="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-green-900 shadow-lg transition hover:bg-green-50 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-900">
+                                {{ $page?->section('hero_cta_primary', 'Become a Member') }}
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                </svg>
+                            </a>
+                            <a href="{{ route('trade') }}"
+                                class="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 hover:border-white/60 focus:outline-none focus:ring-2 focus:ring-white/50">
+                                {{ $page?->section('hero_cta_secondary', 'Explore Trade Opportunities') }}
+                            </a>
+                        </div>
+
+                        {{-- Trust indicators --}}
+                        <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
+                            <span class="text-xs font-medium uppercase tracking-widest text-green-400">Recognised by</span>
+                            <span class="text-sm font-semibold text-white/60">African Union</span>
+                            <span class="h-4 w-px bg-white/20"></span>
+                            <span class="text-sm font-semibold text-white/60">AfCFTA Secretariat</span>
+                            <span class="h-4 w-px bg-white/20"></span>
+                            <span class="text-sm font-semibold text-white/60">ECOWAS Framework</span>
+                        </div>
                     </div>
 
-                    {{-- Main headline --}}
-                    <h1 class="font-['Playfair_Display',serif] font-serif text-5xl font-bold leading-[1.1] text-white lg:text-7xl">
-                        {{ $page?->section('hero_title', 'Driving Structured Trade Between Nigeria and Kenya.') }}
-                    </h1>
-
-                    {{-- Sub-paragraph --}}
-                    <p class="mt-6 max-w-2xl text-lg leading-relaxed text-green-200">
-                        {{ $page?->section('hero_subtitle', 'NiKCCIMA is the premier bilateral trade chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable outcomes.') }}
-                    </p>
-
-                    {{-- CTA buttons --}}
-                    <div class="mt-10 flex flex-wrap gap-4">
-                        <a href="{{ route('membership.apply') }}"
-                            class="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-green-900 shadow-lg transition hover:bg-green-50 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-900">
-                            {{ $page?->section('hero_cta_primary', 'Become a Member') }}
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                            </svg>
-                        </a>
-                        <a href="{{ route('trade') }}"
-                            class="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 hover:border-white/60 focus:outline-none focus:ring-2 focus:ring-white/50">
-                            {{ $page?->section('hero_cta_secondary', 'Explore Trade Opportunities') }}
-                        </a>
-                        <a href="{{ route('downloads') }}"
-                            class="inline-flex items-center gap-2 rounded-xl border border-white/25 px-7 py-3.5 text-sm font-semibold text-green-200 transition hover:border-white/40 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/30">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            </svg>
-                            Institutional Profile
-                        </a>
+                    {{-- Right: feature_image or decorative stats panel (hidden on mobile) --}}
+                    <div class="hidden lg:col-span-2 lg:block">
+                        @if($page?->section('feature_image'))
+                            <div class="relative">
+                                <img
+                                    src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('feature_image')) }}"
+                                    alt="NiKCCIMA"
+                                    class="w-full rounded-2xl shadow-2xl ring-1 ring-white/20 -rotate-1 object-cover"
+                                    style="max-height: 500px;"
+                                />
+                                {{-- Floating badge --}}
+                                <div class="absolute -bottom-4 -left-4 rounded-xl border border-green-700 bg-green-900/90 px-4 py-3 shadow-xl backdrop-blur">
+                                    <span class="block text-xs font-semibold uppercase tracking-widest text-green-400">Operating Since</span>
+                                    <span class="block text-2xl font-bold text-white font-serif">2024</span>
+                                </div>
+                            </div>
+                        @else
+                            {{-- Decorative stats panel --}}
+                            <div class="space-y-3">
+                                <div class="rounded-2xl border border-green-800 bg-green-900/50 p-5 backdrop-blur-sm">
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-800">
+                                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-green-400 uppercase tracking-wide">Bilateral Mandate</p>
+                                            <p class="font-semibold text-white">Nigeria ↔ Kenya Corridor</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-2xl border border-green-800 bg-green-900/50 p-5 backdrop-blur-sm">
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-800">
+                                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-green-400 uppercase tracking-wide">Framework</p>
+                                            <p class="font-semibold text-white">AfCFTA Aligned & Governed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-2xl border border-green-800 bg-green-900/50 p-5 backdrop-blur-sm">
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-800">
+                                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-green-400 uppercase tracking-wide">Focus</p>
+                                            <p class="font-semibold text-white">Measurable Trade Outcomes</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-xl border border-green-800/60 bg-white/5 px-4 py-3 text-center">
+                                    <p class="text-xs text-green-400">Upload a feature image via <strong class="text-green-300">Admin → CMS → Pages → Homepage → Feature Image</strong></p>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
-                    {{-- Trust indicators --}}
-                    <div class="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3">
-                        <span class="text-xs font-medium uppercase tracking-widest text-green-400">Recognised by</span>
-                        <span class="text-sm font-semibold text-white/60">African Union</span>
-                        <span class="h-4 w-px bg-white/20"></span>
-                        <span class="text-sm font-semibold text-white/60">AfCFTA Secretariat</span>
-                        <span class="h-4 w-px bg-white/20"></span>
-                        <span class="text-sm font-semibold text-white/60">ECOWAS Framework</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -662,65 +725,116 @@
             </div>
 
             @if($latestNews->isNotEmpty())
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    @foreach($latestNews as $article)
-                        <article class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-100 bg-white shadow-sm transition hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-800">
+                @if($latestNews->count() >= 3)
+                    {{-- Magazine layout: 1 large featured + 2 stacked on right --}}
+                    <div class="grid gap-6 lg:grid-cols-3">
 
-                            {{-- Featured image or placeholder --}}
-                            @if($article->featuredImageUrl())
-                                <div class="h-52 w-full overflow-hidden">
+                        {{-- Featured article: 2/3 width --}}
+                        @php $featured = $latestNews->first(); @endphp
+                        <article class="group lg:col-span-2">
+                            <a href="{{ route('news.show', $featured->slug) }}" class="block relative overflow-hidden rounded-2xl shadow-lg" style="min-height: 420px;">
+                                {{-- Background image or gradient --}}
+                                @if($featured->featuredImageUrl())
                                     <img
-                                        src="{{ $article->featuredImageUrl() }}"
-                                        alt="{{ $article->title }}"
-                                        class="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
-                                    >
-                                </div>
-                            @else
-                                <div class="flex h-52 w-full items-center justify-center bg-gradient-to-br from-green-100 to-zinc-100 dark:from-zinc-800 dark:to-zinc-900">
-                                    <svg class="h-12 w-12 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                                    </svg>
-                                </div>
-                            @endif
-
-                            {{-- Card body --}}
-                            <div class="flex flex-1 flex-col p-6">
-                                {{-- Category + date --}}
-                                <div class="mb-3 flex items-center gap-2">
-                                    <span class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/50 dark:text-green-400">
-                                        {{ ucwords(str_replace('-', ' ', $article->category ?? 'News')) }}
-                                    </span>
-                                    <span class="text-xs text-zinc-400">
-                                        {{ $article->published_at?->format('d M Y') }}
-                                    </span>
-                                </div>
-
-                                {{-- Title --}}
-                                <h3 class="line-clamp-2 font-semibold leading-snug text-zinc-900 transition group-hover:text-green-700 dark:text-white dark:group-hover:text-green-400">
-                                    {{ $article->title }}
-                                </h3>
-
-                                {{-- Excerpt --}}
-                                @if($article->excerpt ?? null)
-                                    <p class="mt-2.5 line-clamp-3 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-                                        {{ $article->excerpt }}
-                                    </p>
+                                        src="{{ $featured->featuredImageUrl() }}"
+                                        alt="{{ $featured->title }}"
+                                        class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                                    />
+                                @else
+                                    <div class="absolute inset-0 bg-gradient-to-br from-green-900 to-green-700">
+                                        <svg class="absolute inset-0 h-full w-full opacity-5" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gn" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#gn)"/></svg>
+                                    </div>
                                 @endif
-
-                                {{-- Read more link --}}
-                                <div class="mt-auto pt-5">
-                                    <a href="{{ route('news.show', $article->slug) }}"
-                                        class="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition">
-                                        Read More
-                                        <svg class="h-3.5 w-3.5 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                                        </svg>
-                                    </a>
+                                {{-- Gradient overlay --}}
+                                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/30 to-transparent"></div>
+                                {{-- Content --}}
+                                <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                                    <div class="mb-3 flex items-center gap-3">
+                                        <span class="inline-flex rounded-full bg-green-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                                            {{ ucwords(str_replace('-', ' ', $featured->category ?? 'News')) }}
+                                        </span>
+                                        <span class="text-xs text-white/60">{{ $featured->published_at?->format('d M Y') }}</span>
+                                    </div>
+                                    <h3 class="font-serif text-xl font-bold leading-snug text-white sm:text-2xl group-hover:text-green-300 transition">
+                                        {{ $featured->title }}
+                                    </h3>
+                                    @if($featured->excerpt)
+                                        <p class="mt-2 line-clamp-2 text-sm text-white/70">{{ $featured->excerpt }}</p>
+                                    @endif
+                                    <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-green-400 group-hover:text-green-300 transition">
+                                        Read Full Story
+                                        <svg class="h-3.5 w-3.5 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                    </span>
                                 </div>
-                            </div>
+                            </a>
                         </article>
-                    @endforeach
-                </div>
+
+                        {{-- 2 smaller articles stacked --}}
+                        <div class="flex flex-col gap-6">
+                            @foreach($latestNews->skip(1) as $article)
+                                <article class="group flex overflow-hidden rounded-2xl border border-zinc-100 bg-white shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-800">
+                                    {{-- Thumbnail --}}
+                                    <div class="w-28 shrink-0 overflow-hidden">
+                                        @if($article->featuredImageUrl())
+                                            <img
+                                                src="{{ $article->featuredImageUrl() }}"
+                                                alt="{{ $article->title }}"
+                                                class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                            />
+                                        @else
+                                            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-green-100 to-zinc-100 dark:from-zinc-700 dark:to-zinc-800">
+                                                <svg class="h-8 w-8 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    {{-- Body --}}
+                                    <a href="{{ route('news.show', $article->slug) }}" class="flex flex-1 flex-col justify-center p-4">
+                                        <span class="text-xs text-zinc-400">{{ $article->published_at?->format('d M Y') }}</span>
+                                        <h3 class="mt-1 line-clamp-2 text-sm font-semibold leading-snug text-zinc-900 transition group-hover:text-green-700 dark:text-white dark:group-hover:text-green-400">
+                                            {{ $article->title }}
+                                        </h3>
+                                        <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-green-700 dark:text-green-400 group-hover:underline">
+                                            Read More <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        </span>
+                                    </a>
+                                </article>
+                            @endforeach
+                        </div>
+
+                    </div>
+                @else
+                    {{-- Fallback: equal grid for < 3 articles --}}
+                    <div class="grid gap-6 sm:grid-cols-2">
+                        @foreach($latestNews as $article)
+                            <article class="group flex flex-col overflow-hidden rounded-2xl border border-zinc-100 bg-white shadow-sm transition hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-800">
+                                @if($article->featuredImageUrl())
+                                    <div class="h-52 overflow-hidden">
+                                        <img src="{{ $article->featuredImageUrl() }}" alt="{{ $article->title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                                    </div>
+                                @else
+                                    <div class="flex h-52 items-center justify-center bg-gradient-to-br from-green-100 to-zinc-100 dark:from-zinc-800 dark:to-zinc-900">
+                                        <svg class="h-12 w-12 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                                    </div>
+                                @endif
+                                <div class="flex flex-1 flex-col p-6">
+                                    <div class="mb-3 flex items-center gap-2">
+                                        <span class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/50 dark:text-green-400">{{ ucwords(str_replace('-', ' ', $article->category ?? 'News')) }}</span>
+                                        <span class="text-xs text-zinc-400">{{ $article->published_at?->format('d M Y') }}</span>
+                                    </div>
+                                    <h3 class="line-clamp-2 font-semibold leading-snug text-zinc-900 transition group-hover:text-green-700 dark:text-white dark:group-hover:text-green-400">{{ $article->title }}</h3>
+                                    @if($article->excerpt)
+                                        <p class="mt-2.5 line-clamp-3 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">{{ $article->excerpt }}</p>
+                                    @endif
+                                    <div class="mt-auto pt-5">
+                                        <a href="{{ route('news.show', $article->slug) }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-800 dark:text-green-400 transition">
+                                            Read More <svg class="h-3.5 w-3.5 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @endif
             @else
                 <div class="rounded-2xl border border-zinc-100 bg-white px-8 py-16 text-center dark:border-zinc-800 dark:bg-zinc-800">
                     <p class="text-base font-medium text-zinc-500 dark:text-zinc-400">No news articles published yet — check back soon.</p>
@@ -799,33 +913,33 @@
                     @endphp
 
                     @foreach([
-                        ['tier' => 'Platinum', 'model' => $platinum, 'icon_color' => 'text-slate-300', 'border' => 'border-slate-600'],
-                        ['tier' => 'Gold',     'model' => $gold,     'icon_color' => 'text-yellow-400', 'border' => 'border-yellow-800'],
-                        ['tier' => 'Silver',   'model' => $silver,   'icon_color' => 'text-zinc-400',  'border' => 'border-zinc-600'],
-                        ['tier' => 'Bronze',   'model' => $bronze,   'icon_color' => 'text-orange-400','border' => 'border-orange-900'],
+                        ['tier' => 'Platinum', 'model' => $platinum, 'strip' => 'bg-gradient-to-r from-slate-400 to-slate-300', 'icon_color' => 'text-slate-300', 'label_color' => 'text-slate-300'],
+                        ['tier' => 'Gold',     'model' => $gold,     'strip' => 'bg-gradient-to-r from-yellow-500 to-amber-400',  'icon_color' => 'text-yellow-400', 'label_color' => 'text-yellow-400'],
+                        ['tier' => 'Silver',   'model' => $silver,   'strip' => 'bg-gradient-to-r from-zinc-400 to-zinc-300',     'icon_color' => 'text-zinc-400',  'label_color' => 'text-zinc-400'],
+                        ['tier' => 'Bronze',   'model' => $bronze,   'strip' => 'bg-gradient-to-r from-orange-600 to-orange-400', 'icon_color' => 'text-orange-400','label_color' => 'text-orange-400'],
                     ] as $item)
-                        <div class="rounded-xl border {{ $item['border'] }} bg-zinc-800 p-4">
-                            <div class="mb-2 flex items-center gap-2">
-                                <svg class="h-4 w-4 {{ $item['icon_color'] }}" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                                <span class="font-semibold text-white text-sm">{{ $item['tier'] }}</span>
+                        <div class="overflow-hidden rounded-xl bg-zinc-800 transition hover:-translate-y-0.5 hover:shadow-xl">
+                            {{-- Color strip --}}
+                            <div class="h-1 {{ $item['strip'] }}"></div>
+                            <div class="p-4">
+                                <div class="mb-2 flex items-center gap-2">
+                                    <svg class="h-4 w-4 {{ $item['icon_color'] }}" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    <span class="font-semibold text-white text-sm">{{ $item['tier'] }}</span>
+                                </div>
+                                @if($item['model'])
+                                    @if($item['model']->fee_ngn)
+                                        <p class="text-sm font-bold text-white">₦{{ number_format($item['model']->fee_ngn) }}</p>
+                                    @endif
+                                    @if($item['model']->fee_kes)
+                                        <p class="mt-0.5 text-xs text-zinc-400">KES {{ number_format($item['model']->fee_kes) }}</p>
+                                    @endif
+                                @else
+                                    <p class="text-xs text-zinc-400">Contact for pricing</p>
+                                @endif
+                                <p class="mt-1.5 text-[10px] font-semibold uppercase tracking-wide {{ $item['label_color'] }}">Membership Tier</p>
                             </div>
-                            @if($item['model'])
-                                @if($item['model']->fee_ngn)
-                                    <p class="text-sm font-bold text-white">
-                                        ₦{{ number_format($item['model']->fee_ngn) }}
-                                    </p>
-                                @endif
-                                @if($item['model']->fee_kes)
-                                    <p class="mt-0.5 text-xs text-zinc-400">
-                                        KES {{ number_format($item['model']->fee_kes) }}
-                                    </p>
-                                @endif
-                            @else
-                                <p class="text-xs text-zinc-400">Contact for pricing</p>
-                            @endif
-                            <p class="mt-1.5 text-xs text-zinc-500">Membership Tier</p>
                         </div>
                     @endforeach
 
@@ -838,6 +952,63 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    {{-- =========================================================
+         SECTION I — BOTTOM CTA STRIP
+         Full-bleed, uses cta_background_image when available
+         =========================================================
+         CMS-MANAGED SECTIONS — Admin → CMS → Pages → "Homepage"
+         cta_background_image : Full-bleed background (upload 1920×500)
+         ========================================================= --}}
+    <section
+        class="relative overflow-hidden py-24 text-white"
+        @if($page?->section('cta_background_image'))
+            style="background-image: url('{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('cta_background_image')) }}'); background-size: cover; background-position: center;"
+        @endif
+    >
+        {{-- Overlay --}}
+        @if($page?->section('cta_background_image'))
+            <div class="absolute inset-0 bg-green-950/85"></div>
+        @else
+            <div class="absolute inset-0 bg-gradient-to-r from-green-950 via-green-900 to-green-800"></div>
+            {{-- Subtle mesh pattern --}}
+            <svg class="absolute inset-0 h-full w-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="ctamesh" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M0 20h40M20 0v40" stroke="white" stroke-width="1" fill="none"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#ctamesh)"/>
+            </svg>
+        @endif
+
+        {{-- Decorative blobs --}}
+        <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-white/5 blur-3xl"></div>
+        <div class="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-green-600/10 blur-3xl"></div>
+
+        <div class="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+            <span class="mb-4 inline-block rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Join the Chamber</span>
+            <h2 class="font-['Playfair_Display',serif] font-serif text-4xl font-bold text-white lg:text-5xl">
+                Ready to Drive AfCFTA Trade?
+            </h2>
+            <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-green-200">
+                Become a NiKCCIMA member and gain structured access to the Nigeria-Kenya bilateral trade corridor — B2B pipelines, policy advocacy, and flagship events.
+            </p>
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+                <a href="{{ route('membership.apply') }}"
+                    class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-sm font-semibold text-green-900 shadow-lg transition hover:bg-green-50 hover:shadow-xl">
+                    Apply for Membership
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
+                <a href="{{ route('contact') }}"
+                    class="inline-flex items-center gap-2 rounded-xl border border-white/40 px-8 py-4 text-sm font-semibold text-white transition hover:bg-white/10 hover:border-white/60">
+                    Contact the Secretariat
+                </a>
             </div>
         </div>
     </section>

@@ -98,19 +98,47 @@
     </section>
 
     {{-- ===================== INSTITUTIONAL STORY ===================== --}}
-    {{-- CMS: about → about_body (HTML content) --}}
+    {{-- CMS: about → about_body (HTML content), story_image (800×600 optional side image) --}}
     @if($page?->section('about_body'))
         <section class="py-20 bg-zinc-50 dark:bg-zinc-900">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="mx-auto max-w-3xl">
-                    <span class="text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">Our Story</span>
-                    <h2 class="mt-2 mb-8 font-serif text-3xl font-bold text-zinc-900 dark:text-white lg:text-4xl">
-                        The NiKCCIMA Story
-                    </h2>
-                    <div class="prose prose-zinc dark:prose-invert prose-p:leading-relaxed prose-p:text-zinc-600 dark:prose-p:text-zinc-400 max-w-none">
-                        {!! $page->section('about_body') !!}
+                @if($page?->section('story_image'))
+                    {{-- Split layout when story_image is uploaded --}}
+                    <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">Our Story</span>
+                            <h2 class="mt-2 mb-8 font-serif text-3xl font-bold text-zinc-900 dark:text-white lg:text-4xl">
+                                The NiKCCIMA Story
+                            </h2>
+                            <div class="prose prose-zinc dark:prose-invert prose-p:leading-relaxed prose-p:text-zinc-600 dark:prose-p:text-zinc-400 max-w-none">
+                                {!! $page->section('about_body') !!}
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <img
+                                src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('story_image')) }}"
+                                alt="NiKCCIMA Story"
+                                class="w-full rounded-2xl shadow-2xl object-cover"
+                            />
+                            {{-- Decorative accent --}}
+                            <div class="absolute -bottom-4 -left-4 -z-10 h-full w-full rounded-2xl border-2 border-green-200 dark:border-green-800"></div>
+                        </div>
                     </div>
-                </div>
+                @else
+                    {{-- Centered layout when no image --}}
+                    <div class="mx-auto max-w-3xl">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">Our Story</span>
+                        <h2 class="mt-2 mb-8 font-serif text-3xl font-bold text-zinc-900 dark:text-white lg:text-4xl">
+                            The NiKCCIMA Story
+                        </h2>
+                        <div class="prose prose-zinc dark:prose-invert prose-p:leading-relaxed prose-p:text-zinc-600 dark:prose-p:text-zinc-400 max-w-none">
+                            {!! $page->section('about_body') !!}
+                        </div>
+                        <p class="mt-6 text-xs text-zinc-400 dark:text-zinc-600">
+                            Add a story image via Admin → CMS → Pages → About → Story Image (recommended: 800×600)
+                        </p>
+                    </div>
+                @endif
             </div>
         </section>
     @endif

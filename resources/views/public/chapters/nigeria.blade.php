@@ -53,6 +53,40 @@
         </div>
     </section>
 
+    {{-- ===================== CHAPTER PHOTO ===================== --}}
+    {{-- CMS: chapter-nigeria → chapter_photo (upload 800×600 office/city photo) --}}
+    @if($page?->section('chapter_photo'))
+        <section class="py-16 bg-white dark:bg-zinc-950">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid items-center gap-12 lg:grid-cols-2">
+                    <div class="order-2 lg:order-1">
+                        <img
+                            src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('chapter_photo')) }}"
+                            alt="NiKCCIMA Nigeria Chapter"
+                            class="w-full rounded-2xl shadow-2xl object-cover"
+                        />
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">🇳🇬 Nigeria Chapter</span>
+                        <h2 class="mt-2 font-serif text-3xl font-bold text-zinc-900 dark:text-white lg:text-4xl">
+                            {{ $page?->section('heading', 'Nigeria Chapter') }}
+                        </h2>
+                        @if($page?->section('description'))
+                            <p class="mt-4 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                {{ $page->section('description') }}
+                            </p>
+                        @endif
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 rounded-xl bg-green-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-800">
+                                Contact Nigeria Chapter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- ===================== OFFICE INFO ===================== --}}
     <section class="py-16 bg-white dark:bg-zinc-950">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
