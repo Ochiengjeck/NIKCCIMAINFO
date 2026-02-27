@@ -73,11 +73,16 @@
                          };
                          xhr.onload = () => {
                              this.uploading = false;
-                             if (xhr.status === 200) {
+                             if (xhr.status >= 200 && xhr.status < 300) {
                                  const d = JSON.parse(xhr.responseText);
                                  $wire.selectLogo(d.path);
                              } else {
-                                 this.error = 'Upload failed. Please try again.';
+                                 try {
+                                     const err = JSON.parse(xhr.responseText);
+                                     this.error = err.message || err.errors?.file?.[0] || 'Upload failed. Please try again.';
+                                 } catch {
+                                     this.error = 'Upload failed. Please try again.';
+                                 }
                              }
                          };
                          xhr.onerror = () => { this.uploading = false; this.error = 'Network error.'; };
@@ -139,11 +144,16 @@
                          };
                          xhr.onload = () => {
                              this.uploading = false;
-                             if (xhr.status === 200) {
+                             if (xhr.status >= 200 && xhr.status < 300) {
                                  const d = JSON.parse(xhr.responseText);
                                  $wire.selectIcon(d.path);
                              } else {
-                                 this.error = 'Upload failed. Please try again.';
+                                 try {
+                                     const err = JSON.parse(xhr.responseText);
+                                     this.error = err.message || err.errors?.file?.[0] || 'Upload failed. Please try again.';
+                                 } catch {
+                                     this.error = 'Upload failed. Please try again.';
+                                 }
                              }
                          };
                          xhr.onerror = () => { this.uploading = false; this.error = 'Network error.'; };
