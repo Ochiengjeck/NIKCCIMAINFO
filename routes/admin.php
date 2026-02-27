@@ -43,6 +43,7 @@ use App\Livewire\Settings\SmtpConfigurator;
 use App\Livewire\Settings\SystemSettings;
 use App\Livewire\System\ChapterManager;
 use App\Livewire\System\RoleManager;
+use App\Livewire\System\UserDetail;
 use App\Livewire\System\UserManager;
 use App\Livewire\Trade\B2bMatchmaker;
 use App\Livewire\Trade\CorridorTracker;
@@ -161,6 +162,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     // Phase 15: System Management
     Route::prefix('system')->name('system.')->group(function () {
         Route::get('/users', UserManager::class)->name('users');
+        Route::get('/users/{user}', UserDetail::class)->name('user-detail');
         Route::get('/roles', RoleManager::class)->name('roles');
         Route::get('/chapters', ChapterManager::class)->name('chapters');
         Route::get('/settings', SystemSettings::class)->name('settings');

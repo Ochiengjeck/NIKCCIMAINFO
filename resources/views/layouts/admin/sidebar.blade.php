@@ -261,7 +261,7 @@
                 {{-- ── System ── --}}
                 <p class="{{ $g }}">System</p>
 
-                @php $r = request()->routeIs('admin.system.users'); @endphp
+                @php $r = request()->routeIs('admin.system.users') || request()->routeIs('admin.system.user-detail'); @endphp
                 <a href="{{ route('admin.system.users') }}" wire:navigate class="{{ $r ? $a : $i }}">
                     <flux:icon name="user-group" class="{{ $r ? $ai : $ii }}" />
                     Users &amp; Roles

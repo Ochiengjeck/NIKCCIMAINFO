@@ -4,6 +4,7 @@ namespace App\Livewire\System;
 
 use App\Models\Chapter;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
@@ -14,11 +15,26 @@ class UserManager extends Component
 
     public string $search = '';
 
-    public ?int $selectedUserId = null;
+    public string $roleFilter = '';
 
-    public string $selectedRole = '';
+    public string $chapterFilter = '';
 
-    public string $selectedChapterId = '';
+    // Create user form
+    public bool $showCreate = false;
+
+    public string $newName = '';
+
+    public string $newEmail = '';
+
+    public string $newPassword = '';
+
+    public bool $useDefaultPassword = false;
+
+    public string $newRole = '';
+
+    public string $newChapterId = '';
+
+    public bool $newIsAdmin = false;
 
     public function mount(): void
     {
@@ -30,32 +46,77 @@ class UserManager extends Component
         $this->resetPage();
     }
 
-    public function assignRole(int $userId, string $role): void
+    public function updatingRoleFilter(): void
     {
-        $this->authorize('users.assign-role');
-
-        User::findOrFail($userId)->syncRoles([$role]);
-
-        session()->flash('success', 'Role assigned successfully.');
+        $this->resetPage();
     }
 
-    public function assignChapter(int $userId, ?int $chapterId): void
+    public function updatingChapterFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function openCreate(): void
+    {
+        $this->resetCreateForm();
+        $this->showCreate = true;
+    }
+
+    public function createUser(): void
     {
         $this->authorize('users.create');
 
-        User::findOrFail($userId)->update(['chapter_id' => $chapterId ?: null]);
+        $rules = [
+            'newName' => 'required|string|max:255',
+            'newEmail' => 'required|email|max:255|unique:users,email',
+            'newRole' => 'required|exists:roles,name',
+            'newChapterId' => 'nullable|exists:chapters,id',
+        ];
 
-        session()->flash('success', 'Chapter assigned successfully.');
+        if (! $this->useDefaultPassword) {
+            $rules['newPassword'] = 'required|string|min:8';
+        }
+
+        $this->validate($rules, [], [
+            'newName' => 'name',
+            'newEmail' => 'email',
+            'newPassword' => 'password',
+            'newRole' => 'role',
+            'newChapterId' => 'chapter',
+        ]);
+
+        $password = $this->useDefaultPassword ? 'password' : $this->newPassword;
+
+        $user = User::create([
+            'name' => $this->newName,
+            'email' => $this->newEmail,
+            'password' => Hash::make($password),
+            'email_verified_at' => now(),
+            'is_admin' => $this->newIsAdmin,
+            'chapter_id' => $this->newChapterId ?: null,
+        ]);
+
+        $user->assignRole($this->newRole);
+
+        $roleName = $this->newRole;
+        $userName = $user->name;
+
+        $this->resetCreateForm();
+        $this->showCreate = false;
+
+        session()->flash('success', "User {$userName} created and assigned role '{$roleName}'.");
     }
 
-    public function toggleActive(int $userId): void
+    protected function resetCreateForm(): void
     {
-        $this->authorize('users.create');
-
-        $user = User::findOrFail($userId);
-        $user->update(['is_admin' => ! $user->is_admin]);
-
-        session()->flash('success', 'User status toggled.');
+        $this->newName = '';
+        $this->newEmail = '';
+        $this->newPassword = '';
+        $this->useDefaultPassword = false;
+        $this->newRole = '';
+        $this->newChapterId = '';
+        $this->newIsAdmin = false;
+        $this->resetErrorBag();
     }
 
     public function render()
@@ -65,16 +126,26 @@ class UserManager extends Component
                 $q->where('name', 'like', "%{$this->search}%")
                     ->orWhere('email', 'like', "%{$this->search}%");
             }))
+            ->when($this->roleFilter, fn ($q) => $q->whereHas('roles', fn ($q) => $q->where('name', $this->roleFilter)))
+            ->when($this->chapterFilter, fn ($q) => $q->where('chapter_id', $this->chapterFilter))
             ->latest()
             ->paginate(20);
 
         $chapters = Chapter::all();
         $roles = Role::orderBy('name')->get();
 
+        $stats = [
+            'total' => User::count(),
+            'admins' => User::where('is_admin', true)->count(),
+            'verified' => User::whereNotNull('email_verified_at')->count(),
+            'recent' => User::where('created_at', '>=', now()->subDays(30))->count(),
+        ];
+
         return view('livewire.system.user-manager', [
             'users' => $users,
             'chapters' => $chapters,
             'roles' => $roles,
+            'stats' => $stats,
         ])->layout('layouts.admin');
     }
 }

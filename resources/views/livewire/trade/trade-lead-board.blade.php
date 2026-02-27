@@ -5,9 +5,80 @@
             <flux:subheading>Manage AfCFTA corridor trade opportunities</flux:subheading>
         </div>
         @can('trade.create')
-            <flux:button variant="primary" icon="plus">New Lead</flux:button>
+            <flux:button variant="primary" icon="plus" wire:click="openForm()">New Lead</flux:button>
         @endcan
     </div>
+
+    {{-- Form --}}
+    @if($showForm)
+        <div class="mb-6 rounded-xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800">
+            <flux:heading size="sm" class="mb-4">New Trade Lead</flux:heading>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <flux:field class="sm:col-span-2">
+                    <flux:label>Title</flux:label>
+                    <flux:input wire:model="title" placeholder="e.g. Maize export opportunity to Kenya" />
+                    <flux:error name="title" />
+                </flux:field>
+                <flux:field class="sm:col-span-2">
+                    <flux:label>Description</flux:label>
+                    <flux:textarea wire:model="description" rows="4" placeholder="Describe the opportunity and requirements..." />
+                    <flux:error name="description" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Sector</flux:label>
+                    <flux:select wire:model="sector_id">
+                        <option value="">Select sector...</option>
+                        @foreach($sectors as $sector)
+                            <option value="{{ $sector->id }}">{{ $sector->name }}</option>
+                        @endforeach
+                    </flux:select>
+                    <flux:error name="sector_id" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Member (Optional)</flux:label>
+                    <flux:select wire:model="member_id">
+                        <option value="">No linked member</option>
+                        @foreach($members as $member)
+                            <option value="{{ $member->id }}">{{ $member->full_name }}</option>
+                        @endforeach
+                    </flux:select>
+                    <flux:error name="member_id" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Type</flux:label>
+                    <flux:select wire:model="type">
+                        <option value="export">Export</option>
+                        <option value="import">Import</option>
+                        <option value="partnership">Partnership</option>
+                    </flux:select>
+                    <flux:error name="type" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Status</flux:label>
+                    <flux:select wire:model="status">
+                        <option value="open">Open</option>
+                        <option value="matched">Matched</option>
+                        <option value="closed">Closed</option>
+                    </flux:select>
+                    <flux:error name="status" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Contact Info</flux:label>
+                    <flux:input wire:model="contact_info" placeholder="email@company.com / +234..." />
+                    <flux:error name="contact_info" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Expires At</flux:label>
+                    <flux:input wire:model="expires_at" type="date" />
+                    <flux:error name="expires_at" />
+                </flux:field>
+            </div>
+            <div class="mt-4 flex gap-3">
+                <flux:button wire:click="save" variant="primary">Save</flux:button>
+                <flux:button wire:click="closeForm" variant="ghost">Cancel</flux:button>
+            </div>
+        </div>
+    @endif
 
     {{-- Filters --}}
     <div class="mb-4 flex flex-col gap-3 sm:flex-row">
