@@ -1,41 +1,23 @@
 FROM php:8.4-cli-alpine
 
-# Install system dependencies
-RUN apk add --no-cache \
-    bash \
-    git \
-    curl \
-    libpng-dev \
-    libzip-dev \
-    freetype-dev \
-    libjpeg-turbo-dev \
-    oniguruma-dev \
-    libxml2-dev \
-    sqlite-dev \
-    postgresql-dev \
-    zip \
-    unzip \
-    nodejs \
-    npm
+# Use mlocati/php-extension-installer for pre-compiled extensions (much faster)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-# Configure GD with freetype + jpeg support
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-
-# Install required PHP extensions
-RUN docker-php-ext-install \
-    pdo \
-    pdo_pgsql \
-    pdo_sqlite \
-    gd \
-    mbstring \
-    zip \
-    opcache \
-    bcmath \
-    pcntl \
-    xml \
-    ctype \
-    fileinfo \
-    tokenizer
+# Install system dependencies + PHP extensions in one layer
+RUN apk add --no-cache bash git nodejs npm \
+    && install-php-extensions \
+        pdo_pgsql \
+        pdo_sqlite \
+        gd \
+        mbstring \
+        zip \
+        opcache \
+        bcmath \
+        pcntl \
+        xml \
+        ctype \
+        fileinfo \
+        tokenizer
 
 # Install Composer 2
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
