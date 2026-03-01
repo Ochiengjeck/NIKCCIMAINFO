@@ -52,238 +52,292 @@
                 </a>
 
                 {{-- ── Governance ── --}}
-                <p class="{{ $g }}">Governance</p>
+                @canany(['governance.view', 'governance.vote'])
+                    <p class="{{ $g }}">Governance</p>
 
-                @php $r = request()->routeIs('admin.governance.plans'); @endphp
-                <a href="{{ route('admin.governance.plans') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="briefcase" class="{{ $r ? $ai : $ii }}" />
-                    Strategic Plans
-                </a>
+                    @can('governance.view')
+                        @php $r = request()->routeIs('admin.governance.plans'); @endphp
+                        <a href="{{ route('admin.governance.plans') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="briefcase" class="{{ $r ? $ai : $ii }}" />
+                            Strategic Plans
+                        </a>
 
-                @php $r = request()->routeIs('admin.governance.resolutions*'); @endphp
-                <a href="{{ route('admin.governance.resolutions') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="document-text" class="{{ $r ? $ai : $ii }}" />
-                    Board Resolutions
-                </a>
+                        @php $r = request()->routeIs('admin.governance.resolutions*'); @endphp
+                        <a href="{{ route('admin.governance.resolutions') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="document-text" class="{{ $r ? $ai : $ii }}" />
+                            Board Resolutions
+                        </a>
 
-                @php $r = request()->routeIs('admin.governance.mous'); @endphp
-                <a href="{{ route('admin.governance.mous') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="paper-clip" class="{{ $r ? $ai : $ii }}" />
-                    MoU Repository
-                </a>
+                        @php $r = request()->routeIs('admin.governance.mous'); @endphp
+                        <a href="{{ route('admin.governance.mous') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="paper-clip" class="{{ $r ? $ai : $ii }}" />
+                            MoU Repository
+                        </a>
 
-                @php $r = request()->routeIs('admin.governance.engagements'); @endphp
-                <a href="{{ route('admin.governance.engagements') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="building-office" class="{{ $r ? $ai : $ii }}" />
-                    Gov. Liaison Tracker
-                </a>
+                        @php $r = request()->routeIs('admin.governance.engagements'); @endphp
+                        <a href="{{ route('admin.governance.engagements') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="building-office" class="{{ $r ? $ai : $ii }}" />
+                            Gov. Liaison Tracker
+                        </a>
+                    @endcan
+                @endcanany
 
                 {{-- ── Membership ── --}}
-                <p class="{{ $g }}">Membership</p>
+                @canany(['members.view', 'settings.edit'])
+                    <p class="{{ $g }}">Membership</p>
 
-                @php $r = request()->routeIs('admin.membership.members*'); @endphp
-                <a href="{{ route('admin.membership.members') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="users" class="{{ $r ? $ai : $ii }}" />
-                    Members
-                </a>
+                    @can('members.view')
+                        @php $r = request()->routeIs('admin.membership.members*'); @endphp
+                        <a href="{{ route('admin.membership.members') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="users" class="{{ $r ? $ai : $ii }}" />
+                            Members
+                        </a>
 
-                @php $r = request()->routeIs('admin.membership.applications*'); @endphp
-                <a href="{{ route('admin.membership.applications') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="clipboard-document-list" class="{{ $r ? $ai : $ii }}" />
-                    Applications
-                </a>
+                        @php $r = request()->routeIs('admin.membership.applications*'); @endphp
+                        <a href="{{ route('admin.membership.applications') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="clipboard-document-list" class="{{ $r ? $ai : $ii }}" />
+                            Applications
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.membership.categories'); @endphp
-                <a href="{{ route('admin.membership.categories') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="tag" class="{{ $r ? $ai : $ii }}" />
-                    Categories &amp; Fees
-                </a>
+                    @can('settings.edit')
+                        @php $r = request()->routeIs('admin.membership.categories'); @endphp
+                        <a href="{{ route('admin.membership.categories') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="tag" class="{{ $r ? $ai : $ii }}" />
+                            Categories &amp; Fees
+                        </a>
+                    @endcan
+                @endcanany
 
                 {{-- ── Trade & Investment ── --}}
-                <p class="{{ $g }}">Trade &amp; Investment</p>
+                @canany(['trade.view', 'corridors.view'])
+                    <p class="{{ $g }}">Trade &amp; Investment</p>
 
-                @php $r = request()->routeIs('admin.trade.leads'); @endphp
-                <a href="{{ route('admin.trade.leads') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="arrow-trending-up" class="{{ $r ? $ai : $ii }}" />
-                    Trade Leads
-                </a>
+                    @can('trade.view')
+                        @php $r = request()->routeIs('admin.trade.leads'); @endphp
+                        <a href="{{ route('admin.trade.leads') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="arrow-trending-up" class="{{ $r ? $ai : $ii }}" />
+                            Trade Leads
+                        </a>
 
-                @php $r = request()->routeIs('admin.trade.deals'); @endphp
-                <a href="{{ route('admin.trade.deals') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="circle-stack" class="{{ $r ? $ai : $ii }}" />
-                    Deal Pipeline
-                </a>
+                        @php $r = request()->routeIs('admin.trade.deals'); @endphp
+                        <a href="{{ route('admin.trade.deals') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="circle-stack" class="{{ $r ? $ai : $ii }}" />
+                            Deal Pipeline
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.trade.corridors'); @endphp
-                <a href="{{ route('admin.trade.corridors') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="map" class="{{ $r ? $ai : $ii }}" />
-                    Corridors
-                </a>
+                    @can('corridors.view')
+                        @php $r = request()->routeIs('admin.trade.corridors'); @endphp
+                        <a href="{{ route('admin.trade.corridors') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="map" class="{{ $r ? $ai : $ii }}" />
+                            Corridors
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.trade.investors'); @endphp
-                <a href="{{ route('admin.trade.investors') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="building-storefront" class="{{ $r ? $ai : $ii }}" />
-                    Anchor Investors
-                </a>
+                    @can('trade.view')
+                        @php $r = request()->routeIs('admin.trade.investors'); @endphp
+                        <a href="{{ route('admin.trade.investors') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="building-storefront" class="{{ $r ? $ai : $ii }}" />
+                            Anchor Investors
+                        </a>
 
-                @php $r = request()->routeIs('admin.trade.b2b'); @endphp
-                <a href="{{ route('admin.trade.b2b') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="arrows-right-left" class="{{ $r ? $ai : $ii }}" />
-                    B2B Matchmaking
-                </a>
+                        @php $r = request()->routeIs('admin.trade.b2b'); @endphp
+                        <a href="{{ route('admin.trade.b2b') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="arrows-right-left" class="{{ $r ? $ai : $ii }}" />
+                            B2B Matchmaking
+                        </a>
+                    @endcan
+                @endcanany
 
                 {{-- ── Policy & Research ── --}}
-                <p class="{{ $g }}">Policy &amp; Research</p>
+                @can('policy.view')
+                    <p class="{{ $g }}">Policy &amp; Research</p>
 
-                @php $r = request()->routeIs('admin.policy.ntbs'); @endphp
-                <a href="{{ route('admin.policy.ntbs') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="exclamation-triangle" class="{{ $r ? $ai : $ii }}" />
-                    NTBs
-                </a>
+                    @php $r = request()->routeIs('admin.policy.ntbs'); @endphp
+                    <a href="{{ route('admin.policy.ntbs') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="exclamation-triangle" class="{{ $r ? $ai : $ii }}" />
+                        NTBs
+                    </a>
 
-                @php $r = request()->routeIs('admin.policy.briefs'); @endphp
-                <a href="{{ route('admin.policy.briefs') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="document-magnifying-glass" class="{{ $r ? $ai : $ii }}" />
-                    Policy Briefs
-                </a>
+                    @php $r = request()->routeIs('admin.policy.briefs'); @endphp
+                    <a href="{{ route('admin.policy.briefs') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="document-magnifying-glass" class="{{ $r ? $ai : $ii }}" />
+                        Policy Briefs
+                    </a>
 
-                @php $r = request()->routeIs('admin.policy.roo'); @endphp
-                <a href="{{ route('admin.policy.roo') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="book-open" class="{{ $r ? $ai : $ii }}" />
-                    Rules of Origin
-                </a>
+                    @php $r = request()->routeIs('admin.policy.roo'); @endphp
+                    <a href="{{ route('admin.policy.roo') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="book-open" class="{{ $r ? $ai : $ii }}" />
+                        Rules of Origin
+                    </a>
+                @endcan
 
                 {{-- ── Finance ── --}}
-                <p class="{{ $g }}">Finance</p>
+                @can('finance.view')
+                    <p class="{{ $g }}">Finance</p>
 
-                @php $r = request()->routeIs('admin.finance.transactions'); @endphp
-                <a href="{{ route('admin.finance.transactions') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="banknotes" class="{{ $r ? $ai : $ii }}" />
-                    Transactions
-                </a>
+                    @php $r = request()->routeIs('admin.finance.transactions'); @endphp
+                    <a href="{{ route('admin.finance.transactions') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="banknotes" class="{{ $r ? $ai : $ii }}" />
+                        Transactions
+                    </a>
 
-                @php $r = request()->routeIs('admin.finance.invoices'); @endphp
-                <a href="{{ route('admin.finance.invoices') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="receipt-percent" class="{{ $r ? $ai : $ii }}" />
-                    Invoices
-                </a>
+                    @php $r = request()->routeIs('admin.finance.invoices'); @endphp
+                    <a href="{{ route('admin.finance.invoices') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="receipt-percent" class="{{ $r ? $ai : $ii }}" />
+                        Invoices
+                    </a>
 
-                @php $r = request()->routeIs('admin.finance.budgets'); @endphp
-                <a href="{{ route('admin.finance.budgets') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="chart-bar" class="{{ $r ? $ai : $ii }}" />
-                    Budget Tracker
-                </a>
+                    @php $r = request()->routeIs('admin.finance.budgets'); @endphp
+                    <a href="{{ route('admin.finance.budgets') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="chart-bar" class="{{ $r ? $ai : $ii }}" />
+                        Budget Tracker
+                    </a>
+                @endcan
 
                 {{-- ── Events ── --}}
-                <p class="{{ $g }}">Events</p>
+                @canany(['events.view', 'events.manage-attendance'])
+                    <p class="{{ $g }}">Events</p>
 
-                @php $r = request()->routeIs('admin.events.index'); @endphp
-                <a href="{{ route('admin.events.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="calendar" class="{{ $r ? $ai : $ii }}" />
-                    Events &amp; Missions
-                </a>
+                    @can('events.view')
+                        @php $r = request()->routeIs('admin.events.index'); @endphp
+                        <a href="{{ route('admin.events.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="calendar" class="{{ $r ? $ai : $ii }}" />
+                            Events &amp; Missions
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.events.desk'); @endphp
-                <a href="{{ route('admin.events.desk') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="identification" class="{{ $r ? $ai : $ii }}" />
-                    Registration Desk
-                </a>
+                    @can('events.manage-attendance')
+                        @php $r = request()->routeIs('admin.events.desk'); @endphp
+                        <a href="{{ route('admin.events.desk') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="identification" class="{{ $r ? $ai : $ii }}" />
+                            Registration Desk
+                        </a>
+                    @endcan
+                @endcanany
 
                 {{-- ── Knowledge ── --}}
-                <p class="{{ $g }}">Knowledge</p>
+                @canany(['documents.view', 'settings.view'])
+                    <p class="{{ $g }}">Knowledge</p>
 
-                @php $r = request()->routeIs('admin.documents.*'); @endphp
-                <a href="{{ route('admin.documents.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="folder-open" class="{{ $r ? $ai : $ii }}" />
-                    Document Library
-                </a>
+                    @can('documents.view')
+                        @php $r = request()->routeIs('admin.documents.*'); @endphp
+                        <a href="{{ route('admin.documents.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="folder-open" class="{{ $r ? $ai : $ii }}" />
+                            Document Library
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.platforms.*'); @endphp
-                <a href="{{ route('admin.platforms.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="puzzle-piece" class="{{ $r ? $ai : $ii }}" />
-                    Technical Platforms
-                </a>
+                    @can('settings.view')
+                        @php $r = request()->routeIs('admin.platforms.*'); @endphp
+                        <a href="{{ route('admin.platforms.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="puzzle-piece" class="{{ $r ? $ai : $ii }}" />
+                            Technical Platforms
+                        </a>
+                    @endcan
+                @endcanany
 
                 {{-- ── Website ── --}}
-                <p class="{{ $g }}">Website</p>
+                @can('cms.view')
+                    <p class="{{ $g }}">Website</p>
 
-                @php $r = request()->routeIs('admin.cms.pages'); @endphp
-                <a href="{{ route('admin.cms.pages') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="document-text" class="{{ $r ? $ai : $ii }}" />
-                    Pages
-                </a>
+                    @php $r = request()->routeIs('admin.cms.pages'); @endphp
+                    <a href="{{ route('admin.cms.pages') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="document-text" class="{{ $r ? $ai : $ii }}" />
+                        Pages
+                    </a>
 
-                @php $r = request()->routeIs('admin.cms.news'); @endphp
-                <a href="{{ route('admin.cms.news') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="newspaper" class="{{ $r ? $ai : $ii }}" />
-                    News &amp; Press
-                </a>
+                    @php $r = request()->routeIs('admin.cms.news'); @endphp
+                    <a href="{{ route('admin.cms.news') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="newspaper" class="{{ $r ? $ai : $ii }}" />
+                        News &amp; Press
+                    </a>
 
-                @php $r = request()->routeIs('admin.cms.leadership'); @endphp
-                <a href="{{ route('admin.cms.leadership') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="identification" class="{{ $r ? $ai : $ii }}" />
-                    Leadership
-                </a>
+                    @php $r = request()->routeIs('admin.cms.leadership'); @endphp
+                    <a href="{{ route('admin.cms.leadership') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="identification" class="{{ $r ? $ai : $ii }}" />
+                        Leadership
+                    </a>
 
-                @php $r = request()->routeIs('admin.cms.media'); @endphp
-                <a href="{{ route('admin.cms.media') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="photo" class="{{ $r ? $ai : $ii }}" />
-                    Media Library
-                </a>
+                    @php $r = request()->routeIs('admin.cms.media'); @endphp
+                    <a href="{{ route('admin.cms.media') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="photo" class="{{ $r ? $ai : $ii }}" />
+                        Media Library
+                    </a>
 
-                @php $r = request()->routeIs('admin.cms.contact'); @endphp
-                <a href="{{ route('admin.cms.contact') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="envelope" class="{{ $r ? $ai : $ii }}" />
-                    Contact Inquiries
-                </a>
+                    @php $r = request()->routeIs('admin.cms.contact'); @endphp
+                    <a href="{{ route('admin.cms.contact') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="envelope" class="{{ $r ? $ai : $ii }}" />
+                        Contact Inquiries
+                    </a>
+                @endcan
 
                 {{-- ── Intelligence ── --}}
-                <p class="{{ $g }}">Intelligence</p>
+                @canany(['kpi.view', 'finance.export', 'audit.view'])
+                    <p class="{{ $g }}">Intelligence</p>
 
-                @php $r = request()->routeIs('admin.kpi.*'); @endphp
-                <a href="{{ route('admin.kpi.dashboard') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="chart-pie" class="{{ $r ? $ai : $ii }}" />
-                    KPI Dashboard
-                </a>
+                    @can('kpi.view')
+                        @php $r = request()->routeIs('admin.kpi.*'); @endphp
+                        <a href="{{ route('admin.kpi.dashboard') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="chart-pie" class="{{ $r ? $ai : $ii }}" />
+                            KPI Dashboard
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.reports.*'); @endphp
-                <a href="{{ route('admin.reports.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="printer" class="{{ $r ? $ai : $ii }}" />
-                    Reports
-                </a>
+                    @can('finance.export')
+                        @php $r = request()->routeIs('admin.reports.*'); @endphp
+                        <a href="{{ route('admin.reports.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="printer" class="{{ $r ? $ai : $ii }}" />
+                            Reports
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.audit.*'); @endphp
-                <a href="{{ route('admin.audit.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="shield-check" class="{{ $r ? $ai : $ii }}" />
-                    Audit Log
-                </a>
+                    @can('audit.view')
+                        @php $r = request()->routeIs('admin.audit.*'); @endphp
+                        <a href="{{ route('admin.audit.index') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="shield-check" class="{{ $r ? $ai : $ii }}" />
+                            Audit Log
+                        </a>
+                    @endcan
+                @endcanany
 
                 {{-- ── System ── --}}
-                <p class="{{ $g }}">System</p>
+                @canany(['users.view', 'settings.view', 'settings.edit', 'chatbot.view'])
+                    <p class="{{ $g }}">System</p>
 
-                @php $r = request()->routeIs('admin.system.users') || request()->routeIs('admin.system.user-detail'); @endphp
-                <a href="{{ route('admin.system.users') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="user-group" class="{{ $r ? $ai : $ii }}" />
-                    Users &amp; Roles
-                </a>
+                    @can('users.view')
+                        @php $r = request()->routeIs('admin.system.users') || request()->routeIs('admin.system.user-detail'); @endphp
+                        <a href="{{ route('admin.system.users') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="user-group" class="{{ $r ? $ai : $ii }}" />
+                            Users &amp; Roles
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.system.chapters'); @endphp
-                <a href="{{ route('admin.system.chapters') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="globe-alt" class="{{ $r ? $ai : $ii }}" />
-                    Chapters
-                </a>
+                    @can('settings.view')
+                        @php $r = request()->routeIs('admin.system.chapters'); @endphp
+                        <a href="{{ route('admin.system.chapters') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="globe-alt" class="{{ $r ? $ai : $ii }}" />
+                            Chapters
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.chatbot.*'); @endphp
-                <a href="{{ route('admin.chatbot.faqs') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="chat-bubble-left-ellipsis" class="{{ $r ? $ai : $ii }}" />
-                    Chatbot
-                </a>
+                    @can('chatbot.view')
+                        @php $r = request()->routeIs('admin.chatbot.*'); @endphp
+                        <a href="{{ route('admin.chatbot.faqs') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="chat-bubble-left-ellipsis" class="{{ $r ? $ai : $ii }}" />
+                            Chatbot
+                        </a>
+                    @endcan
 
-                @php $r = request()->routeIs('admin.system.settings'); @endphp
-                <a href="{{ route('admin.system.settings') }}" wire:navigate class="{{ $r ? $a : $i }}">
-                    <flux:icon name="cog-6-tooth" class="{{ $r ? $ai : $ii }}" />
-                    Settings
-                </a>
+                    @can('settings.edit')
+                        @php $r = request()->routeIs('admin.system.settings'); @endphp
+                        <a href="{{ route('admin.system.settings') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                            <flux:icon name="cog-6-tooth" class="{{ $r ? $ai : $ii }}" />
+                            Settings
+                        </a>
+                    @endcan
+                @endcanany
 
                 {{-- Bottom padding --}}
                 <div class="h-4"></div>

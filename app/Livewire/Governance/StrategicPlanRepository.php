@@ -41,12 +41,13 @@ class StrategicPlanRepository extends Component
         $mediaItem = MediaItem::findOrFail($this->fileMediaItemId);
 
         StrategicPlan::create([
-            'title' => $this->title,
-            'fiscal_year' => $this->fiscal_year,
-            'status' => $this->status,
-            'file_path' => $mediaItem->path,
-            'chapter_id' => auth()->user()->chapter_id,
-            'uploaded_by' => auth()->id(),
+            'title'              => $this->title,
+            'fiscal_year'        => $this->fiscal_year,
+            'status'             => $this->status,
+            'file_path'          => $mediaItem->path,
+            'file_media_item_id' => $this->fileMediaItemId,
+            'chapter_id'         => auth()->user()->chapter_id,
+            'uploaded_by'        => auth()->id(),
         ]);
 
         $this->reset(['title', 'fiscal_year', 'status', 'fileMediaItemId']);
@@ -56,10 +57,17 @@ class StrategicPlanRepository extends Component
         session()->flash('success', 'Strategic plan uploaded.');
     }
 
+    public function delete(int $planId): void
+    {
+        $this->authorize('governance.upload');
+        StrategicPlan::forChapter()->findOrFail($planId)->delete();
+        session()->flash('success', 'Strategic plan removed.');
+    }
+
     public function render()
     {
         return view('livewire.governance.strategic-plan-repository', [
-            'plans' => StrategicPlan::forChapter()->with('uploader')->latest()->paginate(15),
+            'plans' => StrategicPlan::forChapter()->with(['uploader', 'mediaItem'])->latest()->paginate(15),
         ])->layout('layouts.admin');
     }
 }

@@ -58,7 +58,7 @@ class AppServiceProvider extends ServiceProvider
     protected function configureAuthorization(): void
     {
         Gate::before(function (User $user): ?bool {
-            return ($user->is_admin || $user->hasRole('super-admin')) ? true : null;
+            return $user->hasRole('super-admin') ? true : null;
         });
     }
 }

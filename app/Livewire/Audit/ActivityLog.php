@@ -14,6 +14,8 @@ class ActivityLog extends Component
 
     public string $subjectFilter = '';
 
+    public string $eventFilter = '';
+
     public string $dateFrom = '';
 
     public string $dateTo = '';
@@ -33,11 +35,27 @@ class ActivityLog extends Component
         $this->resetPage();
     }
 
+    public function updatingEventFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingDateFrom(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingDateTo(): void
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $activities = Activity::with(['causer', 'subject'])
             ->when($this->search, fn ($q) => $q->where('description', 'like', "%{$this->search}%"))
             ->when($this->subjectFilter, fn ($q) => $q->where('subject_type', 'like', "%{$this->subjectFilter}%"))
+            ->when($this->eventFilter, fn ($q) => $q->where('event', $this->eventFilter))
             ->when($this->dateFrom, fn ($q) => $q->whereDate('created_at', '>=', $this->dateFrom))
             ->when($this->dateTo, fn ($q) => $q->whereDate('created_at', '<=', $this->dateTo))
             ->latest()

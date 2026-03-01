@@ -11,7 +11,7 @@ class StrategicPlan extends Model
     use ChapterScoped;
 
     protected $fillable = [
-        'chapter_id', 'title', 'fiscal_year', 'file_path', 'status', 'uploaded_by',
+        'chapter_id', 'title', 'fiscal_year', 'file_path', 'file_media_item_id', 'status', 'uploaded_by',
     ];
 
     public function chapter(): BelongsTo
@@ -22,5 +22,10 @@ class StrategicPlan extends Model
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
+    }
+
+    public function mediaItem(): BelongsTo
+    {
+        return $this->belongsTo(MediaItem::class, 'file_media_item_id');
     }
 }
