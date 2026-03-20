@@ -2,7 +2,7 @@
 
     {{-- Hero --}}
     <section class="relative overflow-hidden py-24 text-white">
-        <div class="absolute inset-0 bg-gradient-to-br from-green-900 to-green-800">
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-900 to-brand-800">
             <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <pattern id="dp" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -13,9 +13,9 @@
             </svg>
         </div>
         <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <span class="mb-4 inline-flex rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Resources</span>
+            <span class="mb-4 inline-flex rounded-full bg-crimson-700 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Resources</span>
             <h1 class="font-serif text-4xl font-bold lg:text-6xl">Download Centre</h1>
-            <p class="mt-4 max-w-2xl text-lg text-green-200">Trade reports, policy briefs, AfCFTA documentation, and official NiKCCIMA publications.</p>
+            <p class="mt-4 max-w-2xl text-lg text-brand-200">Trade reports, policy briefs, AfCFTA documentation, and official NiKCCIMA publications.</p>
         </div>
     </section>
 
@@ -47,16 +47,16 @@
                                 @php
                                     $ext = strtolower(pathinfo($file->original_filename, PATHINFO_EXTENSION));
                                     $iconBg = match(true) {
-                                        $ext === 'pdf'               => 'bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400',
+                                        $ext === 'pdf'               => 'bg-crimson-50 dark:bg-crimson-800/20 text-crimson-500 dark:text-crimson-300',
                                         in_array($ext, ['doc','docx'])  => 'bg-blue-50 dark:bg-blue-900/20 text-blue-500 dark:text-blue-400',
-                                        in_array($ext, ['xls','xlsx'])  => 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
+                                        in_array($ext, ['xls','xlsx'])  => 'bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400',
                                         in_array($ext, ['ppt','pptx'])  => 'bg-orange-50 dark:bg-orange-900/20 text-orange-500 dark:text-orange-400',
                                         default                      => 'bg-zinc-50 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400',
                                     };
                                     $extBadge = match(true) {
-                                        $ext === 'pdf'               => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                                        $ext === 'pdf'               => 'bg-crimson-100 text-crimson-800 dark:bg-crimson-800/30 dark:text-crimson-300',
                                         in_array($ext, ['doc','docx'])  => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-                                        in_array($ext, ['xls','xlsx'])  => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                                        in_array($ext, ['xls','xlsx'])  => 'bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400',
                                         in_array($ext, ['ppt','pptx'])  => 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
                                         default                      => 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
                                     };
@@ -88,7 +88,7 @@
                                     <td class="px-6 py-4 text-sm text-zinc-500 dark:text-zinc-400">{{ $file->created_at->format('d M Y') }}</td>
                                     <td class="px-6 py-4 text-right">
                                         <a href="{{ $file->url() }}" target="_blank" download
-                                           class="inline-flex items-center gap-1.5 rounded-lg border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 transition hover:bg-green-100 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/40">
+                                           class="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-medium text-brand-700 transition hover:bg-brand-100 dark:border-brand-800 dark:bg-brand-900/20 dark:text-brand-400 dark:hover:bg-brand-900/40">
                                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                             </svg>

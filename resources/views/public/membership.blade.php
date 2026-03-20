@@ -22,10 +22,10 @@
                      alt=""
                      class="h-full w-full object-cover"
                      aria-hidden="true">
-                <div class="absolute inset-0 bg-gradient-to-br from-green-950/90 via-green-900/80 to-emerald-800/70"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-900/80 to-brand-800/70"></div>
             </div>
         @else
-            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-emerald-800"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800"></div>
         @endif
 
         {{-- Dot pattern overlay --}}
@@ -40,13 +40,13 @@
 
         <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl">
-                <span class="mb-4 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-green-200">
+                <span class="mb-4 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-brand-200">
                     Join
                 </span>
                 <h1 class="mb-5 font-serif text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
                     {{ $page?->section('hero_title', 'Join NiKCCIMA') }}
                 </h1>
-                <p class="max-w-2xl text-lg text-green-100 sm:text-xl">
+                <p class="max-w-2xl text-lg text-brand-100 sm:text-xl">
                     {{ $page?->section('hero_subtitle', 'Become a member and access bilateral trade corridors, policy advocacy, and structured B2B pipelines across the Nigeria–Kenya AfCFTA corridor.') }}
                 </p>
             </div>
@@ -71,7 +71,7 @@
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid items-center gap-12 lg:grid-cols-2">
                     <div>
-                        <span class="text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">Why Join</span>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400">Why Join</span>
                         <h2 class="mt-2 font-serif text-3xl font-bold text-zinc-900 dark:text-white lg:text-4xl">Membership Benefits</h2>
                         <ul class="mt-6 space-y-4">
                             @foreach([
@@ -82,14 +82,14 @@
                                 'Visibility across both countries through chamber directories',
                             ] as $benefit)
                                 <li class="flex items-start gap-3">
-                                    <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-                                        <svg class="h-3 w-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/40">
+                                        <svg class="h-3 w-3 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                                     </span>
                                     <span class="text-sm text-zinc-600 dark:text-zinc-400">{{ $benefit }}</span>
                                 </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('membership.apply') }}" class="mt-8 inline-flex items-center gap-2 rounded-xl bg-green-700 px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-green-800">
+                        <a href="{{ route('membership.apply') }}" class="mt-8 inline-flex items-center gap-2 rounded-xl bg-crimson-700 px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-crimson-800">
                             Apply Now
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                         </a>
@@ -100,7 +100,7 @@
                             alt="NiKCCIMA Membership Benefits"
                             class="w-full rounded-2xl shadow-2xl object-cover"
                         />
-                        <div class="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl border-2 border-green-200 dark:border-green-800"></div>
+                        <div class="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl border-2 border-brand-200 dark:border-brand-800"></div>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@
 
             {{-- Section header --}}
             <div class="mb-12 text-center">
-                <span class="mb-2 inline-block text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">
+                <span class="mb-2 inline-block text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400">
                     Categories
                 </span>
                 <h2 class="font-serif text-3xl font-bold text-zinc-900 dark:text-white sm:text-4xl">
@@ -176,7 +176,7 @@
                                 <ul class="mb-4 space-y-1">
                                     @foreach(array_filter(explode("\n", $page->section($benefitsKey))) as $b)
                                         <li class="flex items-start gap-1.5 text-xs text-zinc-600 dark:text-zinc-400">
-                                            <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                            <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                                             </svg>
                                             {{ trim($b) }}
@@ -206,7 +206,7 @@
     </section>
 
     {{-- ===================== APPLY CTA ===================== --}}
-    <section class="relative overflow-hidden py-20 bg-green-900 text-white">
+    <section class="relative overflow-hidden py-20 bg-brand-900 text-white">
         {{-- Dot pattern --}}
         <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
@@ -218,25 +218,25 @@
         </svg>
 
         <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-            <span class="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-green-300">
+            <span class="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-brand-200">
                 Get Started
             </span>
             <h2 class="mb-4 font-serif text-3xl font-bold text-white sm:text-4xl">
                 {{ $page?->section('apply_heading', 'Ready to Apply?') }}
             </h2>
-            <p class="mb-10 text-lg text-green-200">
+            <p class="mb-10 text-lg text-brand-200">
                 {{ $page?->section('apply_body', 'Submit your membership application online. Our team reviews all applications within 5 working days.') }}
             </p>
             <div class="flex flex-wrap items-center justify-center gap-4">
                 <a href="{{ route('membership.apply') }}"
-                   class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-green-900 shadow-sm transition hover:bg-green-50 hover:shadow-md">
+                   class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-brand-900 shadow-sm transition hover:bg-brand-50 hover:shadow-md">
                     Apply for Membership
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                     </svg>
                 </a>
                 <a href="{{ route('contact') }}"
-                   class="inline-flex items-center gap-2 rounded-xl border border-green-600 px-8 py-3.5 text-sm font-semibold text-green-200 transition hover:border-green-400 hover:text-white">
+                   class="inline-flex items-center gap-2 rounded-xl border border-brand-600 px-8 py-3.5 text-sm font-semibold text-brand-200 transition hover:border-brand-300 hover:text-white">
                     View Details
                 </a>
             </div>

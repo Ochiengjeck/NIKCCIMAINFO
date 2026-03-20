@@ -204,8 +204,22 @@ class CmsPagesSeeder extends Seeder
                 'hero_image' => '',              // Upload 1920×1080 via Admin → CMS → Pages → Homepage
                 'feature_image' => '',           // Upload 800×600 — "Why NiKCCIMA" split section (right column)
                 'cta_background_image' => '',    // Upload 1920×500 — bottom CTA strip background
-                'hero_cta_primary' => 'Become a Member',
+                // Hero Slide 1 — Trade / AfCFTA
+                'hero_badge'         => 'AfCFTA Corridor Execution',
+                'hero_cta_primary'   => 'Become a Member',
                 'hero_cta_secondary' => 'Explore Trade Opportunities',
+                // Hero Slide 2 — Membership
+                'hero2_badge'         => 'Membership Network',
+                'hero2_title'         => "Connecting Africa's Two Largest Economies.",
+                'hero2_subtitle'      => 'Join a structured bilateral chamber with members spanning trade, finance, agriculture, technology, and maritime sectors across Nigeria and Kenya.',
+                'hero2_cta_primary'   => 'View Membership Tiers',
+                'hero2_cta_secondary' => 'Apply Now',
+                // Hero Slide 3 — Events
+                'hero3_badge'         => 'Events & Missions',
+                'hero3_title'         => 'Flagship Summits. Real Trade Outcomes.',
+                'hero3_subtitle'      => "Attend NiKCCIMA's corridor activation summits, bilateral trade missions, and B2B matching events — where Nigeria meets Kenya in structured, high-value commerce.",
+                'hero3_cta_primary'   => 'View Upcoming Events',
+                'hero3_cta_secondary' => 'Contact the Secretariat',
                 'about_heading' => 'About NiKCCIMA',
                 'about_body' => 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines and Agriculture (NiKCCIMA) is a bilateral trade institution established to operationalise the African Continental Free Trade Area (AfCFTA) corridor between Nigeria and Kenya.',
                 'pillar1_title' => 'Executive & Institutional Leadership',

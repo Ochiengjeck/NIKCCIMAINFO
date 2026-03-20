@@ -2,7 +2,7 @@
 
     {{-- Floating Toggle Button --}}
     <button wire:click="toggle"
-        class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-700 text-white shadow-xl ring-4 ring-green-700/20 transition hover:bg-green-800 focus:outline-none"
+        class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-crimson-700 text-white shadow-xl ring-4 ring-crimson-700/20 transition hover:bg-crimson-800 focus:outline-none"
         aria-label="Toggle chat assistant">
         <svg x-show="!open" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-3 3-3-3z"/>
@@ -26,16 +26,16 @@
         style="max-height: 500px;">
 
         {{-- Header --}}
-        <div class="flex items-center gap-3 bg-gradient-to-r from-green-800 to-green-700 px-4 py-3 text-white">
+        <div class="flex items-center gap-3 bg-gradient-to-r from-brand-800 to-brand-700 px-4 py-3 text-white">
             <div class="relative">
-                <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-green-600 text-xs font-bold tracking-tight">NK</div>
-                <span class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-green-700 bg-green-400"></span>
+                <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-xs font-bold tracking-tight">NK</div>
+                <span class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-brand-700 bg-brand-300"></span>
             </div>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-semibold">NiKCCIMA Assistant</p>
-                <p class="text-xs text-green-200">Trade & membership queries</p>
+                <p class="text-xs text-brand-200">Trade & membership queries</p>
             </div>
-            <button wire:click="toggle" class="rounded-lg p-1 text-green-200 hover:bg-green-600/50 hover:text-white transition">
+            <button wire:click="toggle" class="rounded-lg p-1 text-brand-200 hover:bg-brand-600/50 hover:text-white transition">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -52,7 +52,7 @@
                 <div class="flex {{ $msg['role'] === 'user' ? 'justify-end' : 'justify-start' }}">
                     <div class="max-w-[78%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed
                         {{ $msg['role'] === 'user'
-                            ? 'rounded-br-sm bg-green-700 text-white'
+                            ? 'rounded-br-sm bg-brand-700 text-white'
                             : 'rounded-bl-sm bg-zinc-800 text-zinc-200' }}">
                         <p>{{ $msg['text'] }}</p>
                         <p class="mt-1 text-right text-[10px] opacity-50">{{ $msg['time'] }}</p>
@@ -79,10 +79,10 @@
                     wire:keydown.enter="send"
                     type="text"
                     placeholder="Ask about membership, trade..."
-                    class="flex-1 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20">
+                    class="flex-1 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
                 <button wire:click="send"
                     wire:loading.attr="disabled"
-                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-700 text-white transition hover:bg-green-800 disabled:opacity-50">
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-crimson-700 text-white transition hover:bg-crimson-800 disabled:opacity-50">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>

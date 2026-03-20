@@ -8,7 +8,7 @@
                  class="h-full w-full object-cover">
         </div>
     @else
-        <div class="relative h-64 bg-gradient-to-br from-green-900 to-green-800">
+        <div class="relative h-64 bg-gradient-to-br from-brand-900 to-brand-800">
             <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <pattern id="dp" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -27,7 +27,7 @@
             {{-- Breadcrumb --}}
             <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-400 dark:text-zinc-500">
                 <a href="{{ route('news.index') }}"
-                   class="font-medium text-green-700 dark:text-green-400 hover:underline">News</a>
+                   class="font-medium text-brand-700 dark:text-brand-400 hover:underline">News</a>
                 <svg class="h-4 w-4 shrink-0 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -36,7 +36,7 @@
 
             {{-- Meta Row --}}
             <div class="mb-4 flex flex-wrap items-center gap-3">
-                <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                <span class="inline-flex rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">
                     {{ ucwords(str_replace('-', ' ', $article->category)) }}
                 </span>
                 <span class="text-sm text-zinc-500 dark:text-zinc-400">
@@ -54,7 +54,7 @@
 
             {{-- Excerpt --}}
             @if($article->excerpt)
-                <p class="mb-8 border-l-4 border-green-400 pl-4 text-lg text-zinc-500 dark:text-zinc-400">
+                <p class="mb-8 border-l-4 border-brand-300 pl-4 text-lg text-zinc-500 dark:text-zinc-400">
                     {{ $article->excerpt }}
                 </p>
             @endif
@@ -67,7 +67,7 @@
             {{-- Back Link --}}
             <div class="mt-12 border-t border-zinc-200 dark:border-zinc-800 pt-8">
                 <a href="{{ route('news.index') }}"
-                   class="inline-flex items-center gap-2 text-sm font-medium text-green-700 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition">
+                   class="inline-flex items-center gap-2 text-sm font-medium text-brand-700 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 transition">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>

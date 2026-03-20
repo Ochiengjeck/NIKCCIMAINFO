@@ -16,10 +16,10 @@
                      alt=""
                      class="h-full w-full object-cover"
                      aria-hidden="true">
-                <div class="absolute inset-0 bg-gradient-to-br from-green-950/90 via-green-900/80 to-emerald-800/70"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-900/80 to-brand-800/70"></div>
             </div>
         @else
-            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-emerald-800">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800">
                 {{-- Diamond mesh pattern --}}
                 <svg class="absolute inset-0 h-full w-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <defs>
@@ -46,13 +46,13 @@
 
         <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl">
-                <span class="mb-4 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-green-200">
+                <span class="mb-4 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-brand-200">
                     Calendar
                 </span>
                 <h1 class="mb-5 font-serif text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
                     {{ $page?->section('hero_title', 'Events &amp; Trade Missions') }}
                 </h1>
-                <p class="max-w-2xl text-lg text-green-100 sm:text-xl">
+                <p class="max-w-2xl text-lg text-brand-100 sm:text-xl">
                     {{ $page?->section('hero_subtitle', 'Join NiKCCIMA flagship events, bilateral trade missions, and sector forums driving measurable corridor outcomes.') }}
                 </p>
             </div>
@@ -75,7 +75,7 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
             <div class="mb-10">
-                <span class="mb-2 inline-block text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400">
+                <span class="mb-2 inline-block text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400">
                     Upcoming
                 </span>
                 <h2 class="font-serif text-3xl font-bold text-zinc-900 dark:text-white sm:text-4xl">
@@ -99,8 +99,8 @@
                             $typeLower = strtolower($event->type ?? '');
                             $isFlagship = str_contains($typeLower, 'flagship') || str_contains($typeLower, 'summit');
                             $isMission  = str_contains($typeLower, 'mission');
-                            $stripColor = $isFlagship ? 'bg-red-600' : ($isMission ? 'bg-green-700' : 'bg-green-800');
-                            $badgeColor = $isFlagship ? 'bg-red-600' : 'bg-green-700';
+                            $stripColor = $isFlagship ? 'bg-crimson-700' : ($isMission ? 'bg-brand-700' : 'bg-brand-800');
+                            $badgeColor = $isFlagship ? 'bg-crimson-700' : 'bg-brand-700';
                         @endphp
                         <a href="{{ route('events.show', $event->id) }}"
                            class="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
@@ -125,7 +125,7 @@
                                 </span>
 
                                 {{-- Title --}}
-                                <h3 class="mt-2 font-semibold leading-snug text-zinc-900 line-clamp-2 transition group-hover:text-green-700 dark:text-white dark:group-hover:text-green-400">
+                                <h3 class="mt-2 font-semibold leading-snug text-zinc-900 line-clamp-2 transition group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-400">
                                     {{ $event->title }}
                                 </h3>
 

@@ -1,19 +1,36 @@
 <x-layouts::website :title="'NiKCCIMA — Driving Structured Trade Between Nigeria and Kenya'">
 
     {{-- =========================================================
-         SECTION A — HERO
-         Full-bleed, min-height: calc(100vh - 64px), relative
+         SECTION A — HERO CAROUSEL (3 slides)
+         Full-bleed, min-height: calc(100vh - 91px)
          =========================================================
          CMS-MANAGED SECTIONS — Admin → CMS → Pages → "Homepage"
-         hero_title         : Main headline (text)
-         hero_subtitle      : Sub-paragraph (text)
-         hero_image         : Full-bleed background image path (upload 1920×800 via Admin → Media Library → PLACEHOLDER UNTIL UPLOADED)
-         hero_cta_primary   : Primary CTA button label (default: "Become a Member")
-         hero_cta_secondary : Secondary CTA button label (default: "Explore Trade Opportunities")
+
+         Slide 1 (Trade / AfCFTA):
+           hero_badge         : Badge label          (default: "AfCFTA Corridor Execution")
+           hero_title         : Main headline         (default: "Driving Structured Trade…")
+           hero_subtitle      : Sub-paragraph         (default: "NiKCCIMA is the premier…")
+           hero_cta_primary   : Primary button label  (default: "Become a Member")
+           hero_cta_secondary : Secondary button label(default: "Explore Trade Opportunities")
+           hero_image         : Background image path (upload 1920×800 via Media Library)
+
+         Slide 2 (Membership):
+           hero2_badge        : Badge label          (default: "Membership Network")
+           hero2_title        : Main headline        (default: "Connecting Africa's Two…")
+           hero2_subtitle     : Sub-paragraph        (default: "Join a structured…")
+           hero2_cta_primary  : Primary button label (default: "View Membership Tiers")
+           hero2_cta_secondary: Secondary button label(default: "Apply Now")
+
+         Slide 3 (Events):
+           hero3_badge        : Badge label          (default: "Events & Missions")
+           hero3_title        : Main headline        (default: "Flagship Summits…")
+           hero3_subtitle     : Sub-paragraph        (default: "Attend NiKCCIMA's…")
+           hero3_cta_primary  : Primary button label (default: "View Upcoming Events")
+           hero3_cta_secondary: Secondary button label(default: "Contact the Secretariat")
          ========================================================= --}}
     <section
         class="relative overflow-hidden text-white"
-        style="min-height: calc(100vh - 64px);
+        style="min-height: calc(100vh - 91px);
                @if($page?->section('hero_image'))
                    background-image: url('{{ asset($page->section('hero_image')) }}');
                    background-size: cover;
@@ -23,10 +40,10 @@
         {{-- Background layer: image overlay OR gradient + dot pattern --}}
         @if($page?->section('hero_image'))
             {{-- Dark overlay for image background --}}
-            <div class="absolute inset-0 bg-green-950/80"></div>
+            <div class="absolute inset-0 bg-zinc-950/80"></div>
         @else
             {{-- Gradient background --}}
-            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-green-800"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-green-950 via-green-900 to-[#922529]"></div>
             {{-- Dot pattern SVG overlay at 5% opacity --}}
             <div class="absolute inset-0" style="opacity:0.05;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -41,123 +58,194 @@
         @endif
 
         {{-- Decorative accent blobs --}}
-        <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-green-700/20 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-red-800/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-16 -top-16 h-[36rem] w-[36rem] rounded-full bg-brand-200/30 blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-16 -left-16 h-[32rem] w-[32rem] rounded-full bg-crimson-700/40 blur-2xl pointer-events-none"></div>
 
-        {{-- Hero content: vertically centered, split layout on lg+ --}}
-        <div class="relative flex items-center" style="min-height: calc(100vh - 64px);">
-            <div class="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-                <div class="grid items-center gap-12 lg:grid-cols-5">
+        {{-- ===== HERO CAROUSEL (Alpine.js) ===== --}}
+        {{-- flex-col: content (flex-1) fills space, controls (shrink-0) always stay in viewport --}}
+        <div
+            class="relative flex flex-col"
+            style="min-height: calc(100vh - 91px);"
+            x-data="{
+                active: 0,
+                total: 3,
+                timer: null,
+                start() {
+                    this.timer = setInterval(() => {
+                        this.active = (this.active + 1) % this.total;
+                    }, 6000);
+                },
+                go(i) {
+                    this.active = i;
+                    clearInterval(this.timer);
+                    this.start();
+                },
+                prev() { this.go((this.active - 1 + this.total) % this.total); },
+                next() { this.go((this.active + 1) % this.total); }
+            }"
+            x-init="start()"
+        >
+            {{-- Content area: grows to fill available height, centers grid vertically --}}
+            <div class="mx-auto w-full max-w-7xl flex-1 flex items-center px-4 py-10 sm:px-6 lg:px-8">
+                <div class="grid w-full items-center gap-12 lg:grid-cols-5">
 
-                    {{-- Left: Text content (3/5 width on lg) --}}
-                    <div class="lg:col-span-3">
+                    {{-- ===== LEFT: Slides stacked via CSS grid-area — opacity crossfade, no display:none snap ===== --}}
+                    <div class="lg:col-span-3 grid">
 
-                        {{-- AfCFTA badge pill --}}
-                        <div class="mb-6">
-                            <span class="inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white shadow-sm">
-                                <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                                AfCFTA Corridor Execution
-                            </span>
+                        {{-- SLIDE 1 —— CMS keys: hero_badge, hero_title, hero_subtitle, hero_cta_primary, hero_cta_secondary --}}
+                        <div style="grid-area: 1/1;"
+                             :class="active === 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
+                             class="transition-opacity duration-500 ease-in-out">
+                            <div class="mb-6">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-brand-200 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-900 shadow-sm">
+                                    <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                    {{ $page?->section('hero_badge', 'AfCFTA Corridor Execution') }}
+                                </span>
+                            </div>
+                            <h1 class="font-['Playfair_Display',serif] font-serif text-5xl font-bold leading-[1.1] text-white lg:text-6xl xl:text-7xl">
+                                {{ $page?->section('hero_title', 'Driving Structured Trade Between Nigeria and Kenya.') }}
+                            </h1>
+                            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-brand-100">
+                                {{ $page?->section('hero_subtitle', 'NiKCCIMA is the premier bilateral trade chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable outcomes.') }}
+                            </p>
+                            <div class="mt-10 flex flex-wrap gap-4">
+                                <a href="{{ route('membership.apply') }}" class="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-brand-900 shadow-lg transition hover:bg-brand-50 hover:shadow-xl">
+                                    {{ $page?->section('hero_cta_primary', 'Become a Member') }}
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                </a>
+                                <a href="{{ route('trade') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 hover:border-white/60">
+                                    {{ $page?->section('hero_cta_secondary', 'Explore Trade Opportunities') }}
+                                </a>
+                            </div>
+                            <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+                                <span class="text-xs font-medium uppercase tracking-widest text-brand-300">Recognised by</span>
+                                <span class="text-sm font-semibold text-white/60">African Union</span>
+                                <span class="h-4 w-px bg-white/20"></span>
+                                <span class="text-sm font-semibold text-white/60">AfCFTA Secretariat</span>
+                                <span class="h-4 w-px bg-white/20"></span>
+                                <span class="text-sm font-semibold text-white/60">ECOWAS Framework</span>
+                            </div>
                         </div>
 
-                        {{-- Main headline --}}
-                        <h1 class="font-['Playfair_Display',serif] font-serif text-5xl font-bold leading-[1.1] text-white lg:text-6xl xl:text-7xl">
-                            {{ $page?->section('hero_title', 'Driving Structured Trade Between Nigeria and Kenya.') }}
-                        </h1>
-
-                        {{-- Sub-paragraph --}}
-                        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-green-200">
-                            {{ $page?->section('hero_subtitle', 'NiKCCIMA is the premier bilateral trade chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable outcomes.') }}
-                        </p>
-
-                        {{-- CTA buttons --}}
-                        <div class="mt-10 flex flex-wrap gap-4">
-                            <a href="{{ route('membership.apply') }}"
-                                class="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-green-900 shadow-lg transition hover:bg-green-50 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-900">
-                                {{ $page?->section('hero_cta_primary', 'Become a Member') }}
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                                </svg>
-                            </a>
-                            <a href="{{ route('trade') }}"
-                                class="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 hover:border-white/60 focus:outline-none focus:ring-2 focus:ring-white/50">
-                                {{ $page?->section('hero_cta_secondary', 'Explore Trade Opportunities') }}
-                            </a>
+                        {{-- SLIDE 2 —— CMS keys: hero2_badge, hero2_title, hero2_subtitle, hero2_cta_primary, hero2_cta_secondary --}}
+                        <div style="grid-area: 1/1;"
+                             :class="active === 1 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
+                             class="transition-opacity duration-500 ease-in-out">
+                            <div class="mb-6">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-crimson-700 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white shadow-sm">
+                                    <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
+                                    {{ $page?->section('hero2_badge', 'Membership Network') }}
+                                </span>
+                            </div>
+                            <h1 class="font-['Playfair_Display',serif] font-serif text-5xl font-bold leading-[1.1] text-white lg:text-6xl xl:text-7xl">
+                                {{ $page?->section('hero2_title', "Connecting Africa's Two Largest Economies.") }}
+                            </h1>
+                            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-brand-100">
+                                {{ $page?->section('hero2_subtitle', 'Join a structured bilateral chamber with members spanning trade, finance, agriculture, technology, and maritime sectors across Nigeria and Kenya.') }}
+                            </p>
+                            <div class="mt-10 flex flex-wrap gap-4">
+                                <a href="{{ route('membership') }}" class="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-brand-900 shadow-lg transition hover:bg-brand-50 hover:shadow-xl">
+                                    {{ $page?->section('hero2_cta_primary', 'View Membership Tiers') }}
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                </a>
+                                <a href="{{ route('membership.apply') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 hover:border-white/60">
+                                    {{ $page?->section('hero2_cta_secondary', 'Apply Now') }}
+                                </a>
+                            </div>
+                            <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+                                <span class="text-xs font-medium uppercase tracking-widest text-brand-300">Serving sectors</span>
+                                <span class="text-sm font-semibold text-white/60">Trade & Finance</span>
+                                <span class="h-4 w-px bg-white/20"></span>
+                                <span class="text-sm font-semibold text-white/60">Agriculture</span>
+                                <span class="h-4 w-px bg-white/20"></span>
+                                <span class="text-sm font-semibold text-white/60">Technology</span>
+                            </div>
                         </div>
 
-                        {{-- Trust indicators --}}
-                        <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
-                            <span class="text-xs font-medium uppercase tracking-widest text-green-400">Recognised by</span>
-                            <span class="text-sm font-semibold text-white/60">African Union</span>
-                            <span class="h-4 w-px bg-white/20"></span>
-                            <span class="text-sm font-semibold text-white/60">AfCFTA Secretariat</span>
-                            <span class="h-4 w-px bg-white/20"></span>
-                            <span class="text-sm font-semibold text-white/60">ECOWAS Framework</span>
+                        {{-- SLIDE 3 —— CMS keys: hero3_badge, hero3_title, hero3_subtitle, hero3_cta_primary, hero3_cta_secondary --}}
+                        <div style="grid-area: 1/1;"
+                             :class="active === 2 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
+                             class="transition-opacity duration-500 ease-in-out">
+                            <div class="mb-6">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-brand-200 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-900 shadow-sm">
+                                    <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+                                    {{ $page?->section('hero3_badge', 'Events & Missions') }}
+                                </span>
+                            </div>
+                            <h1 class="font-['Playfair_Display',serif] font-serif text-5xl font-bold leading-[1.1] text-white lg:text-6xl xl:text-7xl">
+                                {{ $page?->section('hero3_title', 'Flagship Summits. Real Trade Outcomes.') }}
+                            </h1>
+                            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-brand-100">
+                                {{ $page?->section('hero3_subtitle', "Attend NiKCCIMA's corridor activation summits, bilateral trade missions, and B2B matching events — where Nigeria meets Kenya in structured, high-value commerce.") }}
+                            </p>
+                            <div class="mt-10 flex flex-wrap gap-4">
+                                <a href="{{ route('events.index') }}" class="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-brand-900 shadow-lg transition hover:bg-brand-50 hover:shadow-xl">
+                                    {{ $page?->section('hero3_cta_primary', 'View Upcoming Events') }}
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                </a>
+                                <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 hover:border-white/60">
+                                    {{ $page?->section('hero3_cta_secondary', 'Contact the Secretariat') }}
+                                </a>
+                            </div>
+                            <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+                                <span class="text-xs font-medium uppercase tracking-widest text-brand-300">Upcoming in</span>
+                                <span class="text-sm font-semibold text-white/60">Abuja</span>
+                                <span class="h-4 w-px bg-white/20"></span>
+                                <span class="text-sm font-semibold text-white/60">Nairobi</span>
+                                <span class="h-4 w-px bg-white/20"></span>
+                                <span class="text-sm font-semibold text-white/60">Virtual</span>
+                            </div>
                         </div>
+
                     </div>
 
-                    {{-- Right: feature_image or decorative stats panel (hidden on mobile) --}}
+                    {{-- ===== RIGHT: Static decorative panel ===== --}}
                     <div class="hidden lg:col-span-2 lg:block">
                         @if($page?->section('feature_image'))
                             <div class="relative">
-                                <img
-                                    src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('feature_image')) }}"
-                                    alt="NiKCCIMA"
-                                    class="w-full rounded-2xl shadow-2xl ring-1 ring-white/20 -rotate-1 object-cover"
-                                    style="max-height: 500px;"
-                                />
-                                {{-- Floating badge --}}
-                                <div class="absolute -bottom-4 -left-4 rounded-xl border border-green-700 bg-green-900/90 px-4 py-3 shadow-xl backdrop-blur">
-                                    <span class="block text-xs font-semibold uppercase tracking-widest text-green-400">Operating Since</span>
+                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('feature_image')) }}"
+                                     alt="NiKCCIMA"
+                                     class="w-full rounded-2xl shadow-2xl ring-1 ring-white/20 -rotate-1 object-cover"
+                                     style="max-height: 500px;"/>
+                                <div class="absolute -bottom-4 -left-4 rounded-xl border border-crimson-800 bg-crimson-900/90 px-4 py-3 shadow-xl backdrop-blur">
+                                    <span class="block text-xs font-semibold uppercase tracking-widest text-brand-300">Operating Since</span>
                                     <span class="block text-2xl font-bold text-white font-serif">2024</span>
                                 </div>
                             </div>
                         @else
-                            {{-- Decorative stats panel --}}
                             <div class="space-y-3">
-                                <div class="rounded-2xl border border-green-800 bg-green-900/50 p-5 backdrop-blur-sm">
+                                <div class="rounded-2xl border border-crimson-800 bg-crimson-900/50 p-5 backdrop-blur-sm">
                                     <div class="flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-800">
-                                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
+                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-crimson-800">
+                                            <svg class="h-6 w-6 text-brand-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         </div>
                                         <div>
-                                            <p class="text-xs text-green-400 uppercase tracking-wide">Bilateral Mandate</p>
+                                            <p class="text-xs uppercase tracking-wide text-brand-200">Bilateral Mandate</p>
                                             <p class="font-semibold text-white">Nigeria ↔ Kenya Corridor</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="rounded-2xl border border-green-800 bg-green-900/50 p-5 backdrop-blur-sm">
+                                <div class="rounded-2xl border border-crimson-800 bg-crimson-900/50 p-5 backdrop-blur-sm">
                                     <div class="flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-800">
-                                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                                            </svg>
+                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-crimson-800">
+                                            <svg class="h-6 w-6 text-brand-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                         </div>
                                         <div>
-                                            <p class="text-xs text-green-400 uppercase tracking-wide">Framework</p>
+                                            <p class="text-xs uppercase tracking-wide text-brand-200">Framework</p>
                                             <p class="font-semibold text-white">AfCFTA Aligned & Governed</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="rounded-2xl border border-green-800 bg-green-900/50 p-5 backdrop-blur-sm">
+                                <div class="rounded-2xl border border-crimson-800 bg-crimson-900/50 p-5 backdrop-blur-sm">
                                     <div class="flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-800">
-                                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                                            </svg>
+                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-crimson-800">
+                                            <svg class="h-6 w-6 text-brand-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                                         </div>
                                         <div>
-                                            <p class="text-xs text-green-400 uppercase tracking-wide">Focus</p>
+                                            <p class="text-xs uppercase tracking-wide text-brand-200">Focus</p>
                                             <p class="font-semibold text-white">Measurable Trade Outcomes</p>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="rounded-xl border border-green-800/60 bg-white/5 px-4 py-3 text-center">
-                                    <p class="text-xs text-green-400">Upload a feature image via <strong class="text-green-300">Admin → CMS → Pages → Homepage → Feature Image</strong></p>
                                 </div>
                             </div>
                         @endif
@@ -165,13 +253,41 @@
 
                 </div>
             </div>
-        </div>
 
-        {{-- Scroll indicator --}}
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-            <svg class="h-6 w-6 text-green-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{-- ===== Carousel controls — flex child, always visible within hero ===== --}}
+            <div class="flex shrink-0 items-center justify-center gap-6 pb-8">
+
+                {{-- Prev arrow --}}
+                <button @click="prev()" aria-label="Previous slide"
+                        class="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition hover:bg-white/25">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+
+                {{-- Dot indicators --}}
+                <div class="flex items-center gap-2">
+                    <template x-for="i in total" :key="i">
+                        <button
+                            @click="go(i - 1)"
+                            :aria-label="'Go to slide ' + i"
+                            :class="active === i - 1
+                                ? 'w-8 bg-brand-200'
+                                : 'w-2.5 bg-white/40 hover:bg-white/70'"
+                            class="h-2.5 rounded-full transition-all duration-300">
+                        </button>
+                    </template>
+                </div>
+
+                {{-- Next arrow --}}
+                <button @click="next()" aria-label="Next slide"
+                        class="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition hover:bg-white/25">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+
+            </div>
         </div>
     </section>
 
@@ -182,12 +298,12 @@
          No CMS keys — values pulled live from DB
          (Member, TradeLead, Corridor, Ntb models)
          ========================================================= --}}
-    <section class="bg-green-900 py-12">
+    <section class="bg-crimson-700 py-12">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 gap-y-10 gap-x-4 lg:grid-cols-4">
 
                 {{-- Active Members --}}
-                <div class="flex flex-col items-center text-center lg:border-r lg:border-green-800 lg:pr-8">
+                <div class="flex flex-col items-center text-center lg:border-r lg:border-crimson-600 lg:pr-8">
                     <span
                         class="font-['Playfair_Display',serif] font-serif text-4xl font-bold text-white lg:text-5xl"
                         x-data="{ count: 0 }"
@@ -201,11 +317,11 @@
                         }, 500)"
                         x-text="count.toLocaleString()"
                     >0</span>
-                    <span class="mt-2 text-sm uppercase tracking-wide text-green-300">Active Members</span>
+                    <span class="mt-2 text-sm uppercase tracking-wide text-brand-200">Active Members</span>
                 </div>
 
                 {{-- Trade Leads --}}
-                <div class="flex flex-col items-center text-center lg:border-r lg:border-green-800 lg:pr-8">
+                <div class="flex flex-col items-center text-center lg:border-r lg:border-crimson-600 lg:pr-8">
                     <span
                         class="font-['Playfair_Display',serif] font-serif text-4xl font-bold text-white lg:text-5xl"
                         x-data="{ count: 0 }"
@@ -219,11 +335,11 @@
                         }, 500)"
                         x-text="count.toLocaleString()"
                     >0</span>
-                    <span class="mt-2 text-sm uppercase tracking-wide text-green-300">Trade Leads</span>
+                    <span class="mt-2 text-sm uppercase tracking-wide text-brand-200">Trade Leads</span>
                 </div>
 
                 {{-- Active Corridors --}}
-                <div class="flex flex-col items-center text-center lg:border-r lg:border-green-800 lg:pr-8">
+                <div class="flex flex-col items-center text-center lg:border-r lg:border-crimson-600 lg:pr-8">
                     <span
                         class="font-['Playfair_Display',serif] font-serif text-4xl font-bold text-white lg:text-5xl"
                         x-data="{ count: 0 }"
@@ -237,7 +353,7 @@
                         }, 500)"
                         x-text="count.toLocaleString()"
                     >0</span>
-                    <span class="mt-2 text-sm uppercase tracking-wide text-green-300">Active Corridors</span>
+                    <span class="mt-2 text-sm uppercase tracking-wide text-brand-200">Active Corridors</span>
                 </div>
 
                 {{-- NTBs Resolved --}}
@@ -255,9 +371,56 @@
                         }, 500)"
                         x-text="count.toLocaleString()"
                     >0</span>
-                    <span class="mt-2 text-sm uppercase tracking-wide text-green-300">NTBs Resolved</span>
+                    <span class="mt-2 text-sm uppercase tracking-wide text-brand-200">NTBs Resolved</span>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    {{-- =========================================================
+         SECTION B2 — WHAT WE DO (Services Grid)
+         Inspired by eaisraelchamber.org services grid
+         ========================================================= --}}
+    <section class="bg-white py-20 dark:bg-zinc-950">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <span class="text-xs font-semibold uppercase tracking-widest text-crimson-700">Our Services</span>
+                <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold text-zinc-900 dark:text-white lg:text-5xl">
+                    What NiKCCIMA Does For You
+                </h2>
+                <p class="mx-auto mt-4 max-w-2xl text-base text-zinc-500 dark:text-zinc-400">
+                    From trade facilitation to policy advocacy — we deliver structured bilateral outcomes across the Nigeria-Kenya corridor.
+                </p>
+            </div>
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach([
+                    ['icon' => 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3', 'title' => 'Trade Facilitation', 'desc' => 'End-to-end support for bilateral trade transactions, documentation, and customs processes between Nigeria and Kenya.'],
+                    ['icon' => 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7', 'title' => 'Market Access & Penetration', 'desc' => 'Strategic entry support for Nigerian businesses into Kenya and vice versa — market intelligence, partner matching, and sector guides.'],
+                    ['icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'title' => 'Policy Advocacy', 'desc' => 'Bilateral policy engagement, NTB resolution, and AfCFTA compliance monitoring to remove barriers and unlock corridor trade.'],
+                    ['icon' => 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', 'title' => 'AfCFTA Corridor Management', 'desc' => 'Structured AfCFTA corridor activation with governance frameworks, KPI tracking, and measurable bilateral trade outcomes.'],
+                    ['icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'title' => 'Business Matchmaking', 'desc' => 'Curated B2B matching connecting Nigerian and Kenyan enterprises through our structured pipeline and deal facilitation process.'],
+                    ['icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064', 'title' => 'Bilateral Trade Missions', 'desc' => 'Flagship summits, trade missions, and corridor activation events connecting senior business leaders across both countries.'],
+                ] as $service)
+                <div class="group rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:border-brand-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-brand-700">
+                    <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-950">
+                        <svg class="h-6 w-6 text-brand-700 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $service['icon'] }}"/>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 font-semibold text-zinc-900 dark:text-white">{{ $service['title'] }}</h3>
+                    <p class="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">{{ $service['desc'] }}</p>
+                </div>
+                @endforeach
+            </div>
+            <div class="mt-10 text-center">
+                <a href="{{ route('pillars') }}"
+                    class="inline-flex items-center gap-2 text-sm font-semibold text-crimson-700 hover:text-crimson-800 dark:text-brand-300 dark:hover:text-brand-200 transition">
+                    Explore Our Strategic Pillars in Detail
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </section>
@@ -276,7 +439,7 @@
 
                 {{-- Left column: heading + body text --}}
                 <div class="max-w-xl">
-                    <span class="text-xs font-semibold uppercase tracking-widest text-red-600">Our Institution</span>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-crimson-700">Our Institution</span>
                     <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold leading-tight text-zinc-900 dark:text-white lg:text-5xl">
                         {{ $page?->section('about_heading', 'About NiKCCIMA') }}
                     </h2>
@@ -285,7 +448,7 @@
                     </div>
                     <div class="mt-8 flex flex-wrap gap-3">
                         <a href="{{ route('about') }}"
-                            class="inline-flex items-center gap-2 rounded-xl bg-green-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
+                            class="inline-flex items-center gap-2 rounded-xl bg-crimson-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-crimson-800 focus:outline-none focus:ring-2 focus:ring-crimson-600 focus:ring-offset-2">
                             Learn More About Us
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -303,8 +466,8 @@
 
                     {{-- Governance-Backed --}}
                     <div class="rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 dark:bg-green-900/40">
-                            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-900/40">
+                            <svg class="h-5 w-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                             </svg>
                         </div>
@@ -314,8 +477,8 @@
 
                     {{-- Structured KPI System --}}
                     <div class="rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 dark:bg-green-900/40">
-                            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-900/40">
+                            <svg class="h-5 w-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
                         </div>
@@ -325,8 +488,8 @@
 
                     {{-- Bilateral Corridor Model --}}
                     <div class="rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 dark:bg-green-900/40">
-                            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-900/40">
+                            <svg class="h-5 w-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
                             </svg>
                         </div>
@@ -336,8 +499,8 @@
 
                     {{-- AfCFTA Aligned --}}
                     <div class="rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 dark:bg-green-900/40">
-                            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-900/40">
+                            <svg class="h-5 w-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
                             </svg>
                         </div>
@@ -346,6 +509,53 @@
                     </div>
 
                 </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- =========================================================
+         SECTION C2 — ABOUT SNAPSHOT (numbered, eaisraelchamber.org style)
+         =========================================================
+         CMS-MANAGED SECTIONS — Admin → CMS → Pages → "Homepage"
+         snapshot_mission, snapshot_vision, snapshot_impact, snapshot_scope
+         ========================================================= --}}
+    <section class="bg-zinc-50 py-20 dark:bg-zinc-900">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <span class="text-xs font-semibold uppercase tracking-widest text-crimson-700">Who We Are</span>
+                <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold text-zinc-900 dark:text-white lg:text-5xl">
+                    Our Foundation
+                </h2>
+            </div>
+            <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach([
+                    ['num' => '01', 'title' => 'Mission',
+                     'body' => $page?->section('snapshot_mission', 'To operationalise the AfCFTA bilateral corridor between Nigeria and Kenya through structured governance, trade facilitation, and measurable outcomes.')],
+                    ['num' => '02', 'title' => 'Vision',
+                     'body' => $page?->section('snapshot_vision', 'To be the leading bilateral chamber driving Africa\'s most productive Nigeria-Kenya trade corridor, setting the standard for governed intra-African commerce.')],
+                    ['num' => '03', 'title' => 'Impact',
+                     'body' => $page?->section('snapshot_impact', 'Measurable bilateral trade growth, reduced NTBs, structured B2B deal pipelines, and active AfCFTA corridor execution between Africa\'s two largest economies.')],
+                    ['num' => '04', 'title' => 'Scope',
+                     'body' => $page?->section('snapshot_scope', 'Operating across both Nigeria and Kenya with chapter offices in Abuja and Nairobi, serving members across all sectors of the bilateral trade corridor.')],
+                ] as $item)
+                    <div class="relative rounded-2xl bg-white p-6 shadow-sm border border-zinc-100 dark:bg-zinc-800 dark:border-zinc-700">
+                        <span class="absolute right-5 top-4 font-serif text-5xl font-bold leading-none text-crimson-700/10 dark:text-crimson-300/10 select-none">{{ $item['num'] }}</span>
+                        <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-950">
+                            <span class="font-serif text-sm font-bold text-brand-700 dark:text-brand-300">{{ $item['num'] }}</span>
+                        </div>
+                        <h3 class="mb-2 font-serif text-lg font-bold text-zinc-900 dark:text-white">{{ $item['title'] }}</h3>
+                        <p class="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">{{ $item['body'] }}</p>
+                    </div>
+                @endforeach
+            </div>
+            <div class="mt-10 text-center">
+                <a href="{{ route('about') }}"
+                    class="inline-flex items-center gap-2 text-sm font-semibold text-crimson-700 hover:text-crimson-800 dark:text-brand-300 dark:hover:text-brand-200 transition">
+                    Read our full story
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </section>
@@ -363,7 +573,7 @@
 
             {{-- Section header --}}
             <div class="mb-12 text-center">
-                <span class="text-xs font-semibold uppercase tracking-widest text-red-600">How We Work</span>
+                <span class="text-xs font-semibold uppercase tracking-widest text-crimson-700">How We Work</span>
                 <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold text-zinc-900 dark:text-white lg:text-5xl">
                     Our Four Pillars
                 </h2>
@@ -381,16 +591,16 @@
                     $pillar1Summary = $page?->section('pillar1_summary', 'Governance, council oversight, and the strategic direction that ensures NiKCCIMA delivers structured bilateral outcomes.');
                 @endphp
                 <a href="{{ route('pillars.show', 'executive') }}"
-                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 to-green-800 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
+                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 to-crimson-800 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
                     <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
                     </div>
-                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-green-400">Pillar 1</span>
+                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-brand-300">Pillar 1</span>
                     <h3 class="font-['Playfair_Display',serif] font-serif mb-3 text-xl font-bold leading-snug text-white">{{ $pillar1Title }}</h3>
-                    <p class="flex-1 text-sm leading-relaxed text-green-200">{{ $pillar1Summary }}</p>
-                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-green-300 group-hover:text-white transition">
+                    <p class="flex-1 text-sm leading-relaxed text-brand-100">{{ $pillar1Summary }}</p>
+                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-brand-200 group-hover:text-white transition">
                         Explore Pillar
                         <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -404,16 +614,16 @@
                     $pillar2Summary = $page?->section('pillar2_summary', 'Corridor activation, B2B facilitation, and structured deal pipeline management across the Nigeria–Kenya corridor.');
                 @endphp
                 <a href="{{ route('pillars.show', 'trade') }}"
-                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-green-800 to-emerald-700 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
+                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 to-brand-700 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
                     <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                         </svg>
                     </div>
-                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-emerald-300">Pillar 2</span>
+                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-brand-300">Pillar 2</span>
                     <h3 class="font-['Playfair_Display',serif] font-serif mb-3 text-xl font-bold leading-snug text-white">{{ $pillar2Title }}</h3>
-                    <p class="flex-1 text-sm leading-relaxed text-green-200">{{ $pillar2Summary }}</p>
-                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-emerald-300 group-hover:text-white transition">
+                    <p class="flex-1 text-sm leading-relaxed text-brand-100">{{ $pillar2Summary }}</p>
+                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-brand-200 group-hover:text-white transition">
                         Explore Pillar
                         <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -427,16 +637,16 @@
                     $pillar3Summary = $page?->section('pillar3_summary', 'NTB resolution, policy briefs, AfCFTA compliance monitoring, and evidence-based strategic advisory services.');
                 @endphp
                 <a href="{{ route('pillars.show', 'policy') }}"
-                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-800 to-green-700 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
+                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-green-800 to-brand-600 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
                     <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
-                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-emerald-300">Pillar 3</span>
+                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-brand-300">Pillar 3</span>
                     <h3 class="font-['Playfair_Display',serif] font-serif mb-3 text-xl font-bold leading-snug text-white">{{ $pillar3Title }}</h3>
-                    <p class="flex-1 text-sm leading-relaxed text-green-200">{{ $pillar3Summary }}</p>
-                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-emerald-300 group-hover:text-white transition">
+                    <p class="flex-1 text-sm leading-relaxed text-brand-100">{{ $pillar3Summary }}</p>
+                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-brand-200 group-hover:text-white transition">
                         Explore Pillar
                         <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -450,17 +660,17 @@
                     $pillar4Summary = $page?->section('pillar4_summary', 'Membership services, secretariat operations, financial governance, and the administrative backbone of the chamber.');
                 @endphp
                 <a href="{{ route('pillars.show', 'admin') }}"
-                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-green-700 to-teal-700 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
+                    class="group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-crimson-800 to-crimson-700 p-8 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
                     <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
                         <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                     </div>
-                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-teal-300">Pillar 4</span>
+                    <span class="mb-1 text-xs font-semibold uppercase tracking-widest text-brand-300">Pillar 4</span>
                     <h3 class="font-['Playfair_Display',serif] font-serif mb-3 text-xl font-bold leading-snug text-white">{{ $pillar4Title }}</h3>
-                    <p class="flex-1 text-sm leading-relaxed text-green-200">{{ $pillar4Summary }}</p>
-                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-teal-300 group-hover:text-white transition">
+                    <p class="flex-1 text-sm leading-relaxed text-brand-100">{{ $pillar4Summary }}</p>
+                    <div class="mt-6 flex items-center gap-1.5 text-xs font-semibold text-brand-200 group-hover:text-white transition">
                         Explore Pillar
                         <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -473,7 +683,7 @@
             {{-- Pillars CTA --}}
             <div class="mt-10 text-center">
                 <a href="{{ route('pillars') }}"
-                    class="inline-flex items-center gap-2 text-sm font-semibold text-green-700 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition">
+                    class="inline-flex items-center gap-2 text-sm font-semibold text-crimson-700 hover:text-crimson-800 dark:text-brand-300 dark:hover:text-brand-200 transition">
                     View All Pillars in Detail
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -502,7 +712,7 @@
 
                 {{-- Section header --}}
                 <div class="mb-12">
-                    <span class="text-xs font-semibold uppercase tracking-widest text-red-600">Strategic Focus</span>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-crimson-700">Strategic Focus</span>
                     <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold text-zinc-900 dark:text-white lg:text-5xl">
                         {{ $sectorsPage->section('page_heading', 'Featured Sectors') }}
                     </h2>
@@ -518,8 +728,8 @@
 
                     {{-- Maritime / Blue Economy --}}
                     <div class="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/40">
-                            <svg class="h-6 w-6 text-green-700 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-900/40">
+                            <svg class="h-6 w-6 text-brand-700 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
                             </svg>
                         </div>
@@ -531,8 +741,8 @@
 
                     {{-- Agriculture --}}
                     <div class="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/40">
-                            <svg class="h-6 w-6 text-green-700 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-900/40">
+                            <svg class="h-6 w-6 text-brand-700 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
                         </div>
@@ -544,8 +754,8 @@
 
                     {{-- Aviation --}}
                     <div class="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/40">
-                            <svg class="h-6 w-6 text-green-700 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-900/40">
+                            <svg class="h-6 w-6 text-brand-700 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                             </svg>
                         </div>
@@ -557,8 +767,8 @@
 
                     {{-- Inland Waterways --}}
                     <div class="group rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/40">
-                            <svg class="h-6 w-6 text-green-700 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-900/40">
+                            <svg class="h-6 w-6 text-brand-700 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                             </svg>
                         </div>
@@ -573,7 +783,7 @@
                 {{-- Sectors CTA --}}
                 <div class="mt-10">
                     <a href="{{ route('trade') }}"
-                        class="inline-flex items-center gap-2 text-sm font-semibold text-green-700 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition">
+                        class="inline-flex items-center gap-2 text-sm font-semibold text-crimson-700 hover:text-crimson-800 dark:text-brand-300 dark:hover:text-brand-200 transition">
                         Explore All Sectors & Trade Opportunities
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -590,22 +800,22 @@
          =========================================================
          No CMS keys — events fetched live from DB (upcoming 3)
          ========================================================= --}}
-    <section class="bg-green-950 py-20">
+    <section class="bg-brand-50 py-20 dark:bg-zinc-900">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
             {{-- Section header --}}
-            <div class="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div class="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-red-400">Upcoming</span>
-                    <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold text-white lg:text-5xl">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-crimson-700">Upcoming</span>
+                    <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold text-zinc-900 dark:text-white lg:text-5xl">
                         Events &amp; Trade Missions
                     </h2>
-                    <p class="mt-3 max-w-lg text-base text-green-300">
+                    <p class="mt-3 max-w-lg text-base text-zinc-500 dark:text-zinc-400">
                         Flagship summits, trade missions, and corridor activation events connecting Nigeria and Kenya.
                     </p>
                 </div>
                 <a href="{{ route('events.index') }}"
-                    class="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-green-400 hover:text-white transition">
+                    class="shrink-0 inline-flex items-center gap-2 rounded-full border border-crimson-700 px-5 py-2 text-sm font-semibold text-crimson-700 hover:bg-crimson-50 dark:border-crimson-400 dark:text-crimson-300 dark:hover:bg-crimson-950/40 transition">
                     View All Events
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -614,84 +824,79 @@
             </div>
 
             @if($upcomingEvents->isNotEmpty())
-                <div class="grid gap-6 sm:grid-cols-3">
-                    @foreach($upcomingEvents as $event)
+                {{-- Table-style events listing --}}
+                <div class="overflow-hidden rounded-2xl border border-brand-200 dark:border-brand-900 shadow-sm">
+                    {{-- Table header --}}
+                    <div class="grid grid-cols-12 gap-4 bg-brand-200 dark:bg-brand-900 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-brand-900 dark:text-brand-100">
+                        <div class="col-span-2">Date</div>
+                        <div class="col-span-5">Event</div>
+                        <div class="col-span-3">Venue</div>
+                        <div class="col-span-2 text-right">Type</div>
+                    </div>
+                    {{-- Table rows --}}
+                    @foreach($upcomingEvents as $i => $event)
+                        @php
+                            $type = strtolower($event->type ?? 'event');
+                            $isFlagship = in_array($type, ['flagship', 'summit', 'trade-mission']);
+                        @endphp
                         <a href="{{ route('events.show', $event->id) }}"
-                            class="group flex flex-col overflow-hidden rounded-2xl border border-green-800 bg-green-900 transition hover:border-green-600 hover:shadow-2xl hover:shadow-green-900/50">
-
-                            {{-- Date display bar --}}
-                            <div class="flex items-center gap-4 border-b border-green-800 px-6 py-5">
-                                <div class="text-center">
-                                    <span class="font-['Playfair_Display',serif] font-serif block text-4xl font-bold leading-none text-white">
-                                        {{ $event->starts_at->format('d') }}
-                                    </span>
-                                    <span class="mt-0.5 block text-sm font-semibold uppercase tracking-wide text-green-400">
-                                        {{ $event->starts_at->format('M') }}
-                                    </span>
-                                    <span class="block text-xs text-green-500">
-                                        {{ $event->starts_at->format('Y') }}
-                                    </span>
+                            class="group grid grid-cols-12 gap-4 items-center px-6 py-4 transition hover:bg-brand-100 dark:hover:bg-brand-950/30 {{ $i % 2 === 0 ? 'bg-white dark:bg-zinc-950' : 'bg-brand-50 dark:bg-zinc-900' }} border-t border-brand-100 dark:border-brand-900/50">
+                            {{-- Date --}}
+                            <div class="col-span-2 flex items-center gap-3">
+                                <div class="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg bg-crimson-700 text-white shadow-sm">
+                                    <span class="text-xs font-bold leading-none">{{ $event->starts_at->format('d') }}</span>
+                                    <span class="text-[10px] font-semibold uppercase leading-tight">{{ $event->starts_at->format('M') }}</span>
                                 </div>
-                                <div class="h-10 w-px bg-green-800"></div>
-                                <div>
-                                    {{-- Event type badge --}}
-                                    @php
-                                        $type = strtolower($event->type ?? 'event');
-                                        $isFlagship = in_array($type, ['flagship', 'summit', 'trade-mission']);
-                                    @endphp
-                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold
-                                        {{ $isFlagship ? 'bg-red-600 text-white' : 'bg-green-700 text-green-200' }}">
-                                        {{ ucwords(str_replace('-', ' ', $event->type ?? 'Event')) }}
-                                    </span>
-                                    <span class="mt-1 block text-xs text-green-400">
-                                        {{ $event->starts_at->format('l') }}
-                                    </span>
-                                </div>
+                                <span class="hidden text-xs text-zinc-400 sm:block">{{ $event->starts_at->format('Y') }}</span>
                             </div>
-
-                            {{-- Event body --}}
-                            <div class="flex flex-1 flex-col p-6">
-                                <h3 class="font-semibold leading-snug text-white transition group-hover:text-green-300">
+                            {{-- Title --}}
+                            <div class="col-span-5">
+                                <h3 class="font-semibold text-zinc-900 dark:text-white transition group-hover:text-crimson-700 dark:group-hover:text-brand-300 line-clamp-2">
                                     {{ $event->title }}
                                 </h3>
-
+                                <span class="mt-0.5 block text-xs text-zinc-400">{{ $event->starts_at->format('l, d F Y') }}</span>
+                            </div>
+                            {{-- Venue --}}
+                            <div class="col-span-3">
                                 @if($event->venue)
-                                    <div class="mt-3 flex items-start gap-1.5">
-                                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <span class="flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+                                        <svg class="h-3.5 w-3.5 shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         </svg>
-                                        <span class="text-sm text-green-400">{{ $event->venue }}</span>
-                                    </div>
+                                        {{ $event->venue }}
+                                    </span>
+                                @else
+                                    <span class="text-xs text-zinc-400">TBA</span>
                                 @endif
-
-                                <div class="mt-auto pt-5 flex items-center gap-1.5 text-xs font-semibold text-green-400 group-hover:text-green-300 transition">
-                                    View Event Details
-                                    <svg class="h-3.5 w-3.5 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                                    </svg>
-                                </div>
+                            </div>
+                            {{-- Type badge --}}
+                            <div class="col-span-2 flex justify-end">
+                                <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold
+                                    {{ $isFlagship ? 'bg-crimson-700 text-white' : 'bg-brand-100 text-brand-700 dark:bg-brand-900 dark:text-brand-300' }}">
+                                    {{ ucwords(str_replace('-', ' ', $event->type ?? 'Event')) }}
+                                </span>
                             </div>
                         </a>
                     @endforeach
                 </div>
             @else
                 {{-- Empty state --}}
-                <div class="rounded-2xl border border-green-800 bg-green-900/50 px-8 py-16 text-center">
-                    <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-800">
-                        <svg class="h-8 w-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="rounded-2xl border border-brand-200 bg-white px-8 py-16 text-center dark:border-brand-900 dark:bg-zinc-900">
+                    <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950">
+                        <svg class="h-8 w-8 text-brand-600 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>
-                    <p class="text-base font-medium text-green-200">No upcoming events — check back soon.</p>
-                    <p class="mt-1 text-sm text-green-400">Stay tuned for our next trade mission and summit announcements.</p>
+                    <p class="text-base font-medium text-zinc-700 dark:text-zinc-300">No upcoming events — check back soon.</p>
+                    <p class="mt-1 text-sm text-zinc-400">Stay tuned for our next trade mission and summit announcements.</p>
                 </div>
             @endif
 
             {{-- Bottom CTA --}}
-            <div class="mt-10 text-center">
+            <div class="mt-8 text-center">
                 <a href="{{ route('events.index') }}"
-                    class="inline-flex items-center gap-2 text-sm font-semibold text-green-400 hover:text-white transition">
+                    class="inline-flex items-center gap-2 text-sm font-semibold text-crimson-700 hover:text-crimson-800 dark:text-brand-300 dark:hover:text-brand-200 transition">
                     View All Upcoming Events &rarr;
                 </a>
             </div>
@@ -710,13 +915,13 @@
             {{-- Section header --}}
             <div class="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-red-600">Media</span>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-crimson-700">Media</span>
                     <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold text-zinc-900 dark:text-white lg:text-5xl">
                         Latest News
                     </h2>
                 </div>
                 <a href="{{ route('news.index') }}"
-                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition">
+                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700 hover:text-crimson-800 dark:text-brand-300 dark:hover:text-brand-200 transition">
                     All News
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -741,7 +946,7 @@
                                         class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
                                     />
                                 @else
-                                    <div class="absolute inset-0 bg-gradient-to-br from-green-900 to-green-700">
+                                    <div class="absolute inset-0 bg-gradient-to-br from-green-900 to-crimson-800">
                                         <svg class="absolute inset-0 h-full w-full opacity-5" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gn" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#gn)"/></svg>
                                     </div>
                                 @endif
@@ -750,18 +955,18 @@
                                 {{-- Content --}}
                                 <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                                     <div class="mb-3 flex items-center gap-3">
-                                        <span class="inline-flex rounded-full bg-green-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                                        <span class="inline-flex rounded-full bg-crimson-700 px-2.5 py-0.5 text-xs font-semibold text-white">
                                             {{ ucwords(str_replace('-', ' ', $featured->category ?? 'News')) }}
                                         </span>
                                         <span class="text-xs text-white/60">{{ $featured->published_at?->format('d M Y') }}</span>
                                     </div>
-                                    <h3 class="font-serif text-xl font-bold leading-snug text-white sm:text-2xl group-hover:text-green-300 transition">
+                                    <h3 class="font-serif text-xl font-bold leading-snug text-white sm:text-2xl group-hover:text-brand-200 transition">
                                         {{ $featured->title }}
                                     </h3>
                                     @if($featured->excerpt)
                                         <p class="mt-2 line-clamp-2 text-sm text-white/70">{{ $featured->excerpt }}</p>
                                     @endif
-                                    <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-green-400 group-hover:text-green-300 transition">
+                                    <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-200 group-hover:text-brand-100 transition">
                                         Read Full Story
                                         <svg class="h-3.5 w-3.5 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                                     </span>
@@ -790,10 +995,10 @@
                                     {{-- Body --}}
                                     <a href="{{ route('news.show', $article->slug) }}" class="flex flex-1 flex-col justify-center p-4">
                                         <span class="text-xs text-zinc-400">{{ $article->published_at?->format('d M Y') }}</span>
-                                        <h3 class="mt-1 line-clamp-2 text-sm font-semibold leading-snug text-zinc-900 transition group-hover:text-green-700 dark:text-white dark:group-hover:text-green-400">
+                                        <h3 class="mt-1 line-clamp-2 text-sm font-semibold leading-snug text-zinc-900 transition group-hover:text-crimson-700 dark:text-white dark:group-hover:text-brand-300">
                                             {{ $article->title }}
                                         </h3>
-                                        <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-green-700 dark:text-green-400 group-hover:underline">
+                                        <span class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-crimson-700 dark:text-brand-300 group-hover:underline">
                                             Read More <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                         </span>
                                     </a>
@@ -818,15 +1023,15 @@
                                 @endif
                                 <div class="flex flex-1 flex-col p-6">
                                     <div class="mb-3 flex items-center gap-2">
-                                        <span class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/50 dark:text-green-400">{{ ucwords(str_replace('-', ' ', $article->category ?? 'News')) }}</span>
+                                        <span class="inline-flex rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-semibold text-brand-700 dark:bg-brand-900/50 dark:text-brand-300">{{ ucwords(str_replace('-', ' ', $article->category ?? 'News')) }}</span>
                                         <span class="text-xs text-zinc-400">{{ $article->published_at?->format('d M Y') }}</span>
                                     </div>
-                                    <h3 class="line-clamp-2 font-semibold leading-snug text-zinc-900 transition group-hover:text-green-700 dark:text-white dark:group-hover:text-green-400">{{ $article->title }}</h3>
+                                    <h3 class="line-clamp-2 font-semibold leading-snug text-zinc-900 transition group-hover:text-crimson-700 dark:text-white dark:group-hover:text-brand-300">{{ $article->title }}</h3>
                                     @if($article->excerpt)
                                         <p class="mt-2.5 line-clamp-3 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">{{ $article->excerpt }}</p>
                                     @endif
                                     <div class="mt-auto pt-5">
-                                        <a href="{{ route('news.show', $article->slug) }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-800 dark:text-green-400 transition">
+                                        <a href="{{ route('news.show', $article->slug) }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700 hover:text-crimson-800 dark:text-brand-300 transition">
                                             Read More <svg class="h-3.5 w-3.5 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                                         </a>
                                     </div>
@@ -858,7 +1063,7 @@
 
                 {{-- Left: headline + benefits + CTAs --}}
                 <div>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-green-400">Join NiKCCIMA</span>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-brand-300">Join NiKCCIMA</span>
                     <h2 class="font-['Playfair_Display',serif] font-serif mt-3 text-4xl font-bold leading-tight text-white lg:text-5xl">
                         {{ $page?->section('cta_heading', 'Ready to Join NiKCCIMA?') }}
                     </h2>
@@ -875,7 +1080,7 @@
                             'Visibility across both countries, flagship events, and corridor trade missions',
                         ] as $benefit)
                             <li class="flex items-start gap-3">
-                                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-700">
+                                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-crimson-700">
                                     <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                                     </svg>
@@ -888,7 +1093,7 @@
                     {{-- CTA buttons --}}
                     <div class="mt-10 flex flex-wrap gap-4">
                         <a href="{{ route('membership.apply') }}"
-                            class="inline-flex items-center gap-2 rounded-xl bg-green-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900">
+                            class="inline-flex items-center gap-2 rounded-xl bg-crimson-700 px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-crimson-800 focus:outline-none focus:ring-2 focus:ring-crimson-500 focus:ring-offset-2 focus:ring-offset-zinc-900">
                             Apply for Membership
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -947,7 +1152,7 @@
                     <div class="col-span-2 rounded-xl border border-zinc-700 bg-zinc-800/50 px-4 py-3">
                         <p class="text-xs leading-relaxed text-zinc-500">
                             Annual membership fees. Both NGN and KES pricing available. Contact the Secretariat for corporate and consortium rates.
-                            <a href="{{ route('contact') }}" class="ml-1 font-medium text-green-500 hover:text-green-400">Get in touch &rarr;</a>
+                            <a href="{{ route('contact') }}" class="ml-1 font-medium text-brand-300 hover:text-brand-200">Get in touch &rarr;</a>
                         </p>
                     </div>
                 </div>
@@ -963,50 +1168,41 @@
          CMS-MANAGED SECTIONS — Admin → CMS → Pages → "Homepage"
          cta_background_image : Full-bleed background (upload 1920×500)
          ========================================================= --}}
-    <section
-        class="relative overflow-hidden py-24 text-white"
-        @if($page?->section('cta_background_image'))
-            style="background-image: url('{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('cta_background_image')) }}'); background-size: cover; background-position: center;"
-        @endif
-    >
-        {{-- Overlay --}}
-        @if($page?->section('cta_background_image'))
-            <div class="absolute inset-0 bg-green-950/85"></div>
-        @else
-            <div class="absolute inset-0 bg-gradient-to-r from-green-950 via-green-900 to-green-800"></div>
-            {{-- Subtle mesh pattern --}}
-            <svg class="absolute inset-0 h-full w-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+    <section class="relative overflow-hidden bg-brand-200 py-24">
+        {{-- Subtle dot pattern on celadon --}}
+        <div class="absolute inset-0 opacity-[0.08]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
                 <defs>
-                    <pattern id="ctamesh" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <path d="M0 20h40M20 0v40" stroke="white" stroke-width="1" fill="none"/>
+                    <pattern id="ctadots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1" fill="#1c6123"/>
                     </pattern>
                 </defs>
-                <rect width="100%" height="100%" fill="url(#ctamesh)"/>
+                <rect width="100%" height="100%" fill="url(#ctadots)"/>
             </svg>
-        @endif
+        </div>
 
         {{-- Decorative blobs --}}
-        <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-white/5 blur-3xl"></div>
-        <div class="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-green-600/10 blur-3xl"></div>
+        <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-brand-300/30 blur-3xl"></div>
+        <div class="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-crimson-700/10 blur-3xl"></div>
 
         <div class="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-            <span class="mb-4 inline-block rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Join the Chamber</span>
-            <h2 class="font-['Playfair_Display',serif] font-serif text-4xl font-bold text-white lg:text-5xl">
-                Ready to Drive AfCFTA Trade?
+            <span class="mb-4 inline-block rounded-full bg-crimson-700 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Join the Chamber</span>
+            <h2 class="font-['Playfair_Display',serif] font-serif text-4xl font-bold text-brand-950 lg:text-5xl">
+                Ready to Grow Your Business Across the Corridor?
             </h2>
-            <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-green-200">
-                Become a NiKCCIMA member and gain structured access to the Nigeria-Kenya bilateral trade corridor — B2B pipelines, policy advocacy, and flagship events.
+            <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-brand-900">
+                Join NiKCCIMA and access Africa's most structured bilateral trade network — B2B pipelines, policy advocacy, and flagship events connecting Nigeria and Kenya.
             </p>
             <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
                 <a href="{{ route('membership.apply') }}"
-                    class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-sm font-semibold text-green-900 shadow-lg transition hover:bg-green-50 hover:shadow-xl">
+                    class="inline-flex items-center gap-2 rounded-full bg-crimson-700 px-8 py-4 text-sm font-semibold text-white shadow-lg transition hover:bg-crimson-800 hover:shadow-xl">
                     Apply for Membership
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                     </svg>
                 </a>
                 <a href="{{ route('contact') }}"
-                    class="inline-flex items-center gap-2 rounded-xl border border-white/40 px-8 py-4 text-sm font-semibold text-white transition hover:bg-white/10 hover:border-white/60">
+                    class="inline-flex items-center gap-2 rounded-full border border-brand-700 px-8 py-4 text-sm font-semibold text-brand-900 transition hover:bg-brand-300/50">
                     Contact the Secretariat
                 </a>
             </div>

@@ -24,6 +24,32 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
+    /* Brand — Celadon Green (#A8DCAB) */
+    --color-brand-50:  #f0faf1;
+    --color-brand-100: #ddf4df;
+    --color-brand-200: #A8DCAB;
+    --color-brand-300: #79c97e;
+    --color-brand-400: #4db055;
+    --color-brand-500: #2e9437;
+    --color-brand-600: #237a2b;
+    --color-brand-700: #1c6123;
+    --color-brand-800: #164d1b;
+    --color-brand-900: #0f3512;
+    --color-brand-950: #081e0a;
+
+    /* Crimson — Red (#922529) */
+    --color-crimson-50:  #fdf2f2;
+    --color-crimson-100: #fce8e8;
+    --color-crimson-200: #f8c8c9;
+    --color-crimson-300: #f09394;
+    --color-crimson-400: #e55f61;
+    --color-crimson-500: #d63638;
+    --color-crimson-600: #b82729;
+    --color-crimson-700: #922529;
+    --color-crimson-800: #7a1e22;
+    --color-crimson-900: #651a1d;
+    --color-crimson-950: #3b0d0f;
+
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
     --color-accent-foreground: var(--color-white);
@@ -60,6 +86,34 @@ input:focus[data-flux-control],
 textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* ── Transparent navbar (at top of home page) ─────────────────────────────
+   !important needed: Tailwind v4 layer ordering can beat higher-specificity
+   selectors in some build configurations.
+   ──────────────────────────────────────────────────────────────────────── */
+.nav-at-top nav a,
+.nav-at-top nav .nav-link {
+    color: rgba(255, 255, 255, 0.88) !important;
+    background-color: transparent !important;
+}
+.nav-at-top nav a:hover,
+.nav-at-top nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: white !important;
+}
+.nav-at-top .logo-name {
+    color: white !important;
+}
+.nav-at-top .logo-subtitle {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+.nav-at-top .header-icon-btn {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+.nav-at-top .header-icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: white !important;
 }
 
 @layer utilities {

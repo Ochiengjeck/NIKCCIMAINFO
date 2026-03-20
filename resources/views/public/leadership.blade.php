@@ -2,7 +2,7 @@
 
     {{-- Hero --}}
     <section class="relative overflow-hidden py-24 text-white">
-        <div class="absolute inset-0 bg-gradient-to-br from-green-900 to-green-800">
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-900 to-brand-800">
             <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <pattern id="dp" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -13,9 +13,9 @@
             </svg>
         </div>
         <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <span class="mb-4 inline-flex rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Team</span>
+            <span class="mb-4 inline-flex rounded-full bg-crimson-700 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white">Team</span>
             <h1 class="font-serif text-4xl font-bold lg:text-6xl">Leadership</h1>
-            <p class="mt-4 max-w-2xl text-lg text-green-200">The governing council and executive leadership driving NiKCCIMA's bilateral mandate.</p>
+            <p class="mt-4 max-w-2xl text-lg text-brand-200">The governing council and executive leadership driving NiKCCIMA's bilateral mandate.</p>
         </div>
     </section>
 
@@ -48,7 +48,7 @@
                                     @if($profile->photoUrl())
                                         <img src="{{ $profile->photoUrl() }}"
                                              alt="{{ $profile->name }}"
-                                             class="mx-auto mb-4 h-24 w-24 rounded-full object-cover ring-4 ring-green-100 dark:ring-green-900">
+                                             class="mx-auto mb-4 h-24 w-24 rounded-full object-cover ring-4 ring-brand-100 dark:ring-brand-900">
                                     @else
                                         @php
                                             $nameParts = explode(' ', trim($profile->name));
@@ -57,14 +57,14 @@
                                                 $initials .= strtoupper(substr(end($nameParts), 0, 1));
                                             }
                                         @endphp
-                                        <div class="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-green-600 to-green-800 ring-4 ring-green-100 dark:ring-green-900">
+                                        <div class="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-800 ring-4 ring-brand-100 dark:ring-brand-900">
                                             <span class="text-2xl font-bold text-white">{{ $initials }}</span>
                                         </div>
                                     @endif
 
                                     {{-- Name & Position --}}
                                     <h3 class="font-semibold text-zinc-900 dark:text-white">{{ $profile->name }}</h3>
-                                    <p class="mb-3 text-sm text-green-700 dark:text-green-400">{{ $profile->position }}</p>
+                                    <p class="mb-3 text-sm text-brand-700 dark:text-brand-400">{{ $profile->position }}</p>
 
                                     {{-- Bio --}}
                                     @if($profile->bio)
@@ -74,7 +74,7 @@
                                     {{-- Email --}}
                                     @if($profile->email)
                                         <a href="mailto:{{ $profile->email }}"
-                                           class="mt-3 inline-block text-xs text-green-700 dark:text-green-400 hover:underline break-all">
+                                           class="mt-3 inline-block text-xs text-brand-700 dark:text-brand-400 hover:underline break-all">
                                             {{ $profile->email }}
                                         </a>
                                     @endif
