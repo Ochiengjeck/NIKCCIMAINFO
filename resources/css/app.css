@@ -88,32 +88,10 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
-/* ── Transparent navbar (at top of home page) ─────────────────────────────
-   !important needed: Tailwind v4 layer ordering can beat higher-specificity
-   selectors in some build configurations.
-   ──────────────────────────────────────────────────────────────────────── */
-.nav-at-top nav a,
-.nav-at-top nav .nav-link {
-    color: rgba(255, 255, 255, 0.88) !important;
-    background-color: transparent !important;
-}
-.nav-at-top nav a:hover,
-.nav-at-top nav .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    color: white !important;
-}
-.nav-at-top .logo-name {
-    color: white !important;
-}
-.nav-at-top .logo-subtitle {
-    color: rgba(255, 255, 255, 0.65) !important;
-}
-.nav-at-top .header-icon-btn {
-    color: rgba(255, 255, 255, 0.75) !important;
-}
-.nav-at-top .header-icon-btn:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    color: white !important;
+/* ── Site semantic color roles ─────────────────────────────────────────── */
+:root {
+    --site-primary: #922529;   /* red  — CTA buttons, active nav, key headings */
+    --site-accent:  #A8DCAB;   /* celadon — strips, badges, soft tints */
 }
 
 @layer utilities {

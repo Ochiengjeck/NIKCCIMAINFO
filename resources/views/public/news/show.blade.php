@@ -8,7 +8,7 @@
                  class="h-full w-full object-cover">
         </div>
     @else
-        <div class="relative h-64 bg-gradient-to-br from-brand-900 to-brand-800">
+        <div class="relative h-64 bg-gradient-to-br from-brand-900 to-[#7a1e22]">
             <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <pattern id="dp" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -21,53 +21,53 @@
     @endif
 
     {{-- Article Content --}}
-    <section class="py-16 bg-white dark:bg-zinc-950">
+    <section class="py-16 bg-white">
         <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
 
             {{-- Breadcrumb --}}
-            <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-400 dark:text-zinc-500">
+            <nav class="mb-8 flex items-center gap-2 text-sm text-zinc-400">
                 <a href="{{ route('news.index') }}"
-                   class="font-medium text-brand-700 dark:text-brand-400 hover:underline">News</a>
-                <svg class="h-4 w-4 shrink-0 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   class="font-medium text-[#922529] hover:underline">News</a>
+                <svg class="h-4 w-4 shrink-0 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-                <span class="truncate text-zinc-500 dark:text-zinc-400">{{ Str::limit($article->title, 60) }}</span>
+                <span class="truncate text-zinc-500">{{ Str::limit($article->title, 60) }}</span>
             </nav>
 
             {{-- Meta Row --}}
             <div class="mb-4 flex flex-wrap items-center gap-3">
-                <span class="inline-flex rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">
+                <span class="inline-flex rounded-full bg-[#A8DCAB]/20 px-3 py-1 text-xs font-medium text-[#922529]">
                     {{ ucwords(str_replace('-', ' ', $article->category)) }}
                 </span>
-                <span class="text-sm text-zinc-500 dark:text-zinc-400">
+                <span class="text-sm text-zinc-500">
                     {{ $article->published_at?->format('d M Y') }}
                 </span>
                 @if($article->author)
-                    <span class="text-sm text-zinc-500 dark:text-zinc-400">by {{ $article->author->name }}</span>
+                    <span class="text-sm text-zinc-500">by {{ $article->author->name }}</span>
                 @endif
             </div>
 
             {{-- Title --}}
-            <h1 class="mb-6 font-serif text-4xl font-bold text-zinc-900 dark:text-white lg:text-5xl">
+            <h1 class="mb-6 font-serif text-4xl font-bold text-zinc-900 lg:text-5xl">
                 {{ $article->title }}
             </h1>
 
             {{-- Excerpt --}}
             @if($article->excerpt)
-                <p class="mb-8 border-l-4 border-brand-300 pl-4 text-lg text-zinc-500 dark:text-zinc-400">
+                <p class="mb-8 border-l-4 border-[#A8DCAB]/30 pl-4 text-lg text-zinc-500">
                     {{ $article->excerpt }}
                 </p>
             @endif
 
             {{-- Body --}}
-            <div class="prose prose-zinc dark:prose-invert max-w-none">
+            <div class="prose prose-zinc max-w-none">
                 {!! $article->body !!}
             </div>
 
             {{-- Back Link --}}
-            <div class="mt-12 border-t border-zinc-200 dark:border-zinc-800 pt-8">
+            <div class="mt-12 border-t border-zinc-200 pt-8">
                 <a href="{{ route('news.index') }}"
-                   class="inline-flex items-center gap-2 text-sm font-medium text-brand-700 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 transition">
+                   class="inline-flex items-center gap-2 text-sm font-medium text-[#922529] hover:text-[#922529] transition">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
