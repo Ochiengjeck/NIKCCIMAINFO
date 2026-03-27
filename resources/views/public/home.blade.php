@@ -1,16 +1,18 @@
-<x-layouts::website :title="'NiKCCIMA — Driving Structured Trade Between Nigeria and Kenya'">
+<x-layouts::website :title="'NiKCCIMA — Driving Structured Trade Between Nigeria and Kenya'" :transparent-nav="true">
 
     {{-- =========================================================
          SECTION A — HERO CAROUSEL (3 slides, Alpine.js, 6s auto-rotate)
-         Full-viewport, opacity crossfade
-         CMS keys: hero_image, hero_title, hero_subtitle,
-                   hero2_title, hero2_subtitle,
-                   hero3_title, hero3_subtitle
+         Fixed viewport height, per-slide backgrounds, crimson→green gradient overlay
+         CMS keys per slide: hero_image/hero2_image/hero3_image (bg),
+                   hero_badge/hero2_badge/hero3_badge (pill label),
+                   hero_title/hero2_title/hero3_title,
+                   hero_subtitle/hero2_subtitle/hero3_subtitle,
+                   hero_cta_primary/secondary ... hero3_cta_primary/secondary
          =========================================================
     --}}
     <section
         class="relative overflow-hidden"
-        style="min-height: calc(100vh - 80px);"
+        style="height: 100vh; overflow: hidden; margin-top: -120px;"
         x-data="{
             active: 0,
             total: 3,
@@ -30,99 +32,155 @@
         }"
         x-init="start()"
     >
-        {{-- Background --}}
-        @if($page?->section('hero_image'))
-            <div class="absolute inset-0"
-                 style="background-image: url('{{ asset($page->section('hero_image')) }}'); background-size: cover; background-position: center;">
-            </div>
-            <div class="absolute inset-0 bg-zinc-950/60"></div>
-        @else
-            <div class="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-[#3b0d0f]"></div>
-            {{-- Dot SVG pattern at 5% opacity --}}
-            <div class="absolute inset-0" style="opacity:0.05;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-                    <defs>
-                        <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                            <circle cx="2" cy="2" r="1" fill="#A8DCAB"/>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#dots)"/>
-                </svg>
-            </div>
-        @endif
+        {{-- Per-slide backgrounds — each fades in/out with the active slide --}}
 
-        {{-- Slides container — centered, single column --}}
-        <div
-            class="relative flex items-center justify-center"
-            style="min-height: calc(100vh - 80px);"
-        >
-            <div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8 py-20 text-center grid">
+        {{-- Slide 1 background --}}
+        <div class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+             :class="active === 0 ? 'opacity-100' : 'opacity-0'">
+            @if($page?->section('hero_image'))
+                <div class="absolute inset-0"
+                     style="background-image: url('{{ Storage::disk('public')->url($page->section('hero_image')) }}'); background-size: cover; background-position: center;"></div>
+            @else
+                <div class="absolute inset-0 bg-zinc-900"></div>
+                <div class="absolute inset-0" style="opacity:0.05;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                        <defs><pattern id="dots1" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1" fill="#A8DCAB"/>
+                        </pattern></defs>
+                        <rect width="100%" height="100%" fill="url(#dots1)"/>
+                    </svg>
+                </div>
+            @endif
+            <div class="absolute inset-0"
+                 style="background: linear-gradient(135deg, rgba(146,37,41,0.82), rgba(28,97,35,0.76));"></div>
+        </div>
+
+        {{-- Slide 2 background --}}
+        <div class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+             :class="active === 1 ? 'opacity-100' : 'opacity-0'">
+            @if($page?->section('hero2_image'))
+                <div class="absolute inset-0"
+                     style="background-image: url('{{ Storage::disk('public')->url($page->section('hero2_image')) }}'); background-size: cover; background-position: center;"></div>
+            @else
+                <div class="absolute inset-0 bg-zinc-900"></div>
+                <div class="absolute inset-0" style="opacity:0.05;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                        <defs><pattern id="dots2" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1" fill="#A8DCAB"/>
+                        </pattern></defs>
+                        <rect width="100%" height="100%" fill="url(#dots2)"/>
+                    </svg>
+                </div>
+            @endif
+            <div class="absolute inset-0"
+                 style="background: linear-gradient(135deg, rgba(146,37,41,0.82), rgba(28,97,35,0.76));"></div>
+        </div>
+
+        {{-- Slide 3 background --}}
+        <div class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+             :class="active === 2 ? 'opacity-100' : 'opacity-0'">
+            @if($page?->section('hero3_image'))
+                <div class="absolute inset-0"
+                     style="background-image: url('{{ Storage::disk('public')->url($page->section('hero3_image')) }}'); background-size: cover; background-position: center;"></div>
+            @else
+                <div class="absolute inset-0 bg-zinc-900"></div>
+                <div class="absolute inset-0" style="opacity:0.05;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                        <defs><pattern id="dots3" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1" fill="#A8DCAB"/>
+                        </pattern></defs>
+                        <rect width="100%" height="100%" fill="url(#dots3)"/>
+                    </svg>
+                </div>
+            @endif
+            <div class="absolute inset-0"
+                 style="background: linear-gradient(135deg, rgba(146,37,41,0.82), rgba(28,97,35,0.76));"></div>
+        </div>
+
+        {{-- Slides container — left-aligned, single column --}}
+        <div class="relative h-full flex items-center justify-start">
+            <div class="w-full max-w-7xl mx-auto px-4 sm:px-8 lg:pl-28 lg:pr-12 py-8 text-left grid">
 
                 {{-- SLIDE 1 —— Trade / AfCFTA --}}
                 <div style="grid-area: 1/1;"
-                     :class="active === 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
-                     class="transition-opacity duration-500 ease-in-out">
+                     :class="active === 0 ? 'opacity-100 translate-x-0 pointer-events-auto' : 'opacity-0 translate-x-8 pointer-events-none'"
+                     class="transition-all duration-700 ease-in-out flex flex-col">
+                    @if($page?->section('hero_badge'))
+                        <span class="inline-block text-xs font-bold uppercase tracking-widest text-brand-200 border border-brand-200/40 rounded-full px-4 py-1 mb-6">
+                            {{ $page->section('hero_badge') }}
+                        </span>
+                    @endif
                     <h2 class="text-5xl lg:text-6xl font-bold font-serif text-white leading-tight mb-6">
                         {!! $page?->section('hero_title', 'Driving <em class="not-italic text-brand-200">Structured Trade</em> Between Nigeria and Kenya') !!}
                     </h2>
-                    <div class="w-20 h-1.5 bg-brand-200 rounded-full mx-auto my-8"></div>
-                    <p class="text-white/80 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+                    <div class="w-20 h-1.5 bg-brand-200 rounded-full my-6"></div>
+                    <p class="text-white/80 text-lg max-w-2xl mb-8 leading-relaxed">
                         {{ $page?->section('hero_subtitle', 'NiKCCIMA is the premier bilateral trade chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable outcomes.') }}
                     </p>
-                    <div class="flex flex-wrap gap-4 justify-center">
+                    <div class="mt-auto pt-6 flex flex-wrap gap-4 justify-start">
                         <a href="{{ route('membership.apply') }}"
                            class="inline-block bg-brand-500 text-white px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
-                            Become a Member
+                            {{ $page?->section('hero_cta_primary', 'Become a Member') }}
                         </a>
                         <a href="{{ route('trade') }}"
                            class="inline-block border border-white/60 text-white px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
-                            Explore Trade
+                            {{ $page?->section('hero_cta_secondary', 'Explore Trade') }}
                         </a>
                     </div>
                 </div>
 
                 {{-- SLIDE 2 —— Membership --}}
                 <div style="grid-area: 1/1;"
-                     :class="active === 1 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
-                     class="transition-opacity duration-500 ease-in-out">
+                     :class="active === 1 ? 'opacity-100 translate-x-0 pointer-events-auto' : 'opacity-0 translate-x-8 pointer-events-none'"
+                     class="transition-all duration-700 ease-in-out flex flex-col">
+                    @if($page?->section('hero2_badge'))
+                        <span class="inline-block text-xs font-bold uppercase tracking-widest text-brand-200 border border-brand-200/40 rounded-full px-4 py-1 mb-6">
+                            {{ $page->section('hero2_badge') }}
+                        </span>
+                    @endif
                     <h2 class="text-5xl lg:text-6xl font-bold font-serif text-white leading-tight mb-6">
                         {!! $page?->section('hero2_title', 'Connecting <em class="not-italic text-brand-200">Africa\'s</em> Two Largest Economies') !!}
                     </h2>
-                    <div class="w-20 h-1.5 bg-brand-200 rounded-full mx-auto my-8"></div>
-                    <p class="text-white/80 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+                    <div class="w-20 h-1.5 bg-brand-200 rounded-full my-6"></div>
+                    <p class="text-white/80 text-lg max-w-2xl mb-8 leading-relaxed">
                         {{ $page?->section('hero2_subtitle', 'Join a structured bilateral chamber with members spanning trade, finance, agriculture, technology, and maritime sectors across Nigeria and Kenya.') }}
                     </p>
-                    <div class="flex flex-wrap gap-4 justify-center">
+                    <div class="mt-auto pt-6 flex flex-wrap gap-4 justify-start">
                         <a href="{{ route('membership') }}"
                            class="inline-block bg-brand-500 text-white px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
-                            View Membership
+                            {{ $page?->section('hero2_cta_primary', 'View Membership') }}
                         </a>
                         <a href="{{ route('membership.apply') }}"
                            class="inline-block border border-white/60 text-white px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
-                            Apply Now
+                            {{ $page?->section('hero2_cta_secondary', 'Apply Now') }}
                         </a>
                     </div>
                 </div>
 
                 {{-- SLIDE 3 —— Events --}}
                 <div style="grid-area: 1/1;"
-                     :class="active === 2 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
-                     class="transition-opacity duration-500 ease-in-out">
+                     :class="active === 2 ? 'opacity-100 translate-x-0 pointer-events-auto' : 'opacity-0 translate-x-8 pointer-events-none'"
+                     class="transition-all duration-700 ease-in-out flex flex-col">
+                    @if($page?->section('hero3_badge'))
+                        <span class="inline-block text-xs font-bold uppercase tracking-widest text-brand-200 border border-brand-200/40 rounded-full px-4 py-1 mb-6">
+                            {{ $page->section('hero3_badge') }}
+                        </span>
+                    @endif
                     <h2 class="text-5xl lg:text-6xl font-bold font-serif text-white leading-tight mb-6">
                         {!! $page?->section('hero3_title', 'Flagship <em class="not-italic text-brand-200">Summits.</em> Real Trade Outcomes.') !!}
                     </h2>
-                    <div class="w-20 h-1.5 bg-brand-200 rounded-full mx-auto my-8"></div>
-                    <p class="text-white/80 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+                    <div class="w-20 h-1.5 bg-brand-200 rounded-full my-6"></div>
+                    <p class="text-white/80 text-lg max-w-2xl mb-8 leading-relaxed">
                         {{ $page?->section('hero3_subtitle', "Attend NiKCCIMA's corridor activation summits, bilateral trade missions, and B2B matching events — where Nigeria meets Kenya in structured, high-value commerce.") }}
                     </p>
-                    <div class="flex flex-wrap gap-4 justify-center">
+                    <div class="mt-auto pt-6 flex flex-wrap gap-4 justify-start">
                         <a href="{{ route('events.index') }}"
                            class="inline-block bg-brand-500 text-white px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
-                            View Events
+                            {{ $page?->section('hero3_cta_primary', 'View Events') }}
                         </a>
                         <a href="{{ route('contact') }}"
                            class="inline-block border border-white/60 text-white px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
-                            Contact Us
+                            {{ $page?->section('hero3_cta_secondary', 'Contact Us') }}
                         </a>
                     </div>
                 </div>
@@ -418,7 +476,7 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-10">
                 <h4 class="text-2xl lg:text-3xl font-bold font-serif text-white text-center lg:text-left lg:w-1/2">
-                    High priority trade and investment <em class="not-italic text-brand-200">opportunities</em> between Nigeria and Kenya
+                    {!! $page?->section('cta_heading', 'High priority trade and investment <em class="not-italic text-brand-200">opportunities</em> between Nigeria and Kenya') !!}
                 </h4>
                 <div class="flex flex-wrap gap-4 justify-center">
                     <a href="{{ route('trade') }}"
@@ -432,8 +490,7 @@
                 </div>
             </div>
             <p class="text-center text-white/80 mt-10 text-lg">
-                We are open for membership. Kindly apply
-                <a href="{{ route('membership.apply') }}" class="text-brand-200 underline hover:text-white transition-colors">here</a>.
+                {!! $page?->section('cta_body', 'We are open for membership. Kindly apply <a href="' . route('membership.apply') . '" class="text-brand-200 underline hover:text-white transition-colors">here</a>.') !!}
             </p>
         </div>
     </section>
@@ -454,9 +511,11 @@
 
                 {{-- Left: Who We Are --}}
                 <div class="lg:col-span-2">
-                    <h4 class="text-2xl font-bold font-serif text-zinc-900 mb-6 leading-snug">Who We Are</h4>
+                    <h4 class="text-2xl font-bold font-serif text-zinc-900 mb-6 leading-snug">
+                        {{ $page?->section('about_heading', 'Who We Are') }}
+                    </h4>
                     <p class="text-[15px] leading-[26px] text-zinc-600 mb-8">
-                        {{ $page?->section('hero_subtitle', 'NiKCCIMA is the premier bilateral chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable trade outcomes.') }}
+                        {!! $page?->section('about_body', 'NiKCCIMA is the premier bilateral chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable trade outcomes.') !!}
                     </p>
                     <a href="{{ route('about') }}"
                        class="inline-block bg-brand-500 text-white px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">

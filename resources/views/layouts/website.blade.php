@@ -1,3 +1,4 @@
+@props(['title' => null, 'metaDescription' => null, 'transparentNav' => false])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -26,19 +27,22 @@
         <header
             x-data="{
                 hidden: false,
-                atTop: true,
+                atTop: {{ $transparentNav ? 'true' : 'false' }},
                 lastY: 0,
                 mobileOpen: false,
                 onScroll() {
                     const y = window.scrollY;
-                    this.atTop = y < 50;
+                    this.atTop = {{ $transparentNav ? 'y < 50' : 'false' }};
                     this.hidden = y > 100 && y > this.lastY;
                     this.lastY = y;
                 }
             }"
             @scroll.window="onScroll()"
-            :class="[hidden ? '-translate-y-full' : 'translate-y-0', atTop ? '' : 'border-b border-crimson-700/20 shadow-sm']"
-            class="sticky top-0 z-50 bg-white/95 backdrop-blur-md transition-all duration-300 ease-in-out">
+            :class="[
+                hidden ? '-translate-y-full' : 'translate-y-0',
+                atTop ? 'bg-transparent is-hero-top' : 'bg-white/95 backdrop-blur-md border-b border-crimson-700/20 shadow-sm'
+            ]"
+            class="sticky top-0 z-50 transition-all duration-300 ease-in-out">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
 
                 {{-- Logo --}}
@@ -58,7 +62,7 @@
                 </a>
 
                 {{-- -------- Desktop Navigation -------- --}}
-                <nav class="hidden items-center gap-0.5 xl:flex" aria-label="Main navigation">
+                <nav class="desktop-nav hidden items-center gap-0.5 xl:flex" aria-label="Main navigation">
 
                     {{-- Home --}}
                     <a href="{{ route('home') }}"

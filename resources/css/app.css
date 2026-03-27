@@ -81,6 +81,46 @@ select:focus[data-flux-control] {
 }
 
 
+/* ============================================================
+   Transparent hero-top navbar
+   Applied via Alpine when atTop=true on pages with transparentNav
+   ============================================================ */
+header.is-hero-top .logo-name  { color: white; }
+header.is-hero-top .logo-subtitle { color: rgba(255, 255, 255, 0.7); }
+
+/* Desktop nav: top-level <a> links */
+header.is-hero-top .desktop-nav > a {
+    color: rgba(255, 255, 255, 0.9);
+}
+header.is-hero-top .desktop-nav > a:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: white;
+}
+
+/* Active page link gets a solid green pill on transparent header */
+header.is-hero-top .desktop-nav > a.bg-brand-50,
+header.is-hero-top .desktop-nav > div > button.bg-brand-50 {
+    background-color: #1c6123 !important;
+    color: white !important;
+}
+
+/* Desktop nav: dropdown toggle <button> elements */
+header.is-hero-top .desktop-nav > div > button {
+    color: rgba(255, 255, 255, 0.9);
+}
+header.is-hero-top .desktop-nav > div > button:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: white;
+}
+
+/* Mobile menu toggle */
+header.is-hero-top .header-icon-btn {
+    color: rgba(255, 255, 255, 0.9);
+}
+header.is-hero-top .header-icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
 @layer utilities {
     .shimmer {
         background: linear-gradient(
