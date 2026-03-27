@@ -6,7 +6,6 @@
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
-@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -55,13 +54,6 @@
     --color-accent-foreground: var(--color-white);
 }
 
-@layer theme {
-    .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
-    }
-}
 
 @layer base {
 
@@ -88,33 +80,6 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
-/* ── Transparent navbar (at top of home page) ─────────────────────────────
-   !important needed: Tailwind v4 layer ordering can beat higher-specificity
-   selectors in some build configurations.
-   ──────────────────────────────────────────────────────────────────────── */
-.nav-at-top nav a,
-.nav-at-top nav .nav-link {
-    color: rgba(255, 255, 255, 0.88) !important;
-    background-color: transparent !important;
-}
-.nav-at-top nav a:hover,
-.nav-at-top nav .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    color: white !important;
-}
-.nav-at-top .logo-name {
-    color: white !important;
-}
-.nav-at-top .logo-subtitle {
-    color: rgba(255, 255, 255, 0.65) !important;
-}
-.nav-at-top .header-icon-btn {
-    color: rgba(255, 255, 255, 0.75) !important;
-}
-.nav-at-top .header-icon-btn:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    color: white !important;
-}
 
 @layer utilities {
     .shimmer {
@@ -128,16 +93,6 @@ select:focus[data-flux-control] {
         animation: shimmer 2s infinite linear;
     }
 
-    .dark .shimmer {
-        background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.06) 50%,
-            transparent 100%
-        );
-        background-size: 200% 100%;
-        animation: shimmer 2s infinite linear;
-    }
 
     @keyframes shimmer {
         0% {

@@ -45,7 +45,7 @@
     </section>
 
     {{-- Form --}}
-    <section class="bg-zinc-50 py-16 dark:bg-zinc-950">
+    <section class="bg-zinc-50 py-16">
         <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <livewire:public.membership-apply />
         </div>

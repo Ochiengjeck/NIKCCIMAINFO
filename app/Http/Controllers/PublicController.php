@@ -33,8 +33,9 @@ class PublicController extends Controller
         ];
 
         $categories = MembershipCategory::where('is_active', true)->orderBy('sort_order')->get();
+        $leadership = LeadershipProfile::where('is_active', true)->orderBy('sort_order')->take(4)->get();
 
-        return view('public.home', compact('page', 'sectorsPage', 'latestNews', 'upcomingEvents', 'stats', 'categories'));
+        return view('public.home', compact('page', 'sectorsPage', 'latestNews', 'upcomingEvents', 'stats', 'categories', 'leadership'));
     }
 
     public function about(): View

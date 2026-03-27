@@ -10,9 +10,9 @@
 
     {{-- Intro --}}
     @if($page?->section('intro_body'))
-        <section class="border-b border-zinc-100 py-10 dark:border-zinc-800">
+        <section class="border-b border-zinc-100 py-10">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <p class="max-w-3xl text-zinc-600 dark:text-zinc-400">{{ $page->section('intro_body') }}</p>
+                <p class="max-w-3xl text-zinc-600">{{ $page->section('intro_body') }}</p>
             </div>
         </section>
     @endif
@@ -20,19 +20,19 @@
     {{-- ===================== TRADE MAP VISUAL ===================== --}}
     {{-- CMS: trade-investment → trade_map_image (upload 1200×600 corridor map) --}}
     @if($page?->section('trade_map_image'))
-        <section class="py-14 bg-zinc-50 dark:bg-zinc-900">
+        <section class="py-14 bg-zinc-50">
             <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-6">
-                    <span class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400">Corridor</span>
-                    <h2 class="mt-1 font-serif text-2xl font-bold text-zinc-900 dark:text-white">Nigeria–Kenya Trade Corridor</h2>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-brand-600">Corridor</span>
+                    <h2 class="mt-1 font-serif text-2xl font-bold text-zinc-900">Nigeria–Kenya Trade Corridor</h2>
                 </div>
                 <figure>
                     <img
                         src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($page->section('trade_map_image')) }}"
                         alt="Nigeria-Kenya Trade Corridor Map"
-                        class="w-full rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-700"
+                        class="w-full rounded-2xl shadow-xl border border-zinc-200"
                     />
-                    <figcaption class="mt-3 text-center text-xs text-zinc-400 dark:text-zinc-600">
+                    <figcaption class="mt-3 text-center text-xs text-zinc-400">
                         The AfCFTA bilateral trade corridor connecting Nigeria and Kenya
                     </figcaption>
                 </figure>

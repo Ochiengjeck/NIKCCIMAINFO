@@ -1,20 +1,5 @@
 <!DOCTYPE html>
-<html
-    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    x-data="{
-        darkMode: (localStorage.getItem('nk-theme') === 'dark') || (localStorage.getItem('nk-theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches),
-        mobileOpen: false,
-        init() {
-            this.$watch('darkMode', val => {
-                localStorage.setItem('nk-theme', val ? 'dark' : 'light');
-                document.documentElement.classList.toggle('dark', val);
-            });
-            document.documentElement.classList.toggle('dark', this.darkMode);
-        }
-    }"
-    :class="{ 'dark': darkMode }"
-    style="font-size: 75%"
->
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -35,22 +20,25 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
-    <body class="min-h-screen bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-200">
+    <body class="min-h-screen bg-white text-zinc-900 antialiased">
 
         {{-- ===================== STICKY HEADER ===================== --}}
         <header
             x-data="{
                 hidden: false,
+                atTop: true,
                 lastY: 0,
+                mobileOpen: false,
                 onScroll() {
                     const y = window.scrollY;
+                    this.atTop = y < 50;
                     this.hidden = y > 100 && y > this.lastY;
                     this.lastY = y;
                 }
             }"
             @scroll.window="onScroll()"
-            :class="hidden ? '-translate-y-full' : 'translate-y-0'"
-            class="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/95 backdrop-blur-md shadow-sm dark:border-zinc-800/80 dark:bg-zinc-950/95 transition-all duration-300 ease-in-out">
+            :class="[hidden ? '-translate-y-full' : 'translate-y-0', atTop ? '' : 'border-b border-crimson-700/20 shadow-sm']"
+            class="sticky top-0 z-50 bg-white/95 backdrop-blur-md transition-all duration-300 ease-in-out">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
 
                 {{-- Logo --}}
@@ -63,8 +51,8 @@
                             <span class="text-lg font-bold font-serif tracking-tight">NK</span>
                         </div>
                         <div class="hidden sm:block">
-                            <span class="logo-name block text-lg font-bold tracking-wide text-zinc-900 dark:text-zinc-50 font-serif transition-colors duration-300">NiKCCIMA</span>
-                            <span class="logo-subtitle block text-sm text-zinc-500 dark:text-zinc-400 transition-colors duration-300">Nigeria-Kenya Chamber</span>
+                            <span class="logo-name block text-lg font-bold tracking-wide text-zinc-900 font-serif transition-colors duration-300">NiKCCIMA</span>
+                            <span class="logo-subtitle block text-sm text-zinc-500 transition-colors duration-300">Nigeria-Kenya Chamber</span>
                         </div>
                     @endif
                 </a>
@@ -75,14 +63,14 @@
                     {{-- Home --}}
                     <a href="{{ route('home') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('home') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                              {{ request()->routeIs('home') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                         Home
                     </a>
 
                     {{-- About --}}
                     <a href="{{ route('about') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('about') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                              {{ request()->routeIs('about') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                         About
                     </a>
 
@@ -95,7 +83,7 @@
                         <button @click="open = !open"
                                 :aria-expanded="open"
                                 class="nav-link inline-flex items-center gap-1 rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                                       {{ request()->routeIs('pillars*', 'trade', 'policy') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                                       {{ request()->routeIs('pillars*', 'trade', 'policy') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                             What We Do
                             <svg class="h-3.5 w-3.5 transition-transform duration-150" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -108,12 +96,12 @@
                              x-transition:leave="transition ease-in duration-100"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 top-full mt-1 w-56 rounded-xl border border-zinc-200 bg-white py-2 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+                             class="absolute left-0 top-full mt-1 w-56 rounded-xl border border-zinc-200 bg-white py-2 shadow-xl"
                              role="menu">
                             <a href="{{ route('pillars') }}"
-                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors {{ request()->routeIs('pillars*') ? 'text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/40' : '' }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('pillars*') ? 'text-brand-700 bg-brand-50' : '' }}"
                                role="menuitem">
-                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300 shrink-0">
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100 text-brand-700 shrink-0">
                                     {{-- Columns / pillars icon --}}
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
@@ -121,13 +109,13 @@
                                 </span>
                                 <span>
                                     <span class="block font-medium">Our Pillars</span>
-                                    <span class="block text-xs text-zinc-400 dark:text-zinc-500">Five strategic corridors</span>
+                                    <span class="block text-xs text-zinc-400">Five strategic corridors</span>
                                 </span>
                             </a>
                             <a href="{{ route('trade') }}"
-                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors {{ request()->routeIs('trade') ? 'text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/40' : '' }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('trade') ? 'text-brand-700 bg-brand-50' : '' }}"
                                role="menuitem">
-                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300 shrink-0">
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100 text-brand-700 shrink-0">
                                     {{-- Chart / trade icon --}}
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
@@ -135,13 +123,13 @@
                                 </span>
                                 <span>
                                     <span class="block font-medium">Trade & Investment</span>
-                                    <span class="block text-xs text-zinc-400 dark:text-zinc-500">AfCFTA corridor data</span>
+                                    <span class="block text-xs text-zinc-400">AfCFTA corridor data</span>
                                 </span>
                             </a>
                             <a href="{{ route('policy') }}"
-                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors {{ request()->routeIs('policy') ? 'text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/40' : '' }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('policy') ? 'text-brand-700 bg-brand-50' : '' }}"
                                role="menuitem">
-                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400 shrink-0">
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 shrink-0">
                                     {{-- Document / policy icon --}}
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -149,7 +137,7 @@
                                 </span>
                                 <span>
                                     <span class="block font-medium">Policy & Research</span>
-                                    <span class="block text-xs text-zinc-400 dark:text-zinc-500">Publications & briefs</span>
+                                    <span class="block text-xs text-zinc-400">Publications & briefs</span>
                                 </span>
                             </a>
                         </div>
@@ -158,14 +146,14 @@
                     {{-- Membership --}}
                     <a href="{{ route('membership') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                              {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                         Membership
                     </a>
 
                     {{-- Events --}}
                     <a href="{{ route('events.index') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('events*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                              {{ request()->routeIs('events*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                         Events
                     </a>
 
@@ -178,7 +166,7 @@
                         <button @click="open = !open"
                                 :aria-expanded="open"
                                 class="nav-link inline-flex items-center gap-1 rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                                       {{ request()->routeIs('chapters*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                                       {{ request()->routeIs('chapters*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                             Chapters
                             <svg class="h-3.5 w-3.5 transition-transform duration-150" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -191,16 +179,16 @@
                              x-transition:leave="transition ease-in duration-100"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 top-full mt-1 w-48 rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+                             class="absolute left-0 top-full mt-1 w-48 rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl"
                              role="menu">
                             <a href="{{ route('chapters.nigeria') }}"
-                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors {{ request()->routeIs('chapters.nigeria') ? 'text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/40' : '' }}"
+                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('chapters.nigeria') ? 'text-brand-700 bg-brand-50' : '' }}"
                                role="menuitem">
                                 <span class="text-base leading-none">&#127475;&#127468;</span>
                                 <span class="font-medium">Nigeria Chapter</span>
                             </a>
                             <a href="{{ route('chapters.kenya') }}"
-                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors {{ request()->routeIs('chapters.kenya') ? 'text-crimson-700 dark:text-crimson-300 bg-crimson-50 dark:bg-crimson-950/40' : '' }}"
+                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('chapters.kenya') ? 'text-crimson-700 bg-crimson-50' : '' }}"
                                role="menuitem">
                                 <span class="text-base leading-none">&#127472;&#127466;</span>
                                 <span class="font-medium">Kenya Chapter</span>
@@ -211,14 +199,14 @@
                     {{-- News --}}
                     <a href="{{ route('news.index') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('news*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                              {{ request()->routeIs('news*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                         News
                     </a>
 
                     {{-- Contact --}}
                     <a href="{{ route('contact') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('contact') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100' }}">
+                              {{ request()->routeIs('contact') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
                         Contact
                     </a>
                 </nav>
@@ -226,21 +214,11 @@
                 {{-- -------- Right-side controls -------- --}}
                 <div class="flex items-center gap-2">
 
-                    {{-- Dark mode toggle --}}
-                    <button @click="darkMode = !darkMode"
-                            :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
-                            class="header-icon-btn rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 transition-colors">
-                        {{-- Sun icon (shown in dark mode) --}}
-                        <svg x-show="darkMode" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 100 10A5 5 0 0012 7z"/>
-                        </svg>
-                        {{-- Moon icon (shown in light mode) --}}
-                        <svg x-show="!darkMode" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                        </svg>
-                    </button>
+                    {{-- Apply Now CTA --}}
+                    <a href="{{ route('membership.apply') }}"
+                       class="hidden rounded-full bg-crimson-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-crimson-800 transition-colors lg:inline-block">
+                        Apply Now
+                    </a>
 
                     {{-- Member Login / Dashboard button --}}
                     @auth
@@ -259,7 +237,7 @@
                     <button @click="mobileOpen = !mobileOpen"
                             :aria-expanded="mobileOpen"
                             aria-label="Toggle menu"
-                            class="header-icon-btn rounded-lg p-2 text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors xl:hidden">
+                            class="header-icon-btn rounded-lg p-2 text-zinc-600 hover:bg-zinc-50 transition-colors xl:hidden">
                         <svg x-show="!mobileOpen" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
@@ -278,40 +256,40 @@
                  x-transition:leave="transition ease-in duration-150"
                  x-transition:leave-start="opacity-100 translate-y-0"
                  x-transition:leave-end="opacity-0 -translate-y-2"
-                 class="border-t border-zinc-100 bg-white px-4 pb-4 pt-2 dark:border-zinc-800 dark:bg-zinc-950 xl:hidden"
+                 class="border-t border-zinc-100 bg-white px-4 pb-4 pt-2 xl:hidden"
                  @click.outside="mobileOpen = false">
                 <nav class="flex flex-col gap-0.5" aria-label="Mobile navigation">
 
                     {{-- Main links --}}
                     <a href="{{ route('home') }}"
-                       class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                       class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                         Home
                     </a>
                     <a href="{{ route('about') }}"
-                       class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('about') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                       class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('about') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                         About
                     </a>
 
                     {{-- What We Do section --}}
-                    <div class="border-t border-zinc-100 dark:border-zinc-800 my-1 pt-1">
-                        <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">What We Do</p>
+                    <div class="border-t border-zinc-100 my-1 pt-1">
+                        <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">What We Do</p>
                         <a href="{{ route('pillars') }}"
-                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('pillars*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
-                            <svg class="h-4 w-4 shrink-0 text-brand-600 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('pillars*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            <svg class="h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
                             </svg>
                             Our Pillars
                         </a>
                         <a href="{{ route('trade') }}"
-                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('trade') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
-                            <svg class="h-4 w-4 shrink-0 text-brand-600 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('trade') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            <svg class="h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                             </svg>
                             Trade & Investment
                         </a>
                         <a href="{{ route('policy') }}"
-                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('policy') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
-                            <svg class="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('policy') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            <svg class="h-4 w-4 shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
                             Policy & Research
@@ -319,44 +297,44 @@
                     </div>
 
                     {{-- Membership & Events --}}
-                    <div class="border-t border-zinc-100 dark:border-zinc-800 my-1 pt-1">
+                    <div class="border-t border-zinc-100 my-1 pt-1">
                         <a href="{{ route('membership') }}"
-                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             Membership
                         </a>
                         <a href="{{ route('events.index') }}"
-                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('events*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('events*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             Events & Missions
                         </a>
                     </div>
 
                     {{-- Chapters section --}}
-                    <div class="border-t border-zinc-100 dark:border-zinc-800 my-1 pt-1">
-                        <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Chapters</p>
+                    <div class="border-t border-zinc-100 my-1 pt-1">
+                        <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">Chapters</p>
                         <a href="{{ route('chapters.nigeria') }}"
-                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.nigeria') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.nigeria') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             <span class="text-base leading-none">&#127475;&#127468;</span> Nigeria Chapter
                         </a>
                         <a href="{{ route('chapters.kenya') }}"
-                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.kenya') ? 'bg-crimson-50 text-crimson-700 dark:bg-crimson-950/40 dark:text-crimson-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.kenya') ? 'bg-crimson-50 text-crimson-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             <span class="text-base leading-none">&#127472;&#127466;</span> Kenya Chapter
                         </a>
                     </div>
 
                     {{-- News & Contact --}}
-                    <div class="border-t border-zinc-100 dark:border-zinc-800 my-1 pt-1">
+                    <div class="border-t border-zinc-100 my-1 pt-1">
                         <a href="{{ route('news.index') }}"
-                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('news*') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('news*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             News
                         </a>
                         <a href="{{ route('contact') }}"
-                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('contact') ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300' : 'text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800' }}">
+                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('contact') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             Contact
                         </a>
                     </div>
 
                     {{-- CTA --}}
-                    <div class="border-t border-zinc-100 dark:border-zinc-800 my-1 pt-2">
+                    <div class="border-t border-zinc-100 my-1 pt-2">
                         @auth
                             <a href="{{ route('admin.dashboard') }}"
                                class="block rounded-full bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white text-center hover:bg-brand-800 transition-colors">
