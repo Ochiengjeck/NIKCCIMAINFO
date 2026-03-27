@@ -98,32 +98,27 @@
         </div>
 
         {{-- Slides container — left-aligned, single column --}}
-        <div class="relative h-full flex items-center justify-start">
-            <div class="w-full max-w-7xl mx-auto px-4 sm:px-8 lg:pl-28 lg:pr-12 py-8 text-left grid">
+        <div class="relative h-full flex items-start lg:items-center justify-start">
+            <div class="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:pl-28 lg:pr-12 pt-36 pb-12 lg:py-8 text-left grid">
 
                 {{-- SLIDE 1 —— Trade / AfCFTA --}}
                 <div style="grid-area: 1/1;"
                      :class="active === 0 ? 'opacity-100 translate-x-0 pointer-events-auto' : 'opacity-0 translate-x-8 pointer-events-none'"
                      class="transition-all duration-700 ease-in-out flex flex-col">
-                    @if($page?->section('hero_badge'))
-                        <span class="inline-block text-xs font-bold uppercase tracking-widest text-brand-200 border border-brand-200/40 rounded-full px-4 py-1 mb-6">
-                            {{ $page->section('hero_badge') }}
-                        </span>
-                    @endif
-                    <h2 class="text-5xl lg:text-6xl font-bold font-serif text-white leading-tight mb-6">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-serif text-white leading-tight mb-4 sm:mb-6">
                         {!! $page?->section('hero_title', 'Driving <em class="not-italic text-brand-200">Structured Trade</em> Between Nigeria and Kenya') !!}
                     </h2>
-                    <div class="w-20 h-1.5 bg-brand-200 rounded-full my-6"></div>
-                    <p class="text-white/80 text-lg max-w-2xl mb-8 leading-relaxed">
+                    <div class="w-16 h-1.5 bg-brand-200 rounded-full my-4 sm:my-6"></div>
+                    <p class="text-white/80 text-base sm:text-lg max-w-2xl mb-6 leading-relaxed">
                         {{ $page?->section('hero_subtitle', 'NiKCCIMA is the premier bilateral trade chamber operationalising the AfCFTA corridor between Nigeria and Kenya — with governance, structure, and measurable outcomes.') }}
                     </p>
-                    <div class="mt-auto pt-6 flex flex-wrap gap-4 justify-start">
+                    <div class="mt-auto pt-4 flex flex-wrap gap-3 sm:gap-4 justify-start">
                         <a href="{{ route('membership.apply') }}"
-                           class="inline-block bg-brand-500 text-white px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
+                           class="inline-block bg-brand-500 text-white px-6 sm:px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
                             {{ $page?->section('hero_cta_primary', 'Become a Member') }}
                         </a>
                         <a href="{{ route('trade') }}"
-                           class="inline-block border border-white/60 text-white px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
+                           class="inline-block border border-white/60 text-white px-6 sm:px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
                             {{ $page?->section('hero_cta_secondary', 'Explore Trade') }}
                         </a>
                     </div>
@@ -133,25 +128,20 @@
                 <div style="grid-area: 1/1;"
                      :class="active === 1 ? 'opacity-100 translate-x-0 pointer-events-auto' : 'opacity-0 translate-x-8 pointer-events-none'"
                      class="transition-all duration-700 ease-in-out flex flex-col">
-                    @if($page?->section('hero2_badge'))
-                        <span class="inline-block text-xs font-bold uppercase tracking-widest text-brand-200 border border-brand-200/40 rounded-full px-4 py-1 mb-6">
-                            {{ $page->section('hero2_badge') }}
-                        </span>
-                    @endif
-                    <h2 class="text-5xl lg:text-6xl font-bold font-serif text-white leading-tight mb-6">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-serif text-white leading-tight mb-4 sm:mb-6">
                         {!! $page?->section('hero2_title', 'Connecting <em class="not-italic text-brand-200">Africa\'s</em> Two Largest Economies') !!}
                     </h2>
-                    <div class="w-20 h-1.5 bg-brand-200 rounded-full my-6"></div>
-                    <p class="text-white/80 text-lg max-w-2xl mb-8 leading-relaxed">
+                    <div class="w-16 h-1.5 bg-brand-200 rounded-full my-4 sm:my-6"></div>
+                    <p class="text-white/80 text-base sm:text-lg max-w-2xl mb-6 leading-relaxed">
                         {{ $page?->section('hero2_subtitle', 'Join a structured bilateral chamber with members spanning trade, finance, agriculture, technology, and maritime sectors across Nigeria and Kenya.') }}
                     </p>
-                    <div class="mt-auto pt-6 flex flex-wrap gap-4 justify-start">
+                    <div class="mt-auto pt-4 flex flex-wrap gap-3 sm:gap-4 justify-start">
                         <a href="{{ route('membership') }}"
-                           class="inline-block bg-brand-500 text-white px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
+                           class="inline-block bg-brand-500 text-white px-6 sm:px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
                             {{ $page?->section('hero2_cta_primary', 'View Membership') }}
                         </a>
                         <a href="{{ route('membership.apply') }}"
-                           class="inline-block border border-white/60 text-white px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
+                           class="inline-block border border-white/60 text-white px-6 sm:px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
                             {{ $page?->section('hero2_cta_secondary', 'Apply Now') }}
                         </a>
                     </div>
@@ -161,25 +151,20 @@
                 <div style="grid-area: 1/1;"
                      :class="active === 2 ? 'opacity-100 translate-x-0 pointer-events-auto' : 'opacity-0 translate-x-8 pointer-events-none'"
                      class="transition-all duration-700 ease-in-out flex flex-col">
-                    @if($page?->section('hero3_badge'))
-                        <span class="inline-block text-xs font-bold uppercase tracking-widest text-brand-200 border border-brand-200/40 rounded-full px-4 py-1 mb-6">
-                            {{ $page->section('hero3_badge') }}
-                        </span>
-                    @endif
-                    <h2 class="text-5xl lg:text-6xl font-bold font-serif text-white leading-tight mb-6">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-serif text-white leading-tight mb-4 sm:mb-6">
                         {!! $page?->section('hero3_title', 'Flagship <em class="not-italic text-brand-200">Summits.</em> Real Trade Outcomes.') !!}
                     </h2>
-                    <div class="w-20 h-1.5 bg-brand-200 rounded-full my-6"></div>
-                    <p class="text-white/80 text-lg max-w-2xl mb-8 leading-relaxed">
+                    <div class="w-16 h-1.5 bg-brand-200 rounded-full my-4 sm:my-6"></div>
+                    <p class="text-white/80 text-base sm:text-lg max-w-2xl mb-6 leading-relaxed">
                         {{ $page?->section('hero3_subtitle', "Attend NiKCCIMA's corridor activation summits, bilateral trade missions, and B2B matching events — where Nigeria meets Kenya in structured, high-value commerce.") }}
                     </p>
-                    <div class="mt-auto pt-6 flex flex-wrap gap-4 justify-start">
+                    <div class="mt-auto pt-4 flex flex-wrap gap-3 sm:gap-4 justify-start">
                         <a href="{{ route('events.index') }}"
-                           class="inline-block bg-brand-500 text-white px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
+                           class="inline-block bg-brand-500 text-white px-6 sm:px-8 py-3 rounded text-sm font-medium hover:opacity-90 transition-all">
                             {{ $page?->section('hero3_cta_primary', 'View Events') }}
                         </a>
                         <a href="{{ route('contact') }}"
-                           class="inline-block border border-white/60 text-white px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
+                           class="inline-block border border-white/60 text-white px-6 sm:px-8 py-3 rounded text-sm font-medium hover:bg-white/10 transition-all">
                             {{ $page?->section('hero3_cta_secondary', 'Contact Us') }}
                         </a>
                     </div>
