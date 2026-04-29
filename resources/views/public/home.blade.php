@@ -99,7 +99,7 @@
 
         {{-- Slides container — left-aligned, single column --}}
         <div class="relative h-full flex items-start lg:items-center justify-start">
-            <div class="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:pl-28 lg:pr-12 pt-36 pb-12 lg:py-8 text-left grid">
+            <div class="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:pl-28 lg:pr-12 pt-44 pb-12 lg:pt-16 lg:pb-8 text-left grid">
 
                 {{-- SLIDE 1 —— Trade / AfCFTA --}}
                 <div style="grid-area: 1/1;"
