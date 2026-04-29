@@ -82,3 +82,6 @@ Shared validation rules in `app/Concerns/` — `PasswordValidationRules`, `Profi
 
 ## Code Style
 Laravel Pint with the `laravel` preset (`pint.json`). CI enforces this on push/PR.
+
+## Deployment
+Production target is **Spaceship Web Hosting Pro** (shared cPanel, MySQL, no persistent processes — queue runs as `sync`). Domain: `nikccima.org`. PHP 8.4 is required by `spatie/laravel-permission ^7.2`. The full first-time setup is in `docs/SPACESHIP_DEPLOYMENT.md`; subsequent deploys run `./deploy.sh` over SSH from `~/laravel-app/`. Use `.env.production.example` as the server `.env` template — `.env.example` stays as the local-dev (SQLite) template. The `Dockerfile`, `railway.toml`, and `DEPLOYMENT.md` remain for future Railway / VPS use and are not consulted on Spaceship.
