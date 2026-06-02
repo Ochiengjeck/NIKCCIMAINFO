@@ -104,14 +104,17 @@ If `pdo_mysql` is missing, open a support ticket — that is a hard blocker.
 
     ```bash
     php artisan migrate --force
-    php artisan db:seed --class=ChapterSeeder
-    php artisan db:seed --class=RolesAndPermissionsSeeder
+    php artisan db:seed --force
     php artisan storage:link
     php artisan admin:create
     php artisan config:cache
     php artisan route:cache
     php artisan view:cache
     ```
+
+    `db:seed --force` runs `DatabaseSeeder` which chains `ChapterSeeder`,
+    `RolesAndPermissionsSeeder`, and `CmsPagesSeeder` (the six default public
+    CMS pages).
 
 11. **Permissions.**
 
