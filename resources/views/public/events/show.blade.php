@@ -10,29 +10,68 @@
 
     {{-- ===================== HERO ===================== --}}
     @if($posterUrl)
-        {{-- Full-flyer hero: complete poster, never cropped, over a blurred backdrop --}}
-        <section class="relative isolate overflow-hidden bg-zinc-900">
+        {{-- Split hero: text on the left, full uncropped flyer on the right,
+             over the brand gradient blended with a blurred copy of the poster. --}}
+        <section class="relative isolate overflow-hidden text-white">
             <div class="absolute inset-0">
-                <img src="{{ $posterUrl }}" alt="" aria-hidden="true" class="h-full w-full scale-110 object-cover blur-2xl opacity-40">
-                <div class="absolute inset-0 bg-zinc-950/70"></div>
+                <img src="{{ $posterUrl }}" alt="" aria-hidden="true" class="h-full w-full scale-110 object-cover blur-2xl opacity-30">
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-950/95 via-zinc-950/90 to-brand-900/85"></div>
+                <svg class="absolute inset-0 h-full w-full opacity-10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <pattern id="dp-event-show" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1.5" fill="white"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#dp-event-show)"/>
+                </svg>
             </div>
 
-            <div class="relative mx-auto max-w-5xl px-4 pb-14 pt-28 sm:px-6 lg:px-8 lg:pt-32">
-                {{-- Breadcrumb --}}
-                <nav class="mb-6 flex items-center gap-2 text-sm text-zinc-300" aria-label="Breadcrumb">
-                    <a href="{{ route('events.index') }}" class="transition hover:text-white">Events</a>
-                    <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                    <span class="text-zinc-100">{{ Str::limit($event->title, 60) }}</span>
-                </nav>
+            <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+                <div class="grid items-center gap-10 lg:grid-cols-5">
 
-                {{-- The full flyer --}}
-                <a href="{{ $posterUrl }}" target="_blank" rel="noopener" class="group block">
-                    <img src="{{ $posterUrl }}" alt="{{ $event->title }}"
-                         class="mx-auto max-h-[85vh] w-auto rounded-xl shadow-2xl ring-1 ring-white/10 transition duration-300 group-hover:ring-white/30">
-                </a>
-                <p class="mt-4 text-center text-xs text-zinc-400">Click the poster to view full size</p>
+                    {{-- Left: text --}}
+                    <div class="lg:col-span-3">
+                        {{-- Breadcrumb --}}
+                        <nav class="mb-6 flex items-center gap-2 text-sm text-zinc-300" aria-label="Breadcrumb">
+                            <a href="{{ route('events.index') }}" class="transition hover:text-white">Events</a>
+                            <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                            <span class="text-zinc-100">{{ Str::limit($event->title, 60) }}</span>
+                        </nav>
+
+                        <span class="mb-4 inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold text-white {{ $isFlagship ? 'bg-crimson-600' : 'bg-brand-600' }}">
+                            {{ ucwords(str_replace('-', ' ', $event->type ?? 'Event')) }}
+                        </span>
+
+                        <h1 class="font-serif text-3xl font-bold leading-tight drop-shadow-sm sm:text-4xl lg:text-5xl">
+                            {{ $event->title }}
+                        </h1>
+
+                        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-zinc-200">
+                            <span class="inline-flex items-center gap-2">
+                                <svg class="h-4 w-4 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                {{ $event->starts_at->format('d M Y') }}@if($event->ends_at && !$event->starts_at->isSameDay($event->ends_at)) &ndash; {{ $event->ends_at->format('d M Y') }}@endif
+                            </span>
+                            @if($event->venue)
+                                <span class="inline-flex items-center gap-2">
+                                    <svg class="h-4 w-4 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    {{ $event->venue }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Right: the full flyer --}}
+                    <div class="lg:col-span-2">
+                        <a href="{{ $posterUrl }}" target="_blank" rel="noopener" class="group block">
+                            <img src="{{ $posterUrl }}" alt="{{ $event->title }}"
+                                 class="mx-auto max-h-[80vh] w-auto rounded-xl shadow-2xl ring-1 ring-white/10 transition duration-300 group-hover:ring-white/30">
+                        </a>
+                        <p class="mt-3 text-center text-xs text-zinc-400">Click to view full size</p>
+                    </div>
+
+                </div>
             </div>
         </section>
     @else
@@ -89,27 +128,6 @@
 
                 {{-- ---- Main Content ---- --}}
                 <div class="lg:col-span-2">
-                    {{-- In poster mode the hero is just the image, so surface a readable
-                         (indexable) title + meta here. --}}
-                    @if($posterUrl)
-                        <span class="mb-3 inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold text-white {{ $isFlagship ? 'bg-crimson-600' : 'bg-brand-600' }}">
-                            {{ ucwords(str_replace('-', ' ', $event->type ?? 'Event')) }}
-                        </span>
-                        <h1 class="mb-3 font-serif text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl">{{ $event->title }}</h1>
-                        <div class="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-zinc-500">
-                            <span class="inline-flex items-center gap-2">
-                                <svg class="h-4 w-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                {{ $event->starts_at->format('d M Y') }}@if($event->ends_at && !$event->starts_at->isSameDay($event->ends_at)) &ndash; {{ $event->ends_at->format('d M Y') }}@endif
-                            </span>
-                            @if($event->venue)
-                                <span class="inline-flex items-center gap-2">
-                                    <svg class="h-4 w-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                    {{ $event->venue }}
-                                </span>
-                            @endif
-                        </div>
-                    @endif
-
                     @if($event->description)
                         @php
                             $descHtml = \Illuminate\Support\Str::contains((string) $event->description, '<')
