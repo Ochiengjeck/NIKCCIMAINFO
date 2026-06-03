@@ -13,6 +13,7 @@ class Event extends Model
 
     protected $fillable = [
         'chapter_id', 'organizer_id', 'title', 'type', 'description',
+        'featured_image', 'gallery', 'brochure_path', 'brochure_name',
         'venue', 'starts_at', 'ends_at', 'max_capacity', 'status',
     ];
 
@@ -21,7 +22,17 @@ class Event extends Model
         return [
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
+            'gallery' => 'array',
         ];
+    }
+
+    /**
+     * Events visible on the public website — published, ongoing, or completed.
+     * Drafts and cancelled events are hidden.
+     */
+    public function scopePublic($query)
+    {
+        return $query->whereNotIn('status', ['draft', 'cancelled']);
     }
 
     public function chapter(): BelongsTo

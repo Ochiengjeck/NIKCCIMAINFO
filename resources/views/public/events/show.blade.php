@@ -48,6 +48,13 @@
 
                 {{-- ---- Main Content ---- --}}
                 <div class="lg:col-span-2">
+                    {{-- Poster / featured image --}}
+                    @if($event->featured_image)
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image) }}"
+                             alt="{{ $event->title }}"
+                             class="mb-8 w-full rounded-2xl border border-zinc-100 object-cover shadow-sm" />
+                    @endif
+
                     @if($event->description)
                         <h2 class="mb-4 font-serif text-2xl font-bold text-zinc-900">
                             About This Event
@@ -58,6 +65,24 @@
                     @else
                         <div class="flex h-40 items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50">
                             <p class="text-sm text-zinc-400">Event details coming soon.</p>
+                        </div>
+                    @endif
+
+                    {{-- Photo gallery --}}
+                    @if(!empty($event->gallery))
+                        <div class="mt-10 border-t border-zinc-100 pt-8">
+                            <h2 class="mb-5 font-serif text-2xl font-bold text-zinc-900">Gallery</h2>
+                            <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                                @foreach($event->gallery as $image)
+                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($image) }}"
+                                       target="_blank" rel="noopener"
+                                       class="group block overflow-hidden rounded-xl border border-zinc-100 shadow-sm">
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($image) }}"
+                                             alt="{{ $event->title }} photo"
+                                             class="aspect-[4/3] w-full object-cover transition duration-300 group-hover:scale-105" />
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
                     @endif
 
@@ -159,6 +184,20 @@
                                 </li>
                             @endif
                         </ul>
+
+                        {{-- Brochure download --}}
+                        @if($event->brochure_path)
+                            <div class="mt-6 border-t border-zinc-100 pt-5">
+                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->brochure_path) }}"
+                                   download="{{ $event->brochure_name ?? 'event-brochure.pdf' }}"
+                                   class="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-100">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                    </svg>
+                                    Download Brochure
+                                </a>
+                            </div>
+                        @endif
 
                         {{-- CTA --}}
                         <div class="mt-6 border-t border-zinc-100 pt-5">

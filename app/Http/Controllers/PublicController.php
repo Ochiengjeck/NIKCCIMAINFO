@@ -23,7 +23,7 @@ class PublicController extends Controller
         $page = CmsPage::where('slug', 'homepage')->first();
         $sectorsPage = CmsPage::where('slug', 'sectors')->first();
         $latestNews = NewsArticle::published()->latest('published_at')->take(3)->get();
-        $upcomingEvents = Event::where('starts_at', '>=', now())->orderBy('starts_at')->limit(3)->get();
+        $upcomingEvents = Event::public()->where('starts_at', '>=', now())->orderBy('starts_at')->limit(3)->get();
 
         $stats = [
             'members' => Member::where('status', 'active')->count(),
@@ -134,15 +134,15 @@ class PublicController extends Controller
     public function events(): View
     {
         $page = CmsPage::where('slug', 'events-missions')->first();
-        $upcoming = Event::where('starts_at', '>=', now())->orderBy('starts_at')->paginate(9);
-        $past = Event::where('starts_at', '<', now())->orderByDesc('starts_at')->limit(6)->get();
+        $upcoming = Event::public()->where('starts_at', '>=', now())->orderBy('starts_at')->paginate(9);
+        $past = Event::public()->where('starts_at', '<', now())->orderByDesc('starts_at')->limit(6)->get();
 
         return view('public.events.index', compact('page', 'upcoming', 'past'));
     }
 
     public function eventShow(int $id): View
     {
-        $event = Event::with('organizer')->findOrFail($id);
+        $event = Event::public()->with('organizer')->findOrFail($id);
 
         return view('public.events.show', compact('event'));
     }
@@ -155,7 +155,7 @@ class PublicController extends Controller
             ? LeadershipProfile::where('chapter_id', $chapter->id)->where('is_active', true)->orderBy('sort_order')->get()
             : collect();
         $events = $chapter
-            ? Event::where('chapter_id', $chapter->id)->where('starts_at', '>=', now())->orderBy('starts_at')->limit(3)->get()
+            ? Event::public()->where('chapter_id', $chapter->id)->where('starts_at', '>=', now())->orderBy('starts_at')->limit(3)->get()
             : collect();
 
         return view('public.chapters.nigeria', compact('page', 'chapter', 'profiles', 'events'));
@@ -169,7 +169,7 @@ class PublicController extends Controller
             ? LeadershipProfile::where('chapter_id', $chapter->id)->where('is_active', true)->orderBy('sort_order')->get()
             : collect();
         $events = $chapter
-            ? Event::where('chapter_id', $chapter->id)->where('starts_at', '>=', now())->orderBy('starts_at')->limit(3)->get()
+            ? Event::public()->where('chapter_id', $chapter->id)->where('starts_at', '>=', now())->orderBy('starts_at')->limit(3)->get()
             : collect();
 
         return view('public.chapters.kenya', compact('page', 'chapter', 'profiles', 'events'));

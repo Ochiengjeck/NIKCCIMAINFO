@@ -10,7 +10,7 @@ cd "$(dirname "$0")"
 
 git pull --ff-only
 
-composer install --no-dev --optimize-autoloader
+php composer.phar install --no-dev --optimize-autoloader
 npm ci
 npm run build
 

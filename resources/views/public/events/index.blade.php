@@ -55,6 +55,12 @@
 
                     @forelse($upcoming as $event)
                         <div class="flex items-start border-b border-zinc-200 py-4 gap-4 group hover:bg-zinc-50 transition-colors">
+                            @if($event->featured_image)
+                                <a href="{{ route('events.show', $event->id) }}" class="hidden sm:block flex-shrink-0">
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image) }}"
+                                         alt="" class="h-14 w-20 rounded-lg object-cover" />
+                                </a>
+                            @endif
                             <div class="flex-1">
                                 <a href="{{ route('events.show', $event->id) }}" class="font-semibold text-zinc-900 group-hover:text-crimson-700 transition-colors text-[15px]">{{ $event->title }}</a>
                                 @if($event->description)
@@ -107,6 +113,12 @@
 
                 @foreach($past as $event)
                     <div class="flex items-start border-b border-zinc-200 py-4 gap-4">
+                        @if($event->featured_image)
+                            <a href="{{ route('events.show', $event->id) }}" class="hidden sm:block flex-shrink-0">
+                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image) }}"
+                                     alt="" class="h-14 w-20 rounded-lg object-cover opacity-90" />
+                            </a>
+                        @endif
                         <div class="flex-1">
                             <a href="{{ route('events.show', $event->id) }}" class="font-semibold text-zinc-600 hover:text-zinc-800 transition-colors text-[15px]">{{ $event->title }}</a>
                             @if($event->description)

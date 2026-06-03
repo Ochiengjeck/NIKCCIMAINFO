@@ -32,7 +32,76 @@
             <flux:field><flux:label>Ends At</flux:label><flux:input type="datetime-local" wire:model="ends_at" /><flux:error name="ends_at" /></flux:field>
             <flux:field><flux:label>Venue</flux:label><flux:input wire:model="venue" /></flux:field>
             <flux:field><flux:label>Max Capacity</flux:label><flux:input type="number" wire:model="max_capacity" /></flux:field>
-            <flux:field class="sm:col-span-2"><flux:label>Description</flux:label><flux:textarea wire:model="description" rows="3" /></flux:field>
+            <flux:field class="sm:col-span-2"><flux:label>Description</flux:label><flux:textarea wire:model="description" rows="6" /></flux:field>
+
+            {{-- Poster / featured image --}}
+            <flux:field class="sm:col-span-2">
+                <flux:label>Poster / Featured Image</flux:label>
+                <flux:description>Shown on the public events list and event page.</flux:description>
+                <livewire:components.media-picker
+                    wire:model="featuredImageId"
+                    disk="public"
+                    type="image"
+                    folder="cms/events"
+                    accept="image/*"
+                    :key="'event-poster-' . ($editingId ?? 'new')"
+                />
+                <flux:error name="featuredImageId" />
+            </flux:field>
+
+            {{-- Photo gallery --}}
+            <flux:field class="sm:col-span-2">
+                <flux:label>Photo Gallery</flux:label>
+                <flux:description>Add images one at a time — they appear in a gallery on the event page.</flux:description>
+
+                @if($galleryIds)
+                    <div class="mb-3 grid grid-cols-3 gap-3 sm:grid-cols-5">
+                        @foreach($galleryIds as $gid)
+                            @php $gItem = \App\Models\MediaItem::find($gid); @endphp
+                            @if($gItem)
+                                <div class="group relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                                    <img src="{{ $gItem->url() }}" alt="{{ $gItem->alt_text }}" class="aspect-square w-full object-cover" />
+                                    <button type="button" wire:click="removeGalleryImage({{ $gid }})"
+                                        class="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-white opacity-0 transition group-hover:opacity-100"
+                                        title="Remove">
+                                        &times;
+                                    </button>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+
+                <div class="flex items-end gap-3">
+                    <div class="flex-1">
+                        <livewire:components.media-picker
+                            wire:model="galleryPickerId"
+                            disk="public"
+                            type="image"
+                            folder="cms/events"
+                            accept="image/*"
+                            :key="'event-gallery-' . ($editingId ?? 'new') . '-' . count($galleryIds)"
+                        />
+                    </div>
+                    <flux:button type="button" wire:click="addGalleryImage" icon="plus" size="sm">Add to gallery</flux:button>
+                </div>
+            </flux:field>
+
+            {{-- Brochure (PDF) --}}
+            <flux:field class="sm:col-span-2">
+                <flux:label>Brochure (PDF)</flux:label>
+                <flux:description>Offered as a download on the public event page.</flux:description>
+                <livewire:components.media-picker
+                    wire:model="brochureId"
+                    disk="public"
+                    type="document"
+                    folder="cms/events"
+                    accept="application/pdf"
+                    :key="'event-brochure-' . ($editingId ?? 'new')"
+                />
+                <flux:error name="brochureId" />
+            </flux:field>
+
             <div class="sm:col-span-2 flex gap-3"><flux:button type="submit" variant="primary">Save</flux:button><flux:button wire:click="cancel" variant="ghost">Cancel</flux:button></div>
         </form>
     </div>
@@ -52,7 +121,21 @@
             <tbody class="divide-y divide-zinc-200 bg-white dark:divide-zinc-700 dark:bg-zinc-900">
                 @forelse($events as $event)
                 <tr>
-                    <td class="px-4 py-3 font-medium text-zinc-900 dark:text-white">{{ $event->title }}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-3">
+                            @if($event->featured_image)
+                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image) }}"
+                                    class="h-9 w-9 flex-shrink-0 rounded-lg object-cover" alt="" />
+                            @else
+                                <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                                    <svg class="h-4 w-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                    </svg>
+                                </div>
+                            @endif
+                            <span class="font-medium text-zinc-900 dark:text-white">{{ $event->title }}</span>
+                        </div>
+                    </td>
                     <td class="px-4 py-3 text-sm text-zinc-500">{{ ucwords(str_replace('-',' ',$event->type)) }}</td>
                     <td class="px-4 py-3">
                         @php $sc = match($event->status) { 'published'=>'bg-green-100 text-green-800','ongoing'=>'bg-blue-100 text-blue-800','completed'=>'bg-zinc-100 text-zinc-600','cancelled'=>'bg-red-100 text-red-800',default=>'bg-yellow-100 text-yellow-800' }; @endphp

@@ -30,9 +30,11 @@ composer run-script dev
 ```
 
 ### Testing
+PHPUnit (not Pest), config in `phpunit.xml`; tests run against an in-memory SQLite DB.
 ```bash
-./vendor/bin/phpunit              # Run all tests
-./vendor/bin/phpunit --filter=TestName  # Run a single test
+php artisan test                        # Run all tests (preferred)
+php artisan test --filter=TestName      # Run a single test
+./vendor/bin/phpunit                    # Direct runner
 ```
 
 ### Code Quality
@@ -57,10 +59,12 @@ Handled by **Laravel Fortify** (`FortifyServiceProvider`). Auth views are regist
 **Livewire 4** components live in `app/Livewire/`. The **Flux** UI library (`livewire/flux`) provides pre-built components used throughout views.
 
 ### Routing
-- `routes/web.php` — main routes (home, dashboard) — includes `settings.php` and `admin.php`
+- `routes/web.php` — the public-facing website (home, about, pillars, trade, membership, events, news, leadership, downloads, contact), the authed `dashboard`, and the CSRF-exempt Flutterwave webhook. Requires `settings.php` and `admin.php`.
 - `routes/settings.php` — user settings sub-routes (profile, password, 2FA)
 - `routes/admin.php` — all backoffice routes, prefix `admin/`, middleware `[auth, verified, admin]`
 - Each module's routes are added to `routes/admin.php` grouped by prefix
+
+The app has two distinct surfaces: the **public website** (guest, no auth) served from `web.php`, and the **backoffice/admin panel** served from `admin.php`. Public Livewire components (`app/Livewire/Public/`) never call `$this->authorize()`.
 
 ### Frontend Stack
 Vite bundles `resources/css/app.css` (Tailwind 4) and `resources/js/app.js`. Layouts live in `resources/views/layouts/` — `app.blade.php` with sidebar/header partials for authenticated pages, `auth/` layouts for guest pages.
@@ -79,6 +83,21 @@ Admin panel uses `layouts/admin.blade.php` → `layouts/admin/sidebar.blade.php`
 
 ### Validation Traits
 Shared validation rules in `app/Concerns/` — `PasswordValidationRules`, `ProfileValidationRules`, `ChapterScoped` — used by Fortify actions and Livewire components.
+
+### Public Website & CMS
+Public pages are rendered through `PublicController` + the `layouts.website` layout (Blade `<x-layouts::website>`); a full-page Livewire component uses `->layout('layouts.website', [...])`. Content is editable via the admin CMS module (`app/Livewire/Cms/` — pages, news, leadership, media, contact). CMS/public models (`CmsPage`, `NewsArticle`, `LeadershipProfile`, `MediaItem`, `ContactInquiry`) deliberately do **not** use `ChapterScoped`.
+
+### Media Uploads
+All uploads flow through `MediaUploadController` (`POST /admin/media/upload`) via **direct XHR**, not Livewire `WithFileUploads`. Every upload becomes a `MediaItem` record (single source of truth); private files use `disk=local`, public files `disk=public`. Reuse the `<livewire:components.media-picker>` component (Upload + Library tabs) for any new file field — bind it with `wire:model` to an integer `*MediaItemId` property. The XHR layer requires the `<meta name="csrf-token">` tag in `partials/head.blade.php`.
+
+### Payments
+Flutterwave integration lives in `app/Services/FlutterwaveService.php`, with `FlutterwaveWebhookController` handling the CSRF-exempt callback (`POST /webhook/flutterwave`; exemption registered in `bootstrap/app.php`). Used for membership/invoice payments.
+
+### Documents, Exports & Audit
+- PDFs (e.g. membership certificates via `MembershipCertificateController`) are generated with **barryvdh/laravel-dompdf**.
+- Excel exports (reports) use **maatwebsite/excel**.
+- Model audit trails use **spatie/laravel-activitylog** via the `LogsActivity` trait on key models (`Member`, `MembershipApplication`, `Invoice`, `Ntb`, `Document`, `Deal`); surfaced through `app/Livewire/Audit/ActivityLog.php`.
+- KPI rollups are computed by `KpiCalculationService` and snapshotted by the `kpi:snapshot` command (`KpiSnapshotCommand`).
 
 ## Code Style
 Laravel Pint with the `laravel` preset (`pint.json`). CI enforces this on push/PR.
