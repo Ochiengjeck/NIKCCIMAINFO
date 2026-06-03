@@ -14,6 +14,7 @@ class Event extends Model
     protected $fillable = [
         'chapter_id', 'organizer_id', 'title', 'type', 'description',
         'featured_image', 'gallery', 'brochure_path', 'brochure_name',
+        'inquiry_channels',
         'venue', 'starts_at', 'ends_at', 'max_capacity', 'status',
     ];
 
@@ -23,6 +24,7 @@ class Event extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'gallery' => 'array',
+            'inquiry_channels' => 'array',
         ];
     }
 

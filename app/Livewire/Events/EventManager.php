@@ -48,6 +48,9 @@ class EventManager extends Component
     /** Transient "add one" gallery picker binding */
     public ?int $galleryPickerId = null;
 
+    /** Inquiry channels — list of ['type' => email|phone|whatsapp|url, 'value' => '...'] */
+    public array $inquiryChannels = [];
+
     protected function rules(): array
     {
         return [
@@ -65,6 +68,9 @@ class EventManager extends Component
             'galleryPickerId' => 'nullable|exists:media_items,id',
             'galleryIds' => 'array',
             'galleryIds.*' => 'exists:media_items,id',
+            'inquiryChannels' => 'array',
+            'inquiryChannels.*.type' => 'required|in:email,phone,whatsapp,url',
+            'inquiryChannels.*.value' => 'required|string|max:255',
         ];
     }
 
@@ -106,8 +112,20 @@ class EventManager extends Component
             ->pluck('id')
             ->all();
         $this->galleryPickerId = null;
+        $this->inquiryChannels = $e->inquiry_channels ?? [];
 
         $this->showForm = true;
+    }
+
+    public function addInquiryChannel(): void
+    {
+        $this->inquiryChannels[] = ['type' => 'email', 'value' => ''];
+    }
+
+    public function removeInquiryChannel(int $index): void
+    {
+        unset($this->inquiryChannels[$index]);
+        $this->inquiryChannels = array_values($this->inquiryChannels);
     }
 
     public function addGalleryImage(): void
@@ -159,8 +177,15 @@ class EventManager extends Component
             $data['brochure_name'] = null;
         }
 
+        // Normalise inquiry channels — drop blanks, trim values
+        $data['inquiry_channels'] = collect($this->inquiryChannels)
+            ->map(fn ($c) => ['type' => $c['type'] ?? '', 'value' => trim($c['value'] ?? '')])
+            ->filter(fn ($c) => $c['type'] !== '' && $c['value'] !== '')
+            ->values()
+            ->all();
+
         // Not real columns — strip the transient/picker-only validation keys
-        unset($data['featuredImageId'], $data['brochureId'], $data['galleryPickerId'], $data['galleryIds']);
+        unset($data['featuredImageId'], $data['brochureId'], $data['galleryPickerId'], $data['galleryIds'], $data['inquiryChannels']);
 
         if ($this->editingId) {
             Event::findOrFail($this->editingId)->update($data);
@@ -195,6 +220,7 @@ class EventManager extends Component
         $this->brochureId = null;
         $this->galleryIds = [];
         $this->galleryPickerId = null;
+        $this->inquiryChannels = [];
     }
 
     public function render()

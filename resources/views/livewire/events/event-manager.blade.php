@@ -102,6 +102,46 @@
                 <flux:error name="brochureId" />
             </flux:field>
 
+            {{-- Inquiry channels --}}
+            <flux:field class="sm:col-span-2">
+                <flux:label>Inquiry Channels</flux:label>
+                <flux:description>How visitors can inquire from the public event page. Leave empty to use the default contact form.</flux:description>
+
+                <div class="space-y-3">
+                    @forelse($inquiryChannels as $i => $channel)
+                        <div class="flex items-start gap-3">
+                            <flux:select wire:model="inquiryChannels.{{ $i }}.type" class="w-40">
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="url">Registration URL</option>
+                            </flux:select>
+                            <div class="flex-1">
+                                <flux:input
+                                    wire:model="inquiryChannels.{{ $i }}.value"
+                                    :placeholder="match($channel['type'] ?? 'email') {
+                                        'email' => 'name@example.com',
+                                        'phone' => '+234 803 000 0000',
+                                        'whatsapp' => '+254 790 000000',
+                                        'url' => 'https://...',
+                                        default => '',
+                                    }"
+                                />
+                                <flux:error name="inquiryChannels.{{ $i }}.value" />
+                                <flux:error name="inquiryChannels.{{ $i }}.type" />
+                            </div>
+                            <flux:button type="button" wire:click="removeInquiryChannel({{ $i }})" variant="ghost" icon="trash" size="sm" class="text-red-500" />
+                        </div>
+                    @empty
+                        <p class="text-sm text-zinc-500">No channels yet — the event will use the default contact form.</p>
+                    @endforelse
+                </div>
+
+                <div class="mt-3">
+                    <flux:button type="button" wire:click="addInquiryChannel" icon="plus" size="sm" variant="ghost">Add channel</flux:button>
+                </div>
+            </flux:field>
+
             <div class="sm:col-span-2 flex gap-3"><flux:button type="submit" variant="primary">Save</flux:button><flux:button wire:click="cancel" variant="ghost">Cancel</flux:button></div>
         </form>
     </div>
