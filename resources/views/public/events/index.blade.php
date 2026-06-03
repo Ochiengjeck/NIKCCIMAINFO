@@ -65,27 +65,28 @@
                         <article class="group flex flex-col overflow-hidden rounded-xl bg-white shadow-[0_0_15px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1 hover:shadow-xl">
 
                             {{-- Poster / image with date badge --}}
-                            <a href="{{ route('events.show', $event->id) }}" class="relative block overflow-hidden">
+                            <a href="{{ route('events.show', $event->id) }}" class="relative block aspect-[3/4] overflow-hidden bg-zinc-100">
                                 @if($event->featured_image)
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image) }}"
-                                         alt="{{ $event->title }}"
-                                         class="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                    @php $pUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image); @endphp
+                                    {{-- Blurred backdrop + full uncropped flyer --}}
+                                    <img src="{{ $pUrl }}" aria-hidden="true" class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl opacity-40">
+                                    <img src="{{ $pUrl }}" alt="{{ $event->title }}"
+                                         class="relative z-10 h-full w-full object-contain p-1.5 transition-transform duration-500 group-hover:scale-[1.03]">
                                 @else
-                                    <div class="flex h-56 w-full items-center justify-center bg-gradient-to-br {{ $isFlagship ? 'from-crimson-700 to-crimson-950' : 'from-brand-600 to-brand-900' }}">
+                                    <div class="flex h-full w-full items-center justify-center bg-gradient-to-br {{ $isFlagship ? 'from-crimson-700 to-crimson-950' : 'from-brand-600 to-brand-900' }}">
                                         <svg class="h-14 w-14 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
                                     </div>
+                                    {{-- Date badge (only on the no-poster fallback; flyers show their own date) --}}
+                                    <div class="absolute left-4 top-4 z-20 flex flex-col items-center rounded-lg bg-white/95 px-3 py-1.5 text-center shadow-md backdrop-blur">
+                                        <span class="text-lg font-bold leading-none text-crimson-700">{{ $event->starts_at->format('d') }}</span>
+                                        <span class="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">{{ $event->starts_at->format('M Y') }}</span>
+                                    </div>
                                 @endif
 
-                                {{-- Date badge --}}
-                                <div class="absolute left-4 top-4 flex flex-col items-center rounded-lg bg-white/95 px-3 py-1.5 text-center shadow-md backdrop-blur">
-                                    <span class="text-lg font-bold leading-none text-crimson-700">{{ $event->starts_at->format('d') }}</span>
-                                    <span class="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">{{ $event->starts_at->format('M Y') }}</span>
-                                </div>
-
                                 {{-- Type pill --}}
-                                <span class="absolute right-4 top-4 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold text-white {{ $isFlagship ? 'bg-crimson-700/90' : 'bg-brand-700/90' }}">
+                                <span class="absolute right-4 top-4 z-20 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold text-white {{ $isFlagship ? 'bg-crimson-700/90' : 'bg-brand-700/90' }}">
                                     {{ ucwords(str_replace('-', ' ', $event->type ?? 'Event')) }}
                                 </span>
                             </a>
@@ -142,13 +143,14 @@
                     @foreach($past as $event)
                         <a href="{{ route('events.show', $event->id) }}"
                            class="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all duration-300 hover:shadow-md">
-                            <div class="relative overflow-hidden">
+                            <div class="relative aspect-[3/4] overflow-hidden bg-zinc-100">
                                 @if($event->featured_image)
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image) }}"
-                                         alt="{{ $event->title }}"
-                                         class="h-36 w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105">
+                                    @php $pUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image); @endphp
+                                    <img src="{{ $pUrl }}" aria-hidden="true" class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl opacity-30">
+                                    <img src="{{ $pUrl }}" alt="{{ $event->title }}"
+                                         class="relative z-10 h-full w-full object-contain p-1 opacity-95 transition-transform duration-500 group-hover:scale-[1.03]">
                                 @else
-                                    <div class="flex h-36 w-full items-center justify-center bg-zinc-100">
+                                    <div class="flex h-full w-full items-center justify-center">
                                         <svg class="h-9 w-9 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     </div>
                                 @endif

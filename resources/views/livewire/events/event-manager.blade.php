@@ -32,7 +32,11 @@
             <flux:field><flux:label>Ends At</flux:label><flux:input type="datetime-local" wire:model="ends_at" /><flux:error name="ends_at" /></flux:field>
             <flux:field><flux:label>Venue</flux:label><flux:input wire:model="venue" /></flux:field>
             <flux:field><flux:label>Max Capacity</flux:label><flux:input type="number" wire:model="max_capacity" /></flux:field>
-            <flux:field class="sm:col-span-2"><flux:label>Description</flux:label><flux:textarea wire:model="description" rows="6" /></flux:field>
+            <flux:field class="sm:col-span-2">
+                <flux:label>Description</flux:label>
+                <x-trix-editor state-path="description" :value="$description" wire:key="event-desc-{{ $editingId ?? 'new' }}" />
+                <flux:error name="description" />
+            </flux:field>
 
             {{-- Poster / featured image --}}
             <flux:field class="sm:col-span-2">
