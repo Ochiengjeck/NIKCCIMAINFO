@@ -94,17 +94,41 @@
                 </div>
             @endif
 
-            {{-- Step 2: Category & Purpose --}}
+            {{-- Step 2: Member Type, Tier & Purpose --}}
             @if($step === 2)
-                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Membership Category & Purpose</h2>
+                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Membership Type & Tier</h2>
                 <div class="space-y-5">
+                    {{-- Member type --}}
                     <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Membership Category <span class="text-crimson-500">*</span></label>
-                        <select wire:model="category_id"
-                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
-                            <option value="">Select a category</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }} — ₦{{ number_format($cat->fee_ngn) }} / KES {{ number_format($cat->fee_kes) }}</option>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Member Type <span class="text-crimson-500">*</span></label>
+                        <div class="grid grid-cols-2 gap-3">
+                            @foreach(['corporate' => 'Corporate', 'individual' => 'Individual'] as $value => $label)
+                                <label class="flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-sm transition
+                                    {{ $member_type === $value ? 'border-brand-500 bg-brand-50 text-brand-800' : 'border-zinc-300 hover:bg-zinc-50 text-zinc-700' }}">
+                                    <input type="radio" wire:model.live="member_type" value="{{ $value }}" class="h-4 w-4 text-brand-600">
+                                    <span class="font-medium">{{ $label }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('member_type') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+
+                    {{-- Tier (filtered by type) --}}
+                    @php $tiers = $member_type ? $categories->where('member_type', $member_type) : collect(); @endphp
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Tier <span class="text-crimson-500">*</span></label>
+                        <select wire:model="category_id" @disabled(!$member_type)
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20 disabled:bg-zinc-100 disabled:text-zinc-400">
+                            <option value="">{{ $member_type ? 'Select a tier' : 'Choose a member type first' }}</option>
+                            @foreach($tiers as $cat)
+                                @php
+                                    $ngnFree = is_null($cat->fee_ngn) || (float) $cat->fee_ngn == 0;
+                                    $kesFree = is_null($cat->fee_kes) || (float) $cat->fee_kes == 0;
+                                    $price = ($ngnFree && $kesFree)
+                                        ? 'Free'
+                                        : trim((!$ngnFree ? '₦'.number_format($cat->fee_ngn) : '').(!$ngnFree && !$kesFree ? ' / ' : '').(!$kesFree ? 'KES '.number_format($cat->fee_kes) : ''));
+                                @endphp
+                                <option value="{{ $cat->id }}">{{ $cat->name }} — {{ $price }}</option>
                             @endforeach
                         </select>
                         @error('category_id') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror

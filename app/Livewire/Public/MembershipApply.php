@@ -29,6 +29,8 @@ class MembershipApply extends Component
     public string $chapter = ''; // 'nigeria' or 'kenya'
 
     // Step 2
+    public string $member_type = '';
+
     public ?int $category_id = null;
 
     public string $purpose_of_membership = '';
@@ -60,6 +62,7 @@ class MembershipApply extends Component
                 'chapter' => 'required|in:nigeria,kenya',
             ],
             2 => [
+                'member_type' => 'required|in:corporate,individual',
                 'category_id' => 'required|exists:membership_categories,id',
                 'purpose_of_membership' => 'required|string|min:50',
             ],
@@ -76,9 +79,28 @@ class MembershipApply extends Component
         };
     }
 
+    public function updatedMemberType(): void
+    {
+        // Reset the tier when the type changes so a mismatched category can't carry over.
+        $this->category_id = null;
+    }
+
     public function nextStep(): void
     {
         $this->validate();
+
+        // Ensure the chosen tier actually belongs to the selected member type.
+        if ($this->step === 2 && $this->category_id) {
+            $belongs = MembershipCategory::whereKey($this->category_id)
+                ->where('member_type', $this->member_type)
+                ->exists();
+            if (! $belongs) {
+                $this->addError('category_id', 'Please choose a tier for the selected member type.');
+
+                return;
+            }
+        }
+
         $this->step++;
     }
 

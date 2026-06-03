@@ -25,7 +25,9 @@ class ApplicationForm extends Component
 
     public string $organization = '';
 
-    // Step 2: Category & Purpose
+    // Step 2: Type, Category & Purpose
+    public string $member_type = '';
+
     public ?int $category_id = null;
 
     public string $purpose_of_membership = '';
@@ -52,6 +54,7 @@ class ApplicationForm extends Component
                 'organization' => 'required|string|max:255',
             ],
             2 => [
+                'member_type' => 'required|in:corporate,individual',
                 'category_id' => 'required|exists:membership_categories,id',
                 'purpose_of_membership' => 'required|string|min:50',
             ],
@@ -74,9 +77,26 @@ class ApplicationForm extends Component
         abort_unless($chapter, 403, 'No chapter assigned.');
     }
 
+    public function updatedMemberType(): void
+    {
+        $this->category_id = null;
+    }
+
     public function nextStep(): void
     {
         $this->validate();
+
+        if ($this->step === 2 && $this->category_id) {
+            $belongs = MembershipCategory::whereKey($this->category_id)
+                ->where('member_type', $this->member_type)
+                ->exists();
+            if (! $belongs) {
+                $this->addError('category_id', 'Please choose a tier for the selected member type.');
+
+                return;
+            }
+        }
+
         $this->step++;
     }
 

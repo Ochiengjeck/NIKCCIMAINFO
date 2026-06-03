@@ -49,16 +49,31 @@
             </form>
         @endif
 
-        {{-- Step 2: Category & Purpose --}}
+        {{-- Step 2: Type, Tier & Purpose --}}
         @if($step === 2)
-            <flux:heading size="lg" class="mb-4">Membership Category & Purpose</flux:heading>
+            <flux:heading size="lg" class="mb-4">Membership Type & Tier</flux:heading>
             <form wire:submit="nextStep" class="grid grid-cols-1 gap-4">
                 <flux:field>
-                    <flux:label>Membership Category</flux:label>
-                    <flux:select wire:model="category_id">
-                        <option value="">Select category…</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }} — NGN {{ number_format($cat->fee_ngn, 2) }} / KES {{ number_format($cat->fee_kes, 2) }}</option>
+                    <flux:label>Member Type</flux:label>
+                    <flux:select wire:model.live="member_type">
+                        <option value="">Select type…</option>
+                        <option value="corporate">Corporate</option>
+                        <option value="individual">Individual</option>
+                    </flux:select>
+                    <flux:error name="member_type" />
+                </flux:field>
+                @php $tiers = $member_type ? $categories->where('member_type', $member_type) : collect(); @endphp
+                <flux:field>
+                    <flux:label>Tier</flux:label>
+                    <flux:select wire:model="category_id" :disabled="!$member_type">
+                        <option value="">{{ $member_type ? 'Select tier…' : 'Choose a member type first' }}</option>
+                        @foreach($tiers as $cat)
+                            @php
+                                $ngnFree = is_null($cat->fee_ngn) || (float) $cat->fee_ngn == 0;
+                                $kesFree = is_null($cat->fee_kes) || (float) $cat->fee_kes == 0;
+                                $price = ($ngnFree && $kesFree) ? 'Free' : trim((!$ngnFree ? 'NGN '.number_format($cat->fee_ngn, 2) : '').(!$ngnFree && !$kesFree ? ' / ' : '').(!$kesFree ? 'KES '.number_format($cat->fee_kes, 2) : ''));
+                            @endphp
+                            <option value="{{ $cat->id }}">{{ $cat->name }} — {{ $price }}</option>
                         @endforeach
                     </flux:select>
                     <flux:error name="category_id" />
