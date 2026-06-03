@@ -8,24 +8,21 @@
     'transparentNav' => false,
 ])
 @php
-    use Illuminate\Support\Facades\Storage;
-    use App\Models\SystemSetting;
-
     $seoTitle = $title ?? 'NiKCCIMA — Nigeria-Kenya Chamber of Commerce';
-    $siteName = SystemSetting::get('site_name', 'NiKCCIMA');
+    $siteName = \App\Models\SystemSetting::get('site_name', 'NiKCCIMA');
     $seoDescription = $metaDescription
-        ?: SystemSetting::get('seo_default_description', 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture — driving AfCFTA corridor trade, investment and policy between Nigeria and Kenya.');
+        ?: \App\Models\SystemSetting::get('seo_default_description', 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture — driving AfCFTA corridor trade, investment and policy between Nigeria and Kenya.');
 
     // Resolve the social share image (absolute URL): page-specific → settings → logo.
-    $shareImage = $ogImage ?: SystemSetting::get('seo_share_image') ?: SystemSetting::get('site_logo');
+    $shareImage = $ogImage ?: \App\Models\SystemSetting::get('seo_share_image') ?: \App\Models\SystemSetting::get('site_logo');
     if ($shareImage && ! \Illuminate\Support\Str::startsWith($shareImage, ['http://', 'https://'])) {
-        $shareImage = Storage::disk('public')->url($shareImage);
+        $shareImage = \Illuminate\Support\Facades\Storage::disk('public')->url($shareImage);
     }
 
-    $gaId = SystemSetting::get('ga_measurement_id');
-    $searchConsole = SystemSetting::get('search_console_verification');
-    $orgLogo = SystemSetting::get('site_logo');
-    $orgLogo = $orgLogo ? Storage::disk('public')->url($orgLogo) : null;
+    $gaId = \App\Models\SystemSetting::get('ga_measurement_id');
+    $searchConsole = \App\Models\SystemSetting::get('search_console_verification');
+    $orgLogo = \App\Models\SystemSetting::get('site_logo');
+    $orgLogo = $orgLogo ? \Illuminate\Support\Facades\Storage::disk('public')->url($orgLogo) : null;
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
