@@ -194,4 +194,84 @@
 
         </div>
     </div>
+
+    {{-- ===== CONTACT DETAILS ===== --}}
+    <div class="mt-8 max-w-xl">
+        <div class="mb-4">
+            <flux:heading size="lg">Contact Details</flux:heading>
+            <flux:subheading>Chapter addresses, phones and emails — shown on the public contact page and site footer.</flux:subheading>
+        </div>
+
+        <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+            <form wire:submit="saveContact" class="space-y-6">
+
+                {{-- Nigeria --}}
+                <div class="space-y-4">
+                    <p class="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                        <span class="text-base leading-none">&#127475;&#127468;</span> Nigeria Chapter
+                    </p>
+                    <flux:field>
+                        <flux:label>Address</flux:label>
+                        <flux:textarea wire:model="nigeriaAddress" rows="2" />
+                        <flux:error name="nigeriaAddress" />
+                    </flux:field>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <flux:field>
+                            <flux:label>Phone</flux:label>
+                            <flux:input wire:model="nigeriaPhone" type="tel" placeholder="+234 ..." />
+                            <flux:error name="nigeriaPhone" />
+                        </flux:field>
+                        <flux:field>
+                            <flux:label>Email</flux:label>
+                            <flux:input wire:model="nigeriaEmail" type="email" placeholder="nigeria@nikccima.org" />
+                            <flux:error name="nigeriaEmail" />
+                        </flux:field>
+                    </div>
+                </div>
+
+                {{-- Kenya --}}
+                <div class="space-y-4 border-t border-zinc-100 pt-6 dark:border-zinc-800">
+                    <p class="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                        <span class="text-base leading-none">&#127472;&#127466;</span> Kenya Chapter
+                    </p>
+                    <flux:field>
+                        <flux:label>Address</flux:label>
+                        <flux:textarea wire:model="kenyaAddress" rows="2" />
+                        <flux:error name="kenyaAddress" />
+                    </flux:field>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <flux:field>
+                            <flux:label>Phone</flux:label>
+                            <flux:input wire:model="kenyaPhone" type="tel" placeholder="+254 ..." />
+                            <flux:error name="kenyaPhone" />
+                        </flux:field>
+                        <flux:field>
+                            <flux:label>Email</flux:label>
+                            <flux:input wire:model="kenyaEmail" type="email" placeholder="kenya@nikccima.org" />
+                            <flux:error name="kenyaEmail" />
+                        </flux:field>
+                    </div>
+                </div>
+
+                {{-- Map --}}
+                <div class="border-t border-zinc-100 pt-6 dark:border-zinc-800">
+                    <flux:field>
+                        <flux:label>Map Embed URL</flux:label>
+                        <flux:description>Google Maps embed URL (Share → Embed a map → copy the <code>src</code>). Shown on the contact page when set.</flux:description>
+                        <flux:input wire:model="mapEmbedUrl" type="url" placeholder="https://www.google.com/maps/embed?..." />
+                        <flux:error name="mapEmbedUrl" />
+                    </flux:field>
+                    @if($mapEmbedUrl)
+                        <div class="mt-3 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                            <iframe src="{{ $mapEmbedUrl }}" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="pt-2">
+                    <flux:button type="submit" variant="primary" icon="check">Save Contact Details</flux:button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

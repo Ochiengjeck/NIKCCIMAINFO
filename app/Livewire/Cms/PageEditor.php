@@ -145,12 +145,19 @@ class PageEditor extends Component
 
         // Pre-compute field groups to avoid @while in Blade (Livewire's SupportCompiledWireKeys
         // injects $loop->index inside @while, but @while doesn't create $loop — only @foreach does).
-        $shortTypes  = ['text', 'tel', 'email', 'icon', 'url'];
-        $fieldKeys   = array_keys($this->sections);
+        $shortTypes = ['text', 'tel', 'email', 'icon', 'url'];
+
+        // These contact/map values are GLOBAL (Admin → Settings → Contact Details),
+        // not per-page — never expose them in the page editor even if present in stale data.
+        $globalKeys = [
+            'nigeria_address', 'nigeria_phone', 'nigeria_email',
+            'kenya_address', 'kenya_phone', 'kenya_email', 'map_embed_url',
+        ];
+        $fieldKeys = array_values(array_diff(array_keys($this->sections), $globalKeys));
         $fieldGroups = [];
-        $i           = 0;
+        $i = 0;
         while ($i < count($fieldKeys)) {
-            $key  = $fieldKeys[$i];
+            $key = $fieldKeys[$i];
             $type = $this->fieldType($key);
             if (
                 in_array($type, $shortTypes) &&
@@ -160,8 +167,8 @@ class PageEditor extends Component
                 $key2 = $fieldKeys[$i + 1];
                 $fieldGroups[] = [
                     'layout' => 'pair',
-                    'key1'   => $key,  'type1' => $type,
-                    'key2'   => $key2, 'type2' => $this->fieldType($key2),
+                    'key1' => $key,  'type1' => $type,
+                    'key2' => $key2, 'type2' => $this->fieldType($key2),
                 ];
                 $i += 2;
             } else {
@@ -182,8 +189,8 @@ class PageEditor extends Component
             ->values();
 
         return view('livewire.cms.page-editor', [
-            'pages'        => $pages,
-            'fieldGroups'  => $fieldGroups,
+            'pages' => $pages,
+            'fieldGroups' => $fieldGroups,
             'pickerImages' => $pickerImages,
         ])->layout('layouts.admin');
     }

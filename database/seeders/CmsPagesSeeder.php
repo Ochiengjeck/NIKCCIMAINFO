@@ -179,13 +179,7 @@ class CmsPagesSeeder extends Seeder
                 'is_published' => true,
                 'sections' => [
                     'hero_title' => 'Get in Touch',
-                    'nigeria_address' => 'Abuja, Federal Capital Territory, Federal Republic of Nigeria',
-                    'nigeria_phone' => '+234 000 000 0000',
-                    'nigeria_email' => 'nigeria@nikccima.org',
-                    'kenya_address' => 'Nairobi, Republic of Kenya',
-                    'kenya_phone' => '+254 000 000 000',
-                    'kenya_email' => 'kenya@nikccima.org',
-                    'map_embed_url' => '',
+                    // Chapter contact details + map are GLOBAL — see Admin → Settings → Contact Details.
                 ],
             ],
         ];
@@ -202,24 +196,24 @@ class CmsPagesSeeder extends Seeder
         $newKeys = [
             'homepage' => [
                 // Hero backgrounds — one per slide
-                'hero_image'  => '',   // Upload 1920×1080 via Admin → CMS → Pages → Homepage — Slide 1: Trade / AfCFTA
+                'hero_image' => '',   // Upload 1920×1080 via Admin → CMS → Pages → Homepage — Slide 1: Trade / AfCFTA
                 'hero2_image' => '',   // Upload 1920×1080 — Slide 2: Membership
                 'hero3_image' => '',   // Upload 1920×1080 — Slide 3: Events
                 // Hero Slide 1 — Trade / AfCFTA
-                'hero_badge'         => 'AfCFTA Corridor Execution',
-                'hero_cta_primary'   => 'Become a Member',
+                'hero_badge' => 'AfCFTA Corridor Execution',
+                'hero_cta_primary' => 'Become a Member',
                 'hero_cta_secondary' => 'Explore Trade Opportunities',
                 // Hero Slide 2 — Membership
-                'hero2_badge'         => 'Membership Network',
-                'hero2_title'         => "Connecting Africa's Two Largest Economies.",
-                'hero2_subtitle'      => 'Join a structured bilateral chamber with members spanning trade, finance, agriculture, technology, and maritime sectors across Nigeria and Kenya.',
-                'hero2_cta_primary'   => 'View Membership Tiers',
+                'hero2_badge' => 'Membership Network',
+                'hero2_title' => "Connecting Africa's Two Largest Economies.",
+                'hero2_subtitle' => 'Join a structured bilateral chamber with members spanning trade, finance, agriculture, technology, and maritime sectors across Nigeria and Kenya.',
+                'hero2_cta_primary' => 'View Membership Tiers',
                 'hero2_cta_secondary' => 'Apply Now',
                 // Hero Slide 3 — Events
-                'hero3_badge'         => 'Events & Missions',
-                'hero3_title'         => 'Flagship Summits. Real Trade Outcomes.',
-                'hero3_subtitle'      => "Attend NiKCCIMA's corridor activation summits, bilateral trade missions, and B2B matching events — where Nigeria meets Kenya in structured, high-value commerce.",
-                'hero3_cta_primary'   => 'View Upcoming Events',
+                'hero3_badge' => 'Events & Missions',
+                'hero3_title' => 'Flagship Summits. Real Trade Outcomes.',
+                'hero3_subtitle' => "Attend NiKCCIMA's corridor activation summits, bilateral trade missions, and B2B matching events — where Nigeria meets Kenya in structured, high-value commerce.",
+                'hero3_cta_primary' => 'View Upcoming Events',
                 'hero3_cta_secondary' => 'Contact the Secretariat',
                 // CTA strip (Section E)
                 'cta_heading' => 'Ready to Join NiKCCIMA?',
@@ -298,7 +292,7 @@ class CmsPagesSeeder extends Seeder
                 'pillar3_title', 'pillar3_summary',
                 'pillar4_title', 'pillar4_summary',
             ],
-            'about'    => ['about_heading', 'about_body_heading'],
+            'about' => ['about_heading', 'about_body_heading'],
         ];
         foreach ($cleanup as $slug => $deadKeys) {
             $p = CmsPage::where('slug', $slug)->first();

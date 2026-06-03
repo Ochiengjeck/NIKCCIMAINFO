@@ -361,6 +361,14 @@
         </main>
 
         {{-- ===================== FOOTER ===================== --}}
+        @php
+            $footerNgAddress = \App\Models\SystemSetting::get('nigeria_address', 'Abuja, Federal Capital Territory, Federal Republic of Nigeria');
+            $footerNgPhone   = \App\Models\SystemSetting::get('nigeria_phone', '');
+            $footerNgEmail   = \App\Models\SystemSetting::get('nigeria_email', 'nigeria@nikccima.org');
+            $footerKeAddress = \App\Models\SystemSetting::get('kenya_address', 'Nairobi, Republic of Kenya');
+            $footerKePhone   = \App\Models\SystemSetting::get('kenya_phone', '');
+            $footerKeEmail   = \App\Models\SystemSetting::get('kenya_email', 'kenya@nikccima.org');
+        @endphp
         <footer class="mt-16 bg-crimson-700 text-white">
             <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
 
@@ -423,19 +431,31 @@
                             Nigeria Chapter
                         </h3>
                         <ul class="space-y-2 text-sm text-white/80">
-                            <li class="flex items-start gap-2">
-                                <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                </svg>
-                                <span>Abuja, Federal Capital Territory<br>Federal Republic of Nigeria</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="h-4 w-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                <a href="mailto:nigeria@nikccima.org" class="hover:text-white transition-colors">nigeria@nikccima.org</a>
-                            </li>
+                            @if($footerNgAddress)
+                                <li class="flex items-start gap-2">
+                                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span>{{ $footerNgAddress }}</span>
+                                </li>
+                            @endif
+                            @if($footerNgPhone)
+                                <li class="flex items-center gap-2">
+                                    <svg class="h-4 w-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $footerNgPhone) }}" class="hover:text-white transition-colors">{{ $footerNgPhone }}</a>
+                                </li>
+                            @endif
+                            @if($footerNgEmail)
+                                <li class="flex items-center gap-2">
+                                    <svg class="h-4 w-4 shrink-0 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    <a href="mailto:{{ $footerNgEmail }}" class="hover:text-white transition-colors">{{ $footerNgEmail }}</a>
+                                </li>
+                            @endif
                         </ul>
                         <div class="mt-5">
                             <a href="{{ route('chapters.nigeria') }}"
@@ -455,19 +475,31 @@
                             Kenya Chapter
                         </h3>
                         <ul class="space-y-2 text-sm text-white/80">
-                            <li class="flex items-start gap-2">
-                                <svg class="mt-0.5 h-4 w-4 shrink-0 text-crimson-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                </svg>
-                                <span>Nairobi, Capital City<br>Republic of Kenya</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="h-4 w-4 shrink-0 text-crimson-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                <a href="mailto:kenya@nikccima.org" class="hover:text-white transition-colors">kenya@nikccima.org</a>
-                            </li>
+                            @if($footerKeAddress)
+                                <li class="flex items-start gap-2">
+                                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-crimson-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span>{{ $footerKeAddress }}</span>
+                                </li>
+                            @endif
+                            @if($footerKePhone)
+                                <li class="flex items-center gap-2">
+                                    <svg class="h-4 w-4 shrink-0 text-crimson-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $footerKePhone) }}" class="hover:text-white transition-colors">{{ $footerKePhone }}</a>
+                                </li>
+                            @endif
+                            @if($footerKeEmail)
+                                <li class="flex items-center gap-2">
+                                    <svg class="h-4 w-4 shrink-0 text-crimson-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    <a href="mailto:{{ $footerKeEmail }}" class="hover:text-white transition-colors">{{ $footerKeEmail }}</a>
+                                </li>
+                            @endif
                         </ul>
                         <div class="mt-5">
                             <a href="{{ route('chapters.kenya') }}"
