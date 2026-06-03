@@ -1,4 +1,6 @@
-<x-layouts::website :title="'Trade & Investment — NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'Trade & Investment — NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('hero_subtitle', 'Trade leads, investment opportunities and B2B matchmaking across the Nigeria-Kenya AfCFTA corridor.')">
 
     <section class="bg-brand-900 py-16 text-white">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

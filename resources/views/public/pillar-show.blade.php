@@ -16,7 +16,9 @@
     ];
 @endphp
 
-<x-layouts::website :title="($page?->title ?? ($pillars[$pillarSlug] ?? 'Pillar')).' — NiKCCIMA'">
+<x-layouts::website
+    :title="($page?->meta_title ?: ($page?->title ?? ($pillars[$pillarSlug] ?? 'Pillar'))).' — NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('mandate', ($pillars[$pillarSlug] ?? 'A strategic pillar of NiKCCIMA driving the Nigeria-Kenya AfCFTA trade corridor.'))">
 
     {{-- ===================== HERO ===================== --}}
     <section class="relative overflow-hidden py-20 text-white">

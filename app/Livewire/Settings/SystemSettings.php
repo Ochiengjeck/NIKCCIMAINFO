@@ -32,6 +32,15 @@ class SystemSettings extends Component
 
     public string $mapEmbedUrl = '';
 
+    // SEO & analytics
+    public string $seoDefaultDescription = '';
+
+    public string $shareImagePath = '';
+
+    public string $gaMeasurementId = '';
+
+    public string $searchConsoleVerification = '';
+
     public function mount(SettingsService $settings): void
     {
         $this->authorize('settings.edit');
@@ -48,6 +57,11 @@ class SystemSettings extends Component
         $this->kenyaPhone = $settings->get('kenya_phone', '');
         $this->kenyaEmail = $settings->get('kenya_email', 'kenya@nikccima.org');
         $this->mapEmbedUrl = $settings->get('map_embed_url', '');
+
+        $this->seoDefaultDescription = $settings->get('seo_default_description', '');
+        $this->shareImagePath = $settings->get('seo_share_image', '');
+        $this->gaMeasurementId = $settings->get('ga_measurement_id', '');
+        $this->searchConsoleVerification = $settings->get('search_console_verification', '');
     }
 
     public function save(SettingsService $settings): void
@@ -88,6 +102,37 @@ class SystemSettings extends Component
         $settings->set('map_embed_url', $this->mapEmbedUrl, 'contact');
 
         session()->flash('success', 'Contact details saved successfully.');
+    }
+
+    public function saveSeo(SettingsService $settings): void
+    {
+        $this->authorize('settings.edit');
+
+        $this->validate([
+            'seoDefaultDescription' => 'nullable|string|max:300',
+            'gaMeasurementId' => 'nullable|string|max:50',
+            'searchConsoleVerification' => 'nullable|string|max:255',
+        ]);
+
+        $settings->set('seo_default_description', $this->seoDefaultDescription, 'seo');
+        $settings->set('ga_measurement_id', trim($this->gaMeasurementId), 'seo');
+        $settings->set('search_console_verification', trim($this->searchConsoleVerification), 'seo');
+
+        session()->flash('success', 'SEO settings saved successfully.');
+    }
+
+    public function selectShareImage(string $path, SettingsService $settings): void
+    {
+        $this->shareImagePath = $path;
+        $settings->set('seo_share_image', $path, 'seo');
+        session()->flash('success', 'Social share image updated.');
+    }
+
+    public function clearShareImage(SettingsService $settings): void
+    {
+        $this->shareImagePath = '';
+        $settings->set('seo_share_image', '', 'seo');
+        session()->flash('success', 'Social share image removed.');
     }
 
     public function selectLogo(string $path, SettingsService $settings): void

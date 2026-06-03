@@ -1,12 +1,31 @@
-<x-layouts::website :title="($event->title).' — NiKCCIMA Events'">
-
-    @php
-        $typeLower = strtolower($event->type ?? '');
-        $isFlagship = str_contains($typeLower, 'flagship') || str_contains($typeLower, 'summit');
-        $posterUrl = $event->featured_image
-            ? \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image)
-            : null;
-    @endphp
+@php
+    $typeLower = strtolower($event->type ?? '');
+    $isFlagship = str_contains($typeLower, 'flagship') || str_contains($typeLower, 'summit');
+    $posterUrl = $event->featured_image
+        ? \Illuminate\Support\Facades\Storage::disk('public')->url($event->featured_image)
+        : null;
+    $eventDescription = \Illuminate\Support\Str::limit(strip_tags((string) $event->description), 160)
+        ?: ('Join NiKCCIMA for '.$event->title.' — a Nigeria-Kenya AfCFTA corridor event.');
+    $eventJsonLd = array_filter([
+        '@context' => 'https://schema.org',
+        '@type' => 'Event',
+        'name' => $event->title,
+        'startDate' => optional($event->starts_at)->toIso8601String(),
+        'endDate' => optional($event->ends_at)->toIso8601String(),
+        'eventStatus' => 'https://schema.org/EventScheduled',
+        'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
+        'location' => $event->venue ? ['@type' => 'Place', 'name' => $event->venue] : null,
+        'image' => $posterUrl ? [$posterUrl] : null,
+        'description' => $eventDescription,
+        'organizer' => ['@type' => 'Organization', 'name' => 'NiKCCIMA', 'url' => route('home')],
+    ]);
+@endphp
+<x-layouts::website
+    :title="($event->title).' — NiKCCIMA Events'"
+    :meta-description="$eventDescription"
+    :og-image="$posterUrl"
+    og-type="article"
+    :json-ld="$eventJsonLd">
 
     {{-- ===================== HERO ===================== --}}
     @if($posterUrl)

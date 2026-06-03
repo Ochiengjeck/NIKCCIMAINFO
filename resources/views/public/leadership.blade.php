@@ -1,4 +1,6 @@
-<x-layouts::website :title="'Leadership — NiKCCIMA'">
+<x-layouts::website
+    :title="'Leadership — NiKCCIMA'"
+    :meta-description="'Meet the leadership of NiKCCIMA — the governing council and secretariat driving Nigeria-Kenya bilateral trade.'">
 
     {{-- Hero --}}
     <section class="relative overflow-hidden py-32 text-white">

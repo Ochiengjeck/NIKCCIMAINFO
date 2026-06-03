@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FlutterwaveWebhookController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\SeoController;
 use Illuminate\Support\Facades\Route;
 
 // --- Public Website ---
@@ -22,6 +23,10 @@ Route::get('/news/{slug}', [PublicController::class, 'newsShow'])->name('news.sh
 Route::get('/leadership', [PublicController::class, 'leadership'])->name('leadership');
 Route::get('/downloads', [PublicController::class, 'downloads'])->name('downloads');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
+
+// --- SEO ---
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 
 // --- Auth dashboard (Fortify) ---
 Route::view('dashboard', 'dashboard')

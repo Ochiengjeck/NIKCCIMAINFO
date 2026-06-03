@@ -5,7 +5,9 @@
     hero_subtitle: Subheading
     intro_body   : CTA band heading text
 --}}
-<x-layouts::website :title="'Events &amp; Missions — NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'Events & Missions — NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('hero_subtitle', 'NiKCCIMA flagship events, bilateral trade missions and sector forums driving Nigeria-Kenya AfCFTA corridor outcomes.')">
 
     {{-- ===================== HERO ===================== --}}
     <section class="relative overflow-hidden py-28 text-white lg:py-36">

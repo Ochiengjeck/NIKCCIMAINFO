@@ -18,7 +18,9 @@
     $mapEmbedUrl    = \App\Models\SystemSetting::get('map_embed_url', '');
 @endphp
 
-<x-layouts::website :title="'Contact NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'Contact NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: 'Contact the Nigeria-Kenya Chamber of Commerce (NiKCCIMA) — reach our Nigeria (Abuja) and Kenya (Nairobi) chapter offices.'">
 
     {{-- ===================== HERO BANNER ===================== --}}
     <section class="relative overflow-hidden py-28 text-white">

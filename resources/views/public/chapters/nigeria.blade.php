@@ -9,7 +9,9 @@
     office_hours  : Office hours (NEW KEY)
     initiatives   : Comma-separated national initiatives
 --}}
-<x-layouts::website :title="'Nigeria Chapter — NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'Nigeria Chapter — NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('description', 'The Nigeria Chapter of NiKCCIMA — leadership, initiatives and events driving AfCFTA corridor trade from Abuja.')">
 
     {{-- ===================== HERO ===================== --}}
     <section class="relative overflow-hidden py-24 text-white lg:py-32">

@@ -274,4 +274,99 @@
             </form>
         </div>
     </div>
+
+    {{-- ===== SEO & ANALYTICS ===== --}}
+    <div class="mt-8 max-w-xl">
+        <div class="mb-4">
+            <flux:heading size="lg">SEO &amp; Analytics</flux:heading>
+            <flux:subheading>Search-engine metadata, social share image, and analytics tags for the public website.</flux:subheading>
+        </div>
+
+        <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+            <form wire:submit="saveSeo" class="space-y-4">
+                <flux:field>
+                    <flux:label>Default Meta Description</flux:label>
+                    <flux:description>Used on pages without their own description. ~150–160 characters is ideal.</flux:description>
+                    <flux:textarea wire:model="seoDefaultDescription" rows="3" placeholder="The Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture — driving AfCFTA corridor trade between Nigeria and Kenya." />
+                    <flux:error name="seoDefaultDescription" />
+                </flux:field>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <flux:field>
+                        <flux:label>Google Analytics ID (GA4)</flux:label>
+                        <flux:input wire:model="gaMeasurementId" placeholder="G-XXXXXXXXXX" />
+                        <flux:error name="gaMeasurementId" />
+                    </flux:field>
+                    <flux:field>
+                        <flux:label>Search Console Verification</flux:label>
+                        <flux:input wire:model="searchConsoleVerification" placeholder="google-site-verification token" />
+                        <flux:error name="searchConsoleVerification" />
+                    </flux:field>
+                </div>
+
+                <div class="pt-2">
+                    <flux:button type="submit" variant="primary" icon="check">Save SEO Settings</flux:button>
+                </div>
+            </form>
+
+            {{-- Social share image (XHR upload, mirrors logo/icon) --}}
+            <div class="mt-6 border-t border-zinc-100 pt-6 dark:border-zinc-800"
+                 x-data="{
+                     uploading: false,
+                     progress: 0,
+                     error: '',
+                     handleFile(file) {
+                         if (!file) return;
+                         this.uploading = true; this.progress = 0; this.error = '';
+                         const fd = new FormData();
+                         fd.append('file', file);
+                         fd.append('folder', 'system/branding');
+                         const tok = document.querySelector('meta[name=csrf-token]');
+                         if (!tok) { this.error = 'CSRF token missing'; this.uploading = false; return; }
+                         const xhr = new XMLHttpRequest();
+                         xhr.open('POST', '{{ route('admin.media.upload') }}');
+                         xhr.setRequestHeader('X-CSRF-TOKEN', tok.content);
+                         xhr.setRequestHeader('Accept', 'application/json');
+                         xhr.upload.onprogress = e => { if (e.lengthComputable) this.progress = Math.round(e.loaded / e.total * 100); };
+                         xhr.onload = () => {
+                             this.uploading = false;
+                             if (xhr.status >= 200 && xhr.status < 300) {
+                                 const d = JSON.parse(xhr.responseText);
+                                 $wire.selectShareImage(d.path);
+                             } else {
+                                 try { const err = JSON.parse(xhr.responseText); this.error = err.message || err.errors?.file?.[0] || 'Upload failed.'; }
+                                 catch { this.error = 'Upload failed.'; }
+                             }
+                         };
+                         xhr.onerror = () => { this.uploading = false; this.error = 'Network error.'; };
+                         xhr.send(fd);
+                     }
+                 }">
+                <p class="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">Social Share Image</p>
+
+                @if($shareImagePath)
+                    <div class="mb-3 flex items-center gap-3">
+                        <div class="h-16 w-28 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800">
+                            <img src="{{ Storage::disk('public')->url($shareImagePath) }}" alt="Share image" class="h-full w-full object-cover">
+                        </div>
+                        <button wire:click="clearShareImage" class="text-xs text-red-400 transition-colors hover:text-red-300">Remove</button>
+                    </div>
+                @endif
+
+                <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50 px-4 py-5 text-center transition hover:border-green-500 dark:border-zinc-700 dark:bg-zinc-800/50 dark:hover:border-green-500"
+                       @dragover.prevent="$el.classList.add('!border-green-500')"
+                       @dragleave.prevent="$el.classList.remove('!border-green-500')"
+                       @drop.prevent="$el.classList.remove('!border-green-500'); handleFile($event.dataTransfer.files[0])">
+                    <input type="file" accept="image/*" class="sr-only" @change="handleFile($event.target.files[0])">
+                    <svg class="h-6 w-6 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+                    <span x-show="!uploading" class="text-xs text-zinc-500 dark:text-zinc-400">Drop image or <span class="font-medium text-green-600 dark:text-green-400">click to upload</span></span>
+                    <span x-show="uploading" class="text-xs text-green-600 dark:text-green-400" x-cloak>Uploading… <span x-text="progress + '%'"></span></span>
+                </label>
+                <p x-show="error" class="mt-1.5 text-xs text-red-500" x-text="error" x-cloak></p>
+                <p class="mt-2 text-[11px] text-zinc-400">Shown when a page is shared on social media. Recommended 1200×630px. Falls back to the site logo if unset.</p>
+            </div>
+        </div>
+    </div>
 </div>

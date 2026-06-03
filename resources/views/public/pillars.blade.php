@@ -10,7 +10,9 @@
     pillar4_title, pillar4_summary : Admin pillar
 --}}
 
-<x-layouts::website :title="'Our Strategic Pillars — NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'Our Strategic Pillars — NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('page_subtitle', 'The four pillars driving NiKCCIMA: executive leadership, trade & investment, policy & research, and administration & membership.')">
 
     {{-- ===================== HERO ===================== --}}
     <section class="relative overflow-hidden py-24 text-white lg:py-32">

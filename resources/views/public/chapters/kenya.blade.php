@@ -9,7 +9,9 @@
     office_hours  : Office hours (NEW KEY — e.g. "Mon–Fri, 8am–5pm EAT")
     initiatives   : Comma-separated list of chapter initiatives
 --}}
-<x-layouts::website :title="'Kenya Chapter — NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'Kenya Chapter — NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('description', 'The Kenya Chapter of NiKCCIMA — leadership, initiatives and events driving AfCFTA corridor trade from Nairobi.')">
 
     {{-- Hero — Red accents for Kenya --}}
     <section class="relative overflow-hidden py-24 text-white">

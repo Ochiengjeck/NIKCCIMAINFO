@@ -11,7 +11,9 @@
     silver_benefits    : Silver tier benefits
     bronze_benefits    : Bronze tier benefits
 --}}
-<x-layouts::website :title="'Membership — NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'Membership — NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('hero_subtitle', 'Join NiKCCIMA — membership tiers, benefits, and how to apply for the Nigeria-Kenya Chamber of Commerce.')">
 
     {{-- ===================== HERO ===================== --}}
     <section class="relative overflow-hidden py-24 text-white lg:py-32">

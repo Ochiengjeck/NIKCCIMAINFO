@@ -1,4 +1,7 @@
-<x-layouts::website :title="'NiKCCIMA — Driving Structured Trade Between Nigeria and Kenya'" :transparent-nav="true">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'NiKCCIMA — Driving Structured Trade Between Nigeria and Kenya'"
+    :meta-description="$page?->meta_description ?: $page?->section('hero_subtitle', 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture — driving AfCFTA corridor trade, investment and policy between Nigeria and Kenya.')"
+    :transparent-nav="true">
 
     {{-- =========================================================
          SECTION A — HERO CAROUSEL (3 slides, Alpine.js, 6s auto-rotate)

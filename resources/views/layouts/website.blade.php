@@ -1,4 +1,32 @@
-@props(['title' => null, 'metaDescription' => null, 'transparentNav' => false])
+@props([
+    'title' => null,
+    'metaDescription' => null,
+    'ogImage' => null,
+    'ogType' => 'website',
+    'noindex' => false,
+    'jsonLd' => null,
+    'transparentNav' => false,
+])
+@php
+    use Illuminate\Support\Facades\Storage;
+    use App\Models\SystemSetting;
+
+    $seoTitle = $title ?? 'NiKCCIMA — Nigeria-Kenya Chamber of Commerce';
+    $siteName = SystemSetting::get('site_name', 'NiKCCIMA');
+    $seoDescription = $metaDescription
+        ?: SystemSetting::get('seo_default_description', 'The Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture — driving AfCFTA corridor trade, investment and policy between Nigeria and Kenya.');
+
+    // Resolve the social share image (absolute URL): page-specific → settings → logo.
+    $shareImage = $ogImage ?: SystemSetting::get('seo_share_image') ?: SystemSetting::get('site_logo');
+    if ($shareImage && ! \Illuminate\Support\Str::startsWith($shareImage, ['http://', 'https://'])) {
+        $shareImage = Storage::disk('public')->url($shareImage);
+    }
+
+    $gaId = SystemSetting::get('ga_measurement_id');
+    $searchConsole = SystemSetting::get('search_console_verification');
+    $orgLogo = SystemSetting::get('site_logo');
+    $orgLogo = $orgLogo ? Storage::disk('public')->url($orgLogo) : null;
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -6,10 +34,61 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-        <title>{{ $title ?? 'NiKCCIMA — Nigeria-Kenya Chamber of Commerce' }}</title>
-        @isset($metaDescription)
-            <meta name="description" content="{{ $metaDescription }}">
-        @endisset
+        <title>{{ $seoTitle }}</title>
+        <meta name="description" content="{{ $seoDescription }}">
+        <link rel="canonical" href="{{ url()->current() }}">
+        <meta name="robots" content="{{ $noindex ? 'noindex,nofollow' : 'index,follow' }}">
+        <meta name="theme-color" content="#9f1239">
+
+        {{-- Open Graph --}}
+        <meta property="og:type" content="{{ $ogType }}">
+        <meta property="og:site_name" content="{{ $siteName }}">
+        <meta property="og:title" content="{{ $seoTitle }}">
+        <meta property="og:description" content="{{ $seoDescription }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+        @if($shareImage)<meta property="og:image" content="{{ $shareImage }}">@endif
+
+        {{-- Twitter --}}
+        <meta name="twitter:card" content="{{ $shareImage ? 'summary_large_image' : 'summary' }}">
+        <meta name="twitter:title" content="{{ $seoTitle }}">
+        <meta name="twitter:description" content="{{ $seoDescription }}">
+        @if($shareImage)<meta name="twitter:image" content="{{ $shareImage }}">@endif
+
+        @if($searchConsole)<meta name="google-site-verification" content="{{ $searchConsole }}">@endif
+
+        {{-- Organization structured data --}}
+        <script type="application/ld+json">
+            @json([
+                '@context' => 'https://schema.org',
+                '@type' => 'Organization',
+                'name' => 'Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture',
+                'alternateName' => 'NiKCCIMA',
+                'url' => route('home'),
+                'logo' => $orgLogo,
+                'contactPoint' => [
+                    '@type' => 'ContactPoint',
+                    'contactType' => 'customer service',
+                    'email' => SystemSetting::get('nigeria_email', 'nigeria@nikccima.org'),
+                    'telephone' => SystemSetting::get('nigeria_phone', ''),
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+        </script>
+
+        {{-- Page-specific structured data --}}
+        @if($jsonLd)
+            <script type="application/ld+json">@json($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
+        @endif
+
+        {{-- Google Analytics (GA4) --}}
+        @if($gaId)
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ $gaId }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '{{ $gaId }}');
+            </script>
+        @endif
 
         {{-- Playfair Display from fonts.bunny.net --}}
         <link rel="preconnect" href="https://fonts.bunny.net" />

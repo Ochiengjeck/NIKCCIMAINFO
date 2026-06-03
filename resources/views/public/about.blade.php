@@ -10,7 +10,9 @@
     about_body           : Full institutional story (HTML)
 --}}
 
-<x-layouts::website :title="'About NiKCCIMA'">
+<x-layouts::website
+    :title="$page?->meta_title ?: 'About NiKCCIMA'"
+    :meta-description="$page?->meta_description ?: $page?->section('hero_subtitle', 'About the Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture — our mission, vision, and role in AfCFTA corridor trade.')">
 
     {{-- ===================== HERO BANNER ===================== --}}
     <section class="relative overflow-hidden py-28 text-white">

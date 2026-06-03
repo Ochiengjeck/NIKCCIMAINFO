@@ -1,4 +1,6 @@
-<x-layouts::website :title="'News — NiKCCIMA'">
+<x-layouts::website
+    :title="'News — NiKCCIMA'"
+    :meta-description="'Latest news, press releases and announcements from NiKCCIMA and the Nigeria-Kenya AfCFTA trade corridor.'">
 
     {{-- Hero --}}
     <section class="relative overflow-hidden py-32 text-white">

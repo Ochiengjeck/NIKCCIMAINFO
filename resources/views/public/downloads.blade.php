@@ -1,4 +1,6 @@
-<x-layouts::website :title="'Download Centre — NiKCCIMA'">
+<x-layouts::website
+    :title="'Download Centre — NiKCCIMA'"
+    :meta-description="'Download NiKCCIMA reports, policy briefs, strategic plans and trade resources for the Nigeria-Kenya corridor.'">
 
     {{-- Hero --}}
     <section class="relative overflow-hidden py-24 text-white">

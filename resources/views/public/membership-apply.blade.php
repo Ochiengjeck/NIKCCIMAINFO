@@ -1,4 +1,6 @@
-<x-layouts::website :title="'Apply for Membership — NiKCCIMA'">
+<x-layouts::website
+    :title="'Apply for Membership — NiKCCIMA'"
+    :meta-description="'Apply to join the Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture (NiKCCIMA).'">
 
     {{--
         CMS-MANAGED SECTIONS — None (static wrapper for the Livewire application form)

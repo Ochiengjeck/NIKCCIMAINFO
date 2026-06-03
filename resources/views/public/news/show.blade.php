@@ -1,4 +1,25 @@
-<x-layouts::website :title="$article->title . ' — NiKCCIMA'">
+@php
+    $articleImage = $article->featuredImageUrl();
+    $articleDescription = $article->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($article->body), 160);
+    $articleJsonLd = array_filter([
+        '@context' => 'https://schema.org',
+        '@type' => 'NewsArticle',
+        'headline' => $article->title,
+        'description' => $articleDescription,
+        'image' => $articleImage ? [$articleImage] : null,
+        'datePublished' => optional($article->published_at)->toIso8601String(),
+        'dateModified' => optional($article->updated_at)->toIso8601String(),
+        'author' => ['@type' => 'Organization', 'name' => 'NiKCCIMA'],
+        'publisher' => ['@type' => 'Organization', 'name' => 'NiKCCIMA'],
+        'mainEntityOfPage' => route('news.show', $article->slug),
+    ]);
+@endphp
+<x-layouts::website
+    :title="$article->title . ' — NiKCCIMA'"
+    :meta-description="$articleDescription"
+    :og-image="$articleImage"
+    og-type="article"
+    :json-ld="$articleJsonLd">
 
     {{-- Header Image or Gradient --}}
     @if($article->featuredImageUrl())
