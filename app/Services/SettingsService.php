@@ -17,4 +17,14 @@ class SettingsService
         SystemSetting::set($key, $value, $group);
         Cache::forget("setting:{$key}");
     }
+
+    /**
+     * The address that should receive admin/secretariat notifications.
+     */
+    public function adminNotificationEmail(): string
+    {
+        return $this->get('notification_email')
+            ?: $this->get('nigeria_email')
+            ?: 'info@nikccima.org';
+    }
 }

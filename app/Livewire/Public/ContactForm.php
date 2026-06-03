@@ -3,6 +3,10 @@
 namespace App\Livewire\Public;
 
 use App\Models\ContactInquiry;
+use App\Notifications\ContactInquiryAcknowledged;
+use App\Notifications\ContactInquiryReceived;
+use App\Services\SettingsService;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 
 class ContactForm extends Component
@@ -31,7 +35,7 @@ class ContactForm extends Component
     {
         $this->validate();
 
-        ContactInquiry::create([
+        $inquiry = ContactInquiry::create([
             'name' => $this->name,
             'email' => $this->email,
             'subject' => $this->subject,
@@ -39,6 +43,16 @@ class ContactForm extends Component
             'chapter' => $this->chapter,
             'status' => 'new',
         ]);
+
+        // Email the secretariat (reply-to the sender) and acknowledge the sender.
+        // A mail failure must never block the user's submission.
+        try {
+            $adminEmail = app(SettingsService::class)->adminNotificationEmail();
+            Notification::route('mail', $adminEmail)->notify(new ContactInquiryReceived($inquiry));
+            Notification::route('mail', $inquiry->email)->notify(new ContactInquiryAcknowledged($inquiry));
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         $this->reset(['name', 'email', 'subject', 'message', 'chapter']);
         $this->chapter = 'general';

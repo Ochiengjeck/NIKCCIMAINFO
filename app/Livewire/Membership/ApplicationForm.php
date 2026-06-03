@@ -5,6 +5,8 @@ namespace App\Livewire\Membership;
 use App\Models\MembershipApplication;
 use App\Models\MembershipCategory;
 use App\Notifications\ApplicationReceived;
+use App\Notifications\ApplicationSubmittedAdmin;
+use App\Services\SettingsService;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 
@@ -106,8 +108,14 @@ class ApplicationForm extends Component
             'submitted_at' => now(),
         ]);
 
-        Notification::route('mail', $this->email)
-            ->notify(new ApplicationReceived($application));
+        try {
+            Notification::route('mail', $this->email)
+                ->notify(new ApplicationReceived($application));
+            Notification::route('mail', app(SettingsService::class)->adminNotificationEmail())
+                ->notify(new ApplicationSubmittedAdmin($application));
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         session()->flash('success', 'Application submitted successfully. Reference: #'.$application->id);
 
