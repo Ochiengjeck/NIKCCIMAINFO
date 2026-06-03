@@ -23,6 +23,21 @@
     $searchConsole = \App\Models\SystemSetting::get('search_console_verification');
     $orgLogo = \App\Models\SystemSetting::get('site_logo');
     $orgLogo = $orgLogo ? \Illuminate\Support\Facades\Storage::disk('public')->url($orgLogo) : null;
+
+    $organizationJsonLd = array_filter([
+        '@context' => 'https://schema.org',
+        '@type' => 'Organization',
+        'name' => 'Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture',
+        'alternateName' => 'NiKCCIMA',
+        'url' => route('home'),
+        'logo' => $orgLogo,
+        'contactPoint' => [
+            '@type' => 'ContactPoint',
+            'contactType' => 'customer service',
+            'email' => \App\Models\SystemSetting::get('nigeria_email', 'nigeria@nikccima.org'),
+            'telephone' => \App\Models\SystemSetting::get('nigeria_phone', ''),
+        ],
+    ]);
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -54,22 +69,7 @@
         @if($searchConsole)<meta name="google-site-verification" content="{{ $searchConsole }}">@endif
 
         {{-- Organization structured data --}}
-        <script type="application/ld+json">
-            @json([
-                '@context' => 'https://schema.org',
-                '@type' => 'Organization',
-                'name' => 'Nigeria-Kenya Chamber of Commerce, Industry, Mines & Agriculture',
-                'alternateName' => 'NiKCCIMA',
-                'url' => route('home'),
-                'logo' => $orgLogo,
-                'contactPoint' => [
-                    '@type' => 'ContactPoint',
-                    'contactType' => 'customer service',
-                    'email' => SystemSetting::get('nigeria_email', 'nigeria@nikccima.org'),
-                    'telephone' => SystemSetting::get('nigeria_phone', ''),
-                ],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
-        </script>
+        <script type="application/ld+json">@json($organizationJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
 
         {{-- Page-specific structured data --}}
         @if($jsonLd)
