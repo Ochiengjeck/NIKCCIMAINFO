@@ -20,12 +20,26 @@ class ApplicationReceived extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        $app = $this->application->loadMissing(['category', 'chapter']);
+
+        $mail = (new MailMessage)
             ->subject('NiKCCIMA — Membership Application Received')
-            ->greeting("Dear {$this->application->applicant_name},")
-            ->line('Your membership application to NiKCCIMA has been received and is under review.')
-            ->line('Our membership officer will contact you shortly.')
-            ->action('View Application Status', url('/'))
+            ->greeting("Dear {$app->applicant_name},")
+            ->line('Your membership application to NiKCCIMA has been received and is under review. Here is a summary of what you submitted:')
+            ->line("**Reference:** #{$app->id}")
+            ->line('**Applicant:** '.$app->applicant_name.($app->organization && $app->organization !== $app->applicant_name ? ' ('.$app->organization.')' : ''))
+            ->line('**Category:** '.($app->category?->name ?? '—'))
+            ->line('**Chapter:** '.($app->chapter?->name ?? '—'))
+            ->line('**Submitted:** '.optional($app->submitted_at)->format('d M Y') ?? now()->format('d M Y'));
+
+        if ($app->isPriceOnRequest()) {
+            $mail->line('**Fee:** On request — our secretariat will advise the exact subscription fee.');
+        } else {
+            $mail->line('**Indicative fee:** '.$app->chargeLabel().' (payable once your application is approved).');
+        }
+
+        return $mail
+            ->line('Our membership officer will review your application and you will be notified at each step.')
             ->line('Thank you for your interest in NiKCCIMA.');
     }
 

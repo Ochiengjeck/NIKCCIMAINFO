@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Concerns\ChapterScoped;
 use App\Notifications\ApplicationApproved;
 use App\Notifications\ApplicationRejected;
+use App\Notifications\ApplicationStageAdvanced;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,7 +22,7 @@ class MembershipApplication extends Model
     }
 
     protected $fillable = [
-        'chapter_id', 'category_id', 'applicant_name', 'contact_person', 'email', 'phone',
+        'chapter_id', 'category_id', 'member_group', 'applicant_name', 'contact_person', 'email', 'phone',
         'organization', 'address', 'country', 'website', 'sponsored_by',
         'business_profile', 'purpose_of_membership',
         'declaration_accepted', 'status', 'rejection_reason',
@@ -52,6 +53,54 @@ class MembershipApplication extends Model
     public function approvals(): HasMany
     {
         return $this->hasMany(ApplicationApproval::class, 'application_id');
+    }
+
+    /** USD fee for this application, resolved against the chosen group. */
+    public function chargeUsd(): float
+    {
+        return (float) ($this->category?->feeUsd($this->member_group) ?? 0);
+    }
+
+    /** NGN fee for this application, resolved against the chosen group. */
+    public function chargeNgn(): float
+    {
+        return (float) ($this->category?->feeNgn($this->member_group) ?? 0);
+    }
+
+    public function isPriceOnRequest(): bool
+    {
+        return (bool) $this->category?->price_on_request;
+    }
+
+    /** Whether there is a concrete amount to bill (drives the invoice attachment). */
+    public function hasPayableAmount(): bool
+    {
+        return ! $this->isPriceOnRequest() && ($this->chargeUsd() > 0 || $this->chargeNgn() > 0);
+    }
+
+    /** Human charge label — "On request" / "Free" / "$X" (+ " (₦Y)" when NGN set). */
+    public function chargeLabel(): string
+    {
+        if ($this->isPriceOnRequest()) {
+            return 'On request';
+        }
+
+        $usd = $this->chargeUsd();
+        $ngn = $this->chargeNgn();
+
+        if ($usd <= 0 && $ngn <= 0) {
+            return 'Free';
+        }
+
+        $parts = [];
+        if ($usd > 0) {
+            $parts[] = '$'.number_format($usd, 2);
+        }
+        if ($ngn > 0) {
+            $parts[] = '₦'.number_format($ngn, 0);
+        }
+
+        return count($parts) === 2 ? $parts[0].' ('.$parts[1].')' : $parts[0];
     }
 
     public function submitForReview(): void
@@ -91,8 +140,15 @@ class MembershipApplication extends Model
 
         $this->update($updates);
 
-        if ($stage === 'director-general') {
-            $this->notify(new ApplicationApproved($this));
+        // Email the applicant at every step; never let a mail failure block approval.
+        try {
+            if ($stage === 'director-general') {
+                $this->notify(new ApplicationApproved($this));
+            } else {
+                $this->notify(new ApplicationStageAdvanced($this, $stage));
+            }
+        } catch (\Throwable $e) {
+            report($e);
         }
     }
 

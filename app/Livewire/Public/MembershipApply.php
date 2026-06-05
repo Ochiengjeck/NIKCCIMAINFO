@@ -144,6 +144,7 @@ class MembershipApply extends Component
         $application = MembershipApplication::create([
             'chapter_id' => $chapter?->id,
             'category_id' => $this->category_id,
+            'member_group' => $this->grouped ? $this->member_type : null,
             'applicant_name' => $this->applicant_name,
             'contact_person' => $this->contact_person ?: null,
             'email' => $this->email,
