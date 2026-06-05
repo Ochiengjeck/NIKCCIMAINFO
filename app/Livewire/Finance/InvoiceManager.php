@@ -99,7 +99,7 @@ class InvoiceManager extends Component
 
     public function render()
     {
-        $invoices = Invoice::forChapter()->with('member')->latest()->paginate(20);
+        $invoices = Invoice::forChapter()->with(['member', 'application'])->latest()->paginate(20);
         $members = Member::forChapter()->orderBy('first_name')->get();
 
         return view('livewire.finance.invoice-manager', [

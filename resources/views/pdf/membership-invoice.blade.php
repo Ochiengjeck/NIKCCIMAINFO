@@ -6,7 +6,8 @@
         $settings = app(\App\Services\SettingsService::class);
         $usd = $application->chargeUsd();
         $ngn = $application->chargeNgn();
-        $proforma = 'PF-'.now()->format('Y').'-'.str_pad((string) $application->id, 5, '0', STR_PAD_LEFT);
+        $proforma = $application->invoice()?->invoice_number
+            ?? 'PF-'.now()->format('Y').'-'.str_pad((string) $application->id, 5, '0', STR_PAD_LEFT);
         $contactEmail = $settings->get('notification_email') ?: $settings->get('nigeria_email', 'info@nikccima.org');
         $contactPhone = $settings->get('nigeria_phone', '');
         $contactAddress = $settings->get('nigeria_address', 'Abuja, Federal Republic of Nigeria');

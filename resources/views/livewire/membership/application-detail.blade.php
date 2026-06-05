@@ -92,25 +92,62 @@
                 @endif
             </div>
 
-            {{-- Approval Action --}}
+            {{-- Payment capture (final step) --}}
             @can('members.approve')
-                @if(!in_array($application->status, ['active', 'rejected']))
+                @if($application->status === 'payment-pending')
+                    <div class="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
+                        <flux:heading size="sm" class="mb-1">Confirm Payment</flux:heading>
+                        <p class="mb-4 text-xs text-zinc-500">Amount due: <span class="font-medium text-zinc-700 dark:text-zinc-300">{{ $application->chargeLabel() }}</span></p>
+                        <form wire:submit="activateMembership" class="space-y-3">
+                            <flux:field>
+                                <flux:label>Payment Method</flux:label>
+                                <flux:select wire:model="paymentMethod">
+                                    <flux:select.option value="cash">Cash</flux:select.option>
+                                    <flux:select.option value="bank-transfer">Bank Transfer</flux:select.option>
+                                    <flux:select.option value="card">Card / Online</flux:select.option>
+                                    <flux:select.option value="mobile-money">Mobile Money</flux:select.option>
+                                    <flux:select.option value="cheque">Cheque</flux:select.option>
+                                    <flux:select.option value="other">Other</flux:select.option>
+                                </flux:select>
+                                <flux:error name="paymentMethod" />
+                            </flux:field>
+                            <flux:field>
+                                <flux:label>Transaction ID / Code <span class="text-zinc-400 font-normal">(optional)</span></flux:label>
+                                <flux:input wire:model="transactionRef" placeholder="e.g. bank ref, receipt no." />
+                                <flux:error name="transactionRef" />
+                            </flux:field>
+                            <div class="grid grid-cols-3 gap-2">
+                                <flux:field class="col-span-2">
+                                    <flux:label>Amount</flux:label>
+                                    <flux:input type="number" step="0.01" wire:model="paymentAmount" />
+                                    <flux:error name="paymentAmount" />
+                                </flux:field>
+                                <flux:field>
+                                    <flux:label>Currency</flux:label>
+                                    <flux:select wire:model="paymentCurrency">
+                                        <flux:select.option value="USD">USD</flux:select.option>
+                                        <flux:select.option value="NGN">NGN</flux:select.option>
+                                        <flux:select.option value="KES">KES</flux:select.option>
+                                    </flux:select>
+                                </flux:field>
+                            </div>
+                            <flux:field>
+                                <flux:label>Payment Date</flux:label>
+                                <flux:input type="date" wire:model="paymentDate" />
+                                <flux:error name="paymentDate" />
+                            </flux:field>
+                            <flux:button type="submit" variant="primary" icon="check" class="w-full">Confirm Payment &amp; Activate</flux:button>
+                        </form>
+                        <flux:button wire:click="confirmReject" variant="ghost" class="mt-2 w-full text-red-500">Reject Instead</flux:button>
+                    </div>
+                @elseif(!in_array($application->status, ['active', 'rejected']))
                     <div class="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
                         <flux:heading size="sm" class="mb-3">Review Action</flux:heading>
                         <flux:field class="mb-3">
                             <flux:label>Notes (optional)</flux:label>
                             <flux:textarea wire:model="notes" rows="3" />
                         </flux:field>
-
-                        @if($application->status === 'payment-pending')
-                            <flux:button wire:click="activateMembership" variant="primary" class="w-full mb-2">
-                                Mark Payment Received & Activate
-                            </flux:button>
-                        @else
-                            <flux:button wire:click="approve" variant="primary" class="w-full mb-2">
-                                Approve
-                            </flux:button>
-                        @endif
+                        <flux:button wire:click="approve" variant="primary" class="w-full mb-2">Approve</flux:button>
                         <flux:button wire:click="confirmReject" variant="danger" class="w-full">Reject</flux:button>
                     </div>
                 @endif

@@ -55,6 +55,52 @@ class MembershipApplication extends Model
         return $this->hasMany(ApplicationApproval::class, 'application_id');
     }
 
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class, 'application_id');
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'application_id')->latestOfMany();
+    }
+
+    /**
+     * Create the membership invoice for this application if one is payable and none exists yet.
+     * Idempotent — safe to call more than once.
+     */
+    public function ensureInvoice(): ?Invoice
+    {
+        if (! $this->hasPayableAmount()) {
+            return null;
+        }
+
+        if ($existing = $this->invoices()->first()) {
+            return $existing;
+        }
+
+        $usd = $this->chargeUsd();
+        $ngn = $this->chargeNgn();
+        [$amount, $currency] = $usd > 0 ? [$usd, 'USD'] : [$ngn, 'NGN'];
+
+        return $this->invoices()->create([
+            'chapter_id' => $this->chapter_id,
+            'currency' => $currency,
+            'invoice_number' => Invoice::generateInvoiceNumber(),
+            'due_date' => now()->addDays(14),
+            'line_items' => [[
+                'description' => ($this->category?->name ?? 'Membership').' — annual subscription',
+                'qty' => 1,
+                'price' => $amount,
+            ]],
+            'subtotal' => $amount,
+            'tax' => 0,
+            'total' => $amount,
+            'status' => 'sent',
+            'sent_at' => now(),
+        ]);
+    }
+
     /** USD fee for this application, resolved against the chosen group. */
     public function chargeUsd(): float
     {
@@ -143,6 +189,7 @@ class MembershipApplication extends Model
         // Email the applicant at every step; never let a mail failure block approval.
         try {
             if ($stage === 'director-general') {
+                $this->ensureInvoice();
                 $this->notify(new ApplicationApproved($this));
             } else {
                 $this->notify(new ApplicationStageAdvanced($this, $stage));

@@ -69,8 +69,13 @@
                 @forelse($invoices as $invoice)
                     <tr>
                         <td class="px-4 py-3 font-mono text-sm text-zinc-700 dark:text-zinc-300">{{ $invoice->invoice_number }}</td>
-                        <td class="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">{{ $invoice->member?->full_name ?? 'General' }}</td>
-                        <td class="px-4 py-3 text-sm font-medium text-zinc-900 dark:text-white">{{ number_format($invoice->total, 2) }}</td>
+                        <td class="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">
+                            {{ $invoice->member?->full_name ?? $invoice->application?->applicant_name ?? 'General' }}
+                            @if(! $invoice->member_id && $invoice->application_id)
+                                <span class="ml-1 inline-flex rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">Applicant</span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-3 text-sm font-medium text-zinc-900 dark:text-white">{{ $invoice->currency ?? 'USD' }} {{ number_format($invoice->total, 2) }}</td>
                         <td class="px-4 py-3 text-sm text-zinc-500">{{ $invoice->due_date?->format('d M Y') }}</td>
                         <td class="px-4 py-3">
                             <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium

@@ -12,7 +12,7 @@ class FinancialTransaction extends Model
 
     protected $fillable = [
         'chapter_id', 'member_id', 'type', 'amount', 'currency',
-        'reference', 'gateway_ref', 'status', 'paid_at', 'description',
+        'reference', 'gateway_ref', 'payment_method', 'status', 'paid_at', 'description',
     ];
 
     protected function casts(): array

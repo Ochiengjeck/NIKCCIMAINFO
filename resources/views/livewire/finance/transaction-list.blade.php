@@ -34,6 +34,7 @@
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Reference</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Member</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Type</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Method</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Amount</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Status</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Paid At</th>
@@ -45,6 +46,7 @@
                         <td class="px-4 py-3 font-mono text-sm text-zinc-700 dark:text-zinc-300">{{ $txn->reference }}</td>
                         <td class="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">{{ $txn->member?->full_name ?? '—' }}</td>
                         <td class="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">{{ ucfirst(str_replace('-', ' ', $txn->type)) }}</td>
+                        <td class="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">{{ $txn->payment_method ? ucfirst(str_replace('-', ' ', $txn->payment_method)) : '—' }}</td>
                         <td class="px-4 py-3 text-sm font-medium text-zinc-900 dark:text-white">
                             {{ number_format($txn->amount, 2) }} {{ $txn->currency }}
                         </td>
@@ -64,7 +66,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-4 py-8 text-center text-zinc-500">No transactions found.</td>
+                        <td colspan="7" class="px-4 py-8 text-center text-zinc-500">No transactions found.</td>
                     </tr>
                 @endforelse
             </tbody>

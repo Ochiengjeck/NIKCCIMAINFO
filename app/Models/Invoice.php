@@ -18,7 +18,7 @@ class Invoice extends Model
     }
 
     protected $fillable = [
-        'chapter_id', 'member_id', 'invoice_number', 'due_date',
+        'chapter_id', 'member_id', 'application_id', 'currency', 'invoice_number', 'due_date',
         'line_items', 'subtotal', 'tax', 'total', 'status',
         'sent_at', 'paid_at',
     ];
@@ -44,6 +44,11 @@ class Invoice extends Model
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function application(): BelongsTo
+    {
+        return $this->belongsTo(MembershipApplication::class, 'application_id');
     }
 
     public static function generateInvoiceNumber(): string
