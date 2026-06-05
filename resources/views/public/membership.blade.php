@@ -55,36 +55,44 @@
             @endif
 
             @php
-                $typeLabels = \App\Models\MembershipCategory::TYPES;
-                $grouped = $categories->whereNotNull('member_type')->groupBy('member_type');
+                // When grouping is on, render a section per group (only categories offered to it);
+                // otherwise a single flat table. $sections: [label => [group, categories]].
+                if ($grouped) {
+                    $sections = [];
+                    foreach (\App\Models\MembershipCategory::GROUPS as $key => $label) {
+                        $set = $categories->filter(fn ($c) => $c->availableForGroup($key));
+                        if ($set->isNotEmpty()) {
+                            $sections[$label] = ['group' => $key, 'items' => $set];
+                        }
+                    }
+                } else {
+                    $sections = ['Membership Categories' => ['group' => null, 'items' => $categories]];
+                }
             @endphp
 
-            @forelse($grouped as $type => $tiers)
+            @forelse($sections as $label => $section)
                 <div class="mb-14">
-                    <h3 class="mb-5 font-serif text-2xl font-bold text-zinc-900">{{ $typeLabels[$type] ?? ucfirst($type) }} Membership</h3>
+                    @if($grouped)
+                        <h3 class="mb-5 font-serif text-2xl font-bold text-zinc-900">{{ $label }} Membership</h3>
+                    @endif
 
                     {{-- Table header --}}
                     <div class="flex items-center border-b-2 border-crimson-700 pb-4 mb-2">
-                        <span class="w-1/4 text-sm font-bold uppercase tracking-wide text-crimson-700">Tier</span>
+                        <span class="w-1/4 text-sm font-bold uppercase tracking-wide text-crimson-700">Category</span>
                         <span class="w-1/4 text-sm font-bold uppercase tracking-wide text-crimson-700">Annual Fee</span>
                         <span class="w-1/2 text-sm font-bold uppercase tracking-wide text-crimson-700">Key Benefits</span>
                     </div>
 
-                    @foreach($tiers as $category)
-                        @php
-                            $ngnFree = is_null($category->fee_ngn) || (float) $category->fee_ngn == 0;
-                            $kesFree = is_null($category->fee_kes) || (float) $category->fee_kes == 0;
-                        @endphp
+                    @foreach($section['items'] as $category)
                         <div class="flex items-start border-b border-zinc-200 py-5 hover:bg-zinc-50 transition-colors">
                             <div class="w-1/4 font-semibold text-zinc-900">{{ $category->name }}</div>
                             <div class="w-1/4 text-zinc-700">
-                                @if($ngnFree && $kesFree)
+                                @php $priceUsd = $category->priceLabelUsd($section['group']); @endphp
+                                @if($priceUsd === 'Free')
                                     <span class="font-medium text-brand-700">Free</span>
                                 @else
-                                    @if(!$ngnFree)&#8358;{{ number_format($category->fee_ngn) }}@endif
-                                    @if(!$ngnFree && !$kesFree) <span class="text-zinc-400">/</span> @endif
-                                    @if(!$kesFree)KES {{ number_format($category->fee_kes) }}@endif
-                                    <span class="text-xs text-zinc-400">/ yr</span>
+                                    <span class="font-medium">{{ $priceUsd }}</span>
+                                    @if(\Illuminate\Support\Str::startsWith($priceUsd, '$'))<span class="text-xs text-zinc-400">/ yr</span>@endif
                                 @endif
                             </div>
                             <div class="w-1/2 text-zinc-600 text-sm leading-relaxed">
@@ -94,10 +102,10 @@
                     @endforeach
                 </div>
             @empty
-                {{-- Static fallback when no active, typed categories exist --}}
+                {{-- Static fallback when no active categories exist --}}
                 <div class="flex items-start border-b border-zinc-200 py-5">
-                    <div class="w-1/4 font-semibold text-zinc-900">Membership tiers</div>
-                    <div class="w-3/4 text-zinc-600 text-sm leading-relaxed">Tiers are being finalised — please check back soon or contact the secretariat.</div>
+                    <div class="w-1/4 font-semibold text-zinc-900">Membership categories</div>
+                    <div class="w-3/4 text-zinc-600 text-sm leading-relaxed">Categories are being finalised — please check back soon or contact the secretariat.</div>
                 </div>
             @endforelse
 

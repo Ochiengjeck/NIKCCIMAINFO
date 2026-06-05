@@ -41,6 +41,29 @@
         </form>
     </div>
 
+    {{-- ===== MEMBERSHIP ===== --}}
+    <div class="mt-8 max-w-xl">
+        <div class="mb-4">
+            <flux:heading size="lg">Membership</flux:heading>
+            <flux:subheading>Control how membership categories are priced and presented.</flux:subheading>
+        </div>
+
+        <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+            <form wire:submit="saveMembership" class="space-y-4">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-zinc-800 dark:text-zinc-100">Group by Corporate / Individual</p>
+                        <p class="text-xs text-zinc-500">When on, each category can be offered to Corporate and/or Individual applicants with separate prices, and the application form asks the applicant to pick one first. When off, every category uses a single flat price.</p>
+                    </div>
+                    <flux:switch wire:model="membershipGroupByType" />
+                </div>
+                <div class="pt-1">
+                    <flux:button type="submit" variant="primary" icon="check">Save Membership Settings</flux:button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- ===== BRANDING ===== --}}
     <div class="mt-8 max-w-xl">
         <div class="mb-4">

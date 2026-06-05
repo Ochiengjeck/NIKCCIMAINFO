@@ -22,7 +22,7 @@
         {{-- Step Indicator --}}
         <div class="mb-8">
             <div class="mb-4 flex items-center justify-between">
-                @foreach(['Personal Info', 'Category', 'Business Profile', 'Declaration'] as $i => $label)
+                @foreach(['Applicant Info', 'Category', 'Business Profile', 'Declaration'] as $i => $label)
                     <div class="flex flex-1 flex-col items-center {{ $loop->last ? '' : 'relative' }}">
                         <div class="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 text-sm font-semibold transition
                             {{ ($i + 1) < $step ? 'border-brand-600 bg-brand-600 text-white' :
@@ -55,13 +55,19 @@
 
             {{-- Step 1: Personal Info --}}
             @if($step === 1)
-                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Personal & Organisation Details</h2>
+                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Applicant Information</h2>
                 <div class="grid gap-5 sm:grid-cols-2">
                     <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Full Name <span class="text-crimson-500">*</span></label>
-                        <input wire:model="applicant_name" type="text" placeholder="John Doe"
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Full Name / Organisation <span class="text-crimson-500">*</span></label>
+                        <input wire:model="applicant_name" type="text" placeholder="John Doe / Company Ltd"
                             class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
                         @error('applicant_name') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Contact Person <span class="text-xs font-normal text-zinc-400">(if an organisation)</span></label>
+                        <input wire:model="contact_person" type="text" placeholder="Primary contact"
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
+                        @error('contact_person') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="mb-1.5 block text-sm font-medium text-zinc-700">Email Address <span class="text-crimson-500">*</span></label>
@@ -70,7 +76,7 @@
                         @error('email') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Phone Number <span class="text-crimson-500">*</span></label>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Phone / WhatsApp <span class="text-crimson-500">*</span></label>
                         <input wire:model="phone" type="tel" placeholder="+234 000 000 0000"
                             class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
                         @error('phone') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
@@ -80,6 +86,30 @@
                         <input wire:model="organization" type="text" placeholder="Company Name Ltd"
                             class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
                         @error('organization') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Country <span class="text-crimson-500">*</span></label>
+                        <input wire:model="country" type="text" placeholder="e.g. Nigeria"
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
+                        @error('country') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Address <span class="text-crimson-500">*</span></label>
+                        <input wire:model="address" type="text" placeholder="Street, city, state"
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
+                        @error('address') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Website / Social Media <span class="text-xs font-normal text-zinc-400">(optional)</span></label>
+                        <input wire:model="website" type="text" placeholder="https://..."
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
+                        @error('website') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Recommended / Sponsored by <span class="text-xs font-normal text-zinc-400">(optional)</span></label>
+                        <input wire:model="sponsored_by" type="text" placeholder="Existing member / referrer"
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
+                        @error('sponsored_by') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-1.5 block text-sm font-medium text-zinc-700">Which chapter are you applying under? <span class="text-crimson-500">*</span></label>
@@ -94,76 +124,84 @@
                 </div>
             @endif
 
-            {{-- Step 2: Member Type, Tier & Purpose --}}
+            {{-- Step 2: Membership Category --}}
             @if($step === 2)
-                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Membership Type & Tier</h2>
+                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Membership Category</h2>
                 <div class="space-y-5">
-                    {{-- Member type --}}
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Member Type <span class="text-crimson-500">*</span></label>
-                        <div class="grid grid-cols-2 gap-3">
-                            @foreach(['corporate' => 'Corporate', 'individual' => 'Individual'] as $value => $label)
-                                <label class="flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-sm transition
-                                    {{ $member_type === $value ? 'border-brand-500 bg-brand-50 text-brand-800' : 'border-zinc-300 hover:bg-zinc-50 text-zinc-700' }}">
-                                    <input type="radio" wire:model.live="member_type" value="{{ $value }}" class="h-4 w-4 text-brand-600">
-                                    <span class="font-medium">{{ $label }}</span>
-                                </label>
-                            @endforeach
+                    @if($grouped)
+                        {{-- Member type first --}}
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-zinc-700">Member Type <span class="text-crimson-500">*</span></label>
+                            <div class="grid grid-cols-2 gap-3">
+                                @foreach(['corporate' => 'Corporate', 'individual' => 'Individual'] as $value => $label)
+                                    <label class="flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-sm transition
+                                        {{ $member_type === $value ? 'border-brand-500 bg-brand-50 text-brand-800' : 'border-zinc-300 hover:bg-zinc-50 text-zinc-700' }}">
+                                        <input type="radio" wire:model.live="member_type" value="{{ $value }}" class="h-4 w-4 text-brand-600">
+                                        <span class="font-medium">{{ $label }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('member_type') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
                         </div>
-                        @error('member_type') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
-                    </div>
 
-                    {{-- Tier (filtered by type) --}}
-                    @php $tiers = $member_type ? $categories->where('member_type', $member_type) : collect(); @endphp
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Tier <span class="text-crimson-500">*</span></label>
-                        <select wire:model="category_id" @disabled(!$member_type)
-                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20 disabled:bg-zinc-100 disabled:text-zinc-400">
-                            <option value="">{{ $member_type ? 'Select a tier' : 'Choose a member type first' }}</option>
-                            @foreach($tiers as $cat)
-                                @php
-                                    $ngnFree = is_null($cat->fee_ngn) || (float) $cat->fee_ngn == 0;
-                                    $kesFree = is_null($cat->fee_kes) || (float) $cat->fee_kes == 0;
-                                    $price = ($ngnFree && $kesFree)
-                                        ? 'Free'
-                                        : trim((!$ngnFree ? '₦'.number_format($cat->fee_ngn) : '').(!$ngnFree && !$kesFree ? ' / ' : '').(!$kesFree ? 'KES '.number_format($cat->fee_kes) : ''));
-                                @endphp
-                                <option value="{{ $cat->id }}">{{ $cat->name }} — {{ $price }}</option>
-                            @endforeach
-                        </select>
-                        @error('category_id') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Purpose of Membership <span class="text-crimson-500">*</span></label>
-                        <p class="mb-2 text-xs text-zinc-500">Minimum 50 characters. Explain why you are applying and what you hope to achieve.</p>
-                        <textarea wire:model="purpose_of_membership" rows="5" placeholder="Describe your reason for applying..."
-                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20"></textarea>
-                        @error('purpose_of_membership') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
-                    </div>
+                        @php $available = $member_type ? $categories->filter(fn ($c) => $c->availableForGroup($member_type)) : collect(); @endphp
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-zinc-700">Category <span class="text-crimson-500">*</span></label>
+                            <select wire:model="category_id" @disabled(!$member_type)
+                                class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20 disabled:bg-zinc-100 disabled:text-zinc-400">
+                                <option value="">{{ $member_type ? 'Select a category' : 'Choose a member type first' }}</option>
+                                @foreach($available as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }} — {{ $cat->priceLabelUsd($member_type) }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                        </div>
+                    @else
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-zinc-700">Membership Category <span class="text-crimson-500">*</span></label>
+                            <select wire:model="category_id"
+                                class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
+                                <option value="">Select a category</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }} — {{ $cat->priceLabelUsd() }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                        </div>
+                    @endif
                 </div>
             @endif
 
             {{-- Step 3: Business Profile --}}
             @if($step === 3)
-                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Business Profile</h2>
+                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Business / Professional Profile</h2>
                 <div class="grid gap-5 sm:grid-cols-2">
                     <div class="sm:col-span-2">
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Business Type <span class="text-crimson-500">*</span></label>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Primary Sector / Industry <span class="text-crimson-500">*</span></label>
+                        <input wire:model="primary_sector" type="text" placeholder="e.g. Agriculture, Manufacturing, Financial Services"
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
+                        @error('primary_sector') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Brief Summary of Activities <span class="text-crimson-500">*</span></label>
+                        <textarea wire:model="activity_summary" rows="3" placeholder="2–3 lines describing what your organisation does"
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20"></textarea>
+                        @error('activity_summary') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Business Type <span class="text-xs font-normal text-zinc-400">(optional)</span></label>
                         <input wire:model="business_type" type="text" placeholder="e.g. Manufacturing, Trading, Services"
                             class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
-                        @error('business_type') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Years in Operation <span class="text-crimson-500">*</span></label>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Years in Operation <span class="text-xs font-normal text-zinc-400">(optional)</span></label>
                         <input wire:model="years_in_operation" type="text" placeholder="e.g. 5"
                             class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
-                        @error('years_in_operation') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Annual Turnover (approximate) <span class="text-crimson-500">*</span></label>
+                        <label class="mb-1.5 block text-sm font-medium text-zinc-700">Annual Turnover <span class="text-xs font-normal text-zinc-400">(optional)</span></label>
                         <input wire:model="annual_turnover" type="text" placeholder="e.g. $500,000 USD"
                             class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20">
-                        @error('annual_turnover') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-1.5 block text-sm font-medium text-zinc-700">Current Export Markets <span class="text-xs font-normal text-zinc-400">(optional)</span></label>
@@ -175,7 +213,14 @@
 
             {{-- Step 4: Declaration --}}
             @if($step === 4)
-                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Digital Declaration</h2>
+                <h2 class="mb-6 font-serif text-xl font-bold text-zinc-900">Purpose &amp; Declaration</h2>
+                <div class="mb-6">
+                    <label class="mb-1.5 block text-sm font-medium text-zinc-700">Purpose of Membership <span class="text-crimson-500">*</span></label>
+                    <p class="mb-2 text-xs text-zinc-500">Minimum 50 characters. Briefly state why you wish to join NiKCCIMA.</p>
+                    <textarea wire:model="purpose_of_membership" rows="5" placeholder="Describe your reason for applying..."
+                        class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20"></textarea>
+                    @error('purpose_of_membership') <p class="mt-1 text-xs text-crimson-500">{{ $message }}</p> @enderror
+                </div>
                 <div class="mb-6 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
                     <p class="mb-3 text-sm font-semibold text-zinc-700">By submitting this application, you declare that:</p>
                     <ul class="space-y-2.5">

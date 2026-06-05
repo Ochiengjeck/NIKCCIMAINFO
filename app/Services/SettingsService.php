@@ -27,4 +27,13 @@ class SettingsService
             ?: $this->get('nigeria_email')
             ?: 'info@nikccima.org';
     }
+
+    /**
+     * Whether membership categories are grouped into Corporate / Individual
+     * (each with its own pricing). When false, categories use a single flat price.
+     */
+    public function membershipGroupByType(): bool
+    {
+        return (bool) $this->get('membership_group_by_type', false);
+    }
 }

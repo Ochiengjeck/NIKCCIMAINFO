@@ -9,9 +9,11 @@ class SystemSettings extends Component
 {
     public string $siteName = '';
 
-    public string $defaultCurrency = 'NGN';
+    public string $defaultCurrency = 'USD';
 
     public string $notificationEmail = '';
+
+    public bool $membershipGroupByType = false;
 
     public string $logoPath = '';
 
@@ -45,8 +47,9 @@ class SystemSettings extends Component
     {
         $this->authorize('settings.edit');
         $this->siteName = $settings->get('site_name', 'NiKCCIMA Backoffice');
-        $this->defaultCurrency = $settings->get('default_currency', 'NGN');
+        $this->defaultCurrency = $settings->get('default_currency', 'USD');
         $this->notificationEmail = $settings->get('notification_email', '');
+        $this->membershipGroupByType = (bool) $settings->get('membership_group_by_type', false);
         $this->logoPath = $settings->get('site_logo', '');
         $this->iconPath = $settings->get('site_icon', '');
 
@@ -77,6 +80,15 @@ class SystemSettings extends Component
         $settings->set('notification_email', $this->notificationEmail);
 
         session()->flash('success', 'General settings saved successfully.');
+    }
+
+    public function saveMembership(SettingsService $settings): void
+    {
+        $this->authorize('settings.edit');
+
+        $settings->set('membership_group_by_type', $this->membershipGroupByType ? '1' : '0', 'membership');
+
+        session()->flash('success', 'Membership settings saved successfully.');
     }
 
     public function saveContact(SettingsService $settings): void

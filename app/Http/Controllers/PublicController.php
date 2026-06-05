@@ -34,8 +34,9 @@ class PublicController extends Controller
 
         $categories = MembershipCategory::where('is_active', true)->orderBy('sort_order')->get();
         $leadership = LeadershipProfile::where('is_active', true)->orderBy('sort_order')->take(4)->get();
+        $grouped = app(\App\Services\SettingsService::class)->membershipGroupByType();
 
-        return view('public.home', compact('page', 'sectorsPage', 'latestNews', 'upcomingEvents', 'stats', 'categories', 'leadership'));
+        return view('public.home', compact('page', 'sectorsPage', 'latestNews', 'upcomingEvents', 'stats', 'categories', 'leadership', 'grouped'));
     }
 
     public function about(): View
@@ -129,8 +130,9 @@ class PublicController extends Controller
     {
         $page = CmsPage::where('slug', 'membership')->first();
         $categories = MembershipCategory::where('is_active', true)->orderBy('sort_order')->get();
+        $grouped = app(\App\Services\SettingsService::class)->membershipGroupByType();
 
-        return view('public.membership', compact('page', 'categories'));
+        return view('public.membership', compact('page', 'categories', 'grouped'));
     }
 
     public function membershipApply(): View

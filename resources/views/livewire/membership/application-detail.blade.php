@@ -18,10 +18,15 @@
             <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
                 <flux:heading size="lg" class="mb-4">Applicant Details</flux:heading>
                 <dl class="grid grid-cols-2 gap-4">
-                    <div><dt class="text-xs text-zinc-500">Name</dt><dd class="font-medium">{{ $application->applicant_name }}</dd></div>
+                    <div><dt class="text-xs text-zinc-500">Name / Organisation</dt><dd class="font-medium">{{ $application->applicant_name }}</dd></div>
+                    <div><dt class="text-xs text-zinc-500">Contact Person</dt><dd>{{ $application->contact_person ?? '—' }}</dd></div>
                     <div><dt class="text-xs text-zinc-500">Email</dt><dd>{{ $application->email }}</dd></div>
-                    <div><dt class="text-xs text-zinc-500">Phone</dt><dd>{{ $application->phone ?? '—' }}</dd></div>
+                    <div><dt class="text-xs text-zinc-500">Phone / WhatsApp</dt><dd>{{ $application->phone ?? '—' }}</dd></div>
                     <div><dt class="text-xs text-zinc-500">Organisation</dt><dd>{{ $application->organization ?? '—' }}</dd></div>
+                    <div><dt class="text-xs text-zinc-500">Country</dt><dd>{{ $application->country ?? '—' }}</dd></div>
+                    <div class="col-span-2"><dt class="text-xs text-zinc-500">Address</dt><dd>{{ $application->address ?? '—' }}</dd></div>
+                    <div><dt class="text-xs text-zinc-500">Website / Social</dt><dd class="break-words">{{ $application->website ?? '—' }}</dd></div>
+                    <div><dt class="text-xs text-zinc-500">Recommended / Sponsored by</dt><dd>{{ $application->sponsored_by ?? '—' }}</dd></div>
                     <div><dt class="text-xs text-zinc-500">Chapter</dt><dd>{{ $application->chapter?->name }}</dd></div>
                     <div><dt class="text-xs text-zinc-500">Category</dt><dd>{{ $application->category?->name }}</dd></div>
                 </dl>

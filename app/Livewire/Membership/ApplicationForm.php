@@ -16,8 +16,12 @@ class ApplicationForm extends Component
 
     public int $totalSteps = 4;
 
-    // Step 1: Personal / Org info
+    public bool $grouped = false;
+
+    // Step 1: Applicant info
     public string $applicant_name = '';
+
+    public string $contact_person = '';
 
     public string $email = '';
 
@@ -25,14 +29,24 @@ class ApplicationForm extends Component
 
     public string $organization = '';
 
-    // Step 2: Type, Category & Purpose
+    public string $address = '';
+
+    public string $country = '';
+
+    public string $website = '';
+
+    public string $sponsored_by = '';
+
+    // Step 2: Category
     public string $member_type = '';
 
     public ?int $category_id = null;
 
-    public string $purpose_of_membership = '';
-
     // Step 3: Business Profile
+    public string $primary_sector = '';
+
+    public string $activity_summary = '';
+
     public string $business_type = '';
 
     public string $years_in_operation = '';
@@ -41,7 +55,9 @@ class ApplicationForm extends Component
 
     public string $export_markets = '';
 
-    // Step 4: Declaration
+    // Step 4: Purpose + Declaration
+    public string $purpose_of_membership = '';
+
     public bool $declaration_accepted = false;
 
     protected function rules(): array
@@ -49,32 +65,40 @@ class ApplicationForm extends Component
         return match ($this->step) {
             1 => [
                 'applicant_name' => 'required|string|max:255',
+                'contact_person' => 'nullable|string|max:255',
                 'email' => 'required|email|max:255',
                 'phone' => 'required|string|max:30',
                 'organization' => 'required|string|max:255',
+                'address' => 'nullable|string|max:500',
+                'country' => 'nullable|string|max:100',
+                'website' => 'nullable|string|max:255',
+                'sponsored_by' => 'nullable|string|max:255',
             ],
-            2 => [
-                'member_type' => 'required|in:corporate,individual',
-                'category_id' => 'required|exists:membership_categories,id',
-                'purpose_of_membership' => 'required|string|min:50',
-            ],
+            2 => array_merge(
+                $this->grouped ? ['member_type' => 'required|in:corporate,individual'] : [],
+                ['category_id' => 'required|exists:membership_categories,id'],
+            ),
             3 => [
-                'business_type' => 'required|string|max:255',
-                'years_in_operation' => 'required|string|max:10',
-                'annual_turnover' => 'required|string|max:100',
+                'primary_sector' => 'required|string|max:255',
+                'activity_summary' => 'required|string|max:1000',
+                'business_type' => 'nullable|string|max:255',
+                'years_in_operation' => 'nullable|string|max:10',
+                'annual_turnover' => 'nullable|string|max:100',
                 'export_markets' => 'nullable|string',
             ],
             4 => [
+                'purpose_of_membership' => 'required|string|min:50',
                 'declaration_accepted' => 'accepted',
             ],
             default => [],
         };
     }
 
-    public function mount(): void
+    public function mount(SettingsService $settings): void
     {
         $chapter = auth()->user()->chapter;
         abort_unless($chapter, 403, 'No chapter assigned.');
+        $this->grouped = $settings->membershipGroupByType();
     }
 
     public function updatedMemberType(): void
@@ -87,11 +111,10 @@ class ApplicationForm extends Component
         $this->validate();
 
         if ($this->step === 2 && $this->category_id) {
-            $belongs = MembershipCategory::whereKey($this->category_id)
-                ->where('member_type', $this->member_type)
-                ->exists();
-            if (! $belongs) {
-                $this->addError('category_id', 'Please choose a tier for the selected member type.');
+            $category = MembershipCategory::find($this->category_id);
+            $group = $this->grouped ? $this->member_type : null;
+            if (! $category || ! $category->is_active || ! $category->availableForGroup($group)) {
+                $this->addError('category_id', 'Please choose a valid category for your selection.');
 
                 return;
             }
@@ -113,10 +136,17 @@ class ApplicationForm extends Component
             'chapter_id' => auth()->user()->chapter_id,
             'category_id' => $this->category_id,
             'applicant_name' => $this->applicant_name,
+            'contact_person' => $this->contact_person ?: null,
             'email' => $this->email,
             'phone' => $this->phone,
             'organization' => $this->organization,
+            'address' => $this->address ?: null,
+            'country' => $this->country ?: null,
+            'website' => $this->website ?: null,
+            'sponsored_by' => $this->sponsored_by ?: null,
             'business_profile' => [
+                'primary_sector' => $this->primary_sector,
+                'activity_summary' => $this->activity_summary,
                 'business_type' => $this->business_type,
                 'years_in_operation' => $this->years_in_operation,
                 'annual_turnover' => $this->annual_turnover,

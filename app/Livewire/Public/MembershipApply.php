@@ -17,8 +17,12 @@ class MembershipApply extends Component
 
     public int $totalSteps = 4;
 
-    // Step 1
+    public bool $grouped = false;
+
+    // Step 1 — Applicant Information (Section A)
     public string $applicant_name = '';
+
+    public string $contact_person = '';
 
     public string $email = '';
 
@@ -26,16 +30,26 @@ class MembershipApply extends Component
 
     public string $organization = '';
 
-    public string $chapter = ''; // 'nigeria' or 'kenya'
+    public string $address = '';
 
-    // Step 2
-    public string $member_type = '';
+    public string $country = '';
+
+    public string $website = '';
+
+    public string $sponsored_by = '';
+
+    public string $chapter = ''; // 'nigeria' or 'kenya' — used for chapter routing
+
+    // Step 2 — Membership Category (Section B)
+    public string $member_type = ''; // transient group choice when grouping is on
 
     public ?int $category_id = null;
 
-    public string $purpose_of_membership = '';
+    // Step 3 — Business / Professional Profile (Section C)
+    public string $primary_sector = '';
 
-    // Step 3
+    public string $activity_summary = '';
+
     public string $business_type = '';
 
     public string $years_in_operation = '';
@@ -44,35 +58,49 @@ class MembershipApply extends Component
 
     public string $export_markets = '';
 
-    // Step 4
+    // Step 4 — Purpose (Section D) + Declaration (Section E)
+    public string $purpose_of_membership = '';
+
     public bool $declaration_accepted = false;
 
     public bool $submitted = false;
 
     public ?int $applicationId = null;
 
+    public function mount(SettingsService $settings): void
+    {
+        $this->grouped = $settings->membershipGroupByType();
+    }
+
     protected function rules(): array
     {
         return match ($this->step) {
             1 => [
                 'applicant_name' => 'required|string|max:255',
+                'contact_person' => 'nullable|string|max:255',
                 'email' => 'required|email|max:255',
                 'phone' => 'required|string|max:30',
                 'organization' => 'required|string|max:255',
+                'address' => 'required|string|max:500',
+                'country' => 'required|string|max:100',
+                'website' => 'nullable|string|max:255',
+                'sponsored_by' => 'nullable|string|max:255',
                 'chapter' => 'required|in:nigeria,kenya',
             ],
-            2 => [
-                'member_type' => 'required|in:corporate,individual',
-                'category_id' => 'required|exists:membership_categories,id',
-                'purpose_of_membership' => 'required|string|min:50',
-            ],
+            2 => array_merge(
+                $this->grouped ? ['member_type' => 'required|in:corporate,individual'] : [],
+                ['category_id' => 'required|exists:membership_categories,id'],
+            ),
             3 => [
-                'business_type' => 'required|string|max:255',
-                'years_in_operation' => 'required|string|max:10',
-                'annual_turnover' => 'required|string|max:100',
+                'primary_sector' => 'required|string|max:255',
+                'activity_summary' => 'required|string|max:1000',
+                'business_type' => 'nullable|string|max:255',
+                'years_in_operation' => 'nullable|string|max:10',
+                'annual_turnover' => 'nullable|string|max:100',
                 'export_markets' => 'nullable|string',
             ],
             4 => [
+                'purpose_of_membership' => 'required|string|min:50',
                 'declaration_accepted' => 'accepted',
             ],
             default => [],
@@ -81,7 +109,7 @@ class MembershipApply extends Component
 
     public function updatedMemberType(): void
     {
-        // Reset the tier when the type changes so a mismatched category can't carry over.
+        // Reset the category when the group changes so a mismatched one can't carry over.
         $this->category_id = null;
     }
 
@@ -89,13 +117,11 @@ class MembershipApply extends Component
     {
         $this->validate();
 
-        // Ensure the chosen tier actually belongs to the selected member type.
         if ($this->step === 2 && $this->category_id) {
-            $belongs = MembershipCategory::whereKey($this->category_id)
-                ->where('member_type', $this->member_type)
-                ->exists();
-            if (! $belongs) {
-                $this->addError('category_id', 'Please choose a tier for the selected member type.');
+            $category = MembershipCategory::find($this->category_id);
+            $group = $this->grouped ? $this->member_type : null;
+            if (! $category || ! $category->is_active || ! $category->availableForGroup($group)) {
+                $this->addError('category_id', 'Please choose a valid category for your selection.');
 
                 return;
             }
@@ -119,10 +145,17 @@ class MembershipApply extends Component
             'chapter_id' => $chapter?->id,
             'category_id' => $this->category_id,
             'applicant_name' => $this->applicant_name,
+            'contact_person' => $this->contact_person ?: null,
             'email' => $this->email,
             'phone' => $this->phone,
             'organization' => $this->organization,
+            'address' => $this->address ?: null,
+            'country' => $this->country ?: null,
+            'website' => $this->website ?: null,
+            'sponsored_by' => $this->sponsored_by ?: null,
             'business_profile' => [
+                'primary_sector' => $this->primary_sector,
+                'activity_summary' => $this->activity_summary,
                 'business_type' => $this->business_type,
                 'years_in_operation' => $this->years_in_operation,
                 'annual_turnover' => $this->annual_turnover,

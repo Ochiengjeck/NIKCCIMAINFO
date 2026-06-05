@@ -3,6 +3,8 @@
 namespace App\Livewire\Membership;
 
 use App\Models\MembershipCategory;
+use App\Services\SettingsService;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -18,51 +20,61 @@ class CategoryManager extends Component
 
     public string $slug = '';
 
-    public string $member_type = 'individual';
-
     public string $description = '';
+
+    // Flat pricing (used when grouping is off)
+    public string $fee_usd = '';
 
     public string $fee_ngn = '';
 
-    public string $fee_kes = '';
+    // Per-group pricing (used when grouping is on)
+    public bool $corporate_enabled = false;
+
+    public string $corporate_fee_usd = '';
+
+    public string $corporate_fee_ngn = '';
+
+    public bool $individual_enabled = false;
+
+    public string $individual_fee_usd = '';
+
+    public string $individual_fee_ngn = '';
 
     public bool $is_active = true;
 
     public int $sort_order = 0;
+
+    public bool $grouped = false;
 
     protected function rules(): array
     {
         return [
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:membership_categories,slug,'.($this->editingId ?? 'NULL'),
-            'member_type' => 'required|in:corporate,individual',
             'description' => 'nullable|string',
+            'fee_usd' => 'nullable|numeric|min:0',
             'fee_ngn' => 'nullable|numeric|min:0',
-            'fee_kes' => 'nullable|numeric|min:0',
+            'corporate_enabled' => 'boolean',
+            'corporate_fee_usd' => 'nullable|numeric|min:0',
+            'corporate_fee_ngn' => 'nullable|numeric|min:0',
+            'individual_enabled' => 'boolean',
+            'individual_fee_usd' => 'nullable|numeric|min:0',
+            'individual_fee_ngn' => 'nullable|numeric|min:0',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ];
     }
 
-    public function mount(): void
+    public function mount(SettingsService $settings): void
     {
         $this->authorize('settings.edit');
+        $this->grouped = $settings->membershipGroupByType();
     }
 
     public function updatedName(): void
     {
-        $this->regenerateSlug();
-    }
-
-    public function updatedMemberType(): void
-    {
-        $this->regenerateSlug();
-    }
-
-    private function regenerateSlug(): void
-    {
         if (! $this->editingId) {
-            $this->slug = \Illuminate\Support\Str::slug($this->member_type.'-'.$this->name);
+            $this->slug = Str::slug($this->name);
         }
     }
 
@@ -78,10 +90,15 @@ class CategoryManager extends Component
         $this->editingId = $category->id;
         $this->name = $category->name;
         $this->slug = $category->slug;
-        $this->member_type = $category->member_type ?? 'individual';
         $this->description = $category->description ?? '';
-        $this->fee_ngn = $category->fee_ngn ?? '';
-        $this->fee_kes = $category->fee_kes ?? '';
+        $this->fee_usd = (string) ($category->fee_usd ?? '');
+        $this->fee_ngn = (string) ($category->fee_ngn ?? '');
+        $this->corporate_enabled = (bool) $category->corporate_enabled;
+        $this->corporate_fee_usd = (string) ($category->corporate_fee_usd ?? '');
+        $this->corporate_fee_ngn = (string) ($category->corporate_fee_ngn ?? '');
+        $this->individual_enabled = (bool) $category->individual_enabled;
+        $this->individual_fee_usd = (string) ($category->individual_fee_usd ?? '');
+        $this->individual_fee_ngn = (string) ($category->individual_fee_ngn ?? '');
         $this->is_active = $category->is_active;
         $this->sort_order = $category->sort_order;
         $this->showForm = true;
@@ -90,8 +107,10 @@ class CategoryManager extends Component
     public function save(): void
     {
         $data = $this->validate();
-        $data['fee_ngn'] = $this->fee_ngn === '' ? null : $this->fee_ngn;
-        $data['fee_kes'] = $this->fee_kes === '' ? null : $this->fee_kes;
+
+        foreach (['fee_usd', 'fee_ngn', 'corporate_fee_usd', 'corporate_fee_ngn', 'individual_fee_usd', 'individual_fee_ngn'] as $feeField) {
+            $data[$feeField] = $this->{$feeField} === '' ? null : $this->{$feeField};
+        }
 
         if ($this->editingId) {
             MembershipCategory::findOrFail($this->editingId)->update($data);
@@ -122,10 +141,15 @@ class CategoryManager extends Component
         $this->editingId = null;
         $this->name = '';
         $this->slug = '';
-        $this->member_type = 'individual';
         $this->description = '';
+        $this->fee_usd = '';
         $this->fee_ngn = '';
-        $this->fee_kes = '';
+        $this->corporate_enabled = false;
+        $this->corporate_fee_usd = '';
+        $this->corporate_fee_ngn = '';
+        $this->individual_enabled = false;
+        $this->individual_fee_usd = '';
+        $this->individual_fee_ngn = '';
         $this->is_active = true;
         $this->sort_order = 0;
     }

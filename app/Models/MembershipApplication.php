@@ -21,8 +21,9 @@ class MembershipApplication extends Model
     }
 
     protected $fillable = [
-        'chapter_id', 'category_id', 'applicant_name', 'email', 'phone',
-        'organization', 'business_profile', 'purpose_of_membership',
+        'chapter_id', 'category_id', 'applicant_name', 'contact_person', 'email', 'phone',
+        'organization', 'address', 'country', 'website', 'sponsored_by',
+        'business_profile', 'purpose_of_membership',
         'declaration_accepted', 'status', 'rejection_reason',
         'submitted_at', 'reviewed_at', 'approved_at',
     ];

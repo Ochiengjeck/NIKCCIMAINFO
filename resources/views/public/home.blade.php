@@ -328,10 +328,12 @@
                 @forelse($categories as $cat)
                 <div class="flex items-start border-b border-zinc-200 py-5 group hover:bg-white transition-colors rounded">
                     <span class="w-1/4 font-semibold text-zinc-900 pr-4">{{ $cat->name }}</span>
-                    <span class="w-1/4 text-zinc-700 font-medium pr-4">
-                        @if($cat->fee_ngn) ₦{{ number_format($cat->fee_ngn) }} @endif
-                        @if($cat->fee_kes) / KES {{ number_format($cat->fee_kes) }} @endif
-                    </span>
+                    @php
+                        $displayGroup = ($grouped ?? false)
+                            ? ($cat->corporate_enabled ? 'corporate' : ($cat->individual_enabled ? 'individual' : null))
+                            : null;
+                    @endphp
+                    <span class="w-1/4 text-zinc-700 font-medium pr-4">{{ $cat->priceLabelUsd($displayGroup) }}</span>
                     <span class="w-1/2 text-zinc-600 text-sm leading-relaxed">{{ $cat->description ?? "Full access to NiKCCIMA's trade facilitation services, bilateral events, and member network." }}</span>
                 </div>
                 @empty
