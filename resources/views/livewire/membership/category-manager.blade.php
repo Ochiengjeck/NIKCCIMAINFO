@@ -75,7 +75,7 @@
                         @else
                             @php $flatNgn = (float) $cat->feeNgn(); @endphp
                             <p class="font-semibold text-zinc-900 dark:text-white">{{ $cat->priceLabelUsd() }}</p>
-                            @if($flatNgn > 0)
+                            @if(! $cat->price_on_request && $flatNgn > 0)
                                 <p class="text-xs text-zinc-400">≈ ₦{{ number_format($flatNgn) }}</p>
                             @endif
                         @endif
@@ -90,17 +90,10 @@
                     </div>
 
                     {{-- Actions --}}
-                    <div class="sm:col-span-1 sm:text-right">
+                    <div class="flex items-center gap-1 sm:col-span-1 sm:justify-end">
                         @can('settings.edit')
-                            <flux:dropdown position="bottom" align="end">
-                                <flux:button size="sm" variant="ghost" icon="ellipsis-horizontal" />
-                                <flux:menu>
-                                    <flux:menu.item icon="pencil-square" wire:click="edit({{ $cat->id }})">Edit</flux:menu.item>
-                                    <flux:menu.item icon="{{ $cat->is_active ? 'eye-slash' : 'eye' }}" wire:click="toggleActive({{ $cat->id }})">
-                                        {{ $cat->is_active ? 'Deactivate' : 'Activate' }}
-                                    </flux:menu.item>
-                                </flux:menu>
-                            </flux:dropdown>
+                            <flux:button size="sm" variant="ghost" icon="pencil-square" wire:click="edit({{ $cat->id }})" title="Edit" />
+                            <flux:button size="sm" variant="ghost" icon="{{ $cat->is_active ? 'eye-slash' : 'eye' }}" wire:click="toggleActive({{ $cat->id }})" title="{{ $cat->is_active ? 'Deactivate' : 'Activate' }}" />
                         @endcan
                     </div>
                 </div>
@@ -134,7 +127,7 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <flux:field>
                         <flux:label>Category Name</flux:label>
-                        <flux:input wire:model.live="name" placeholder="e.g. Platinum Member" />
+                        <flux:input wire:model.blur="name" placeholder="e.g. Platinum Member" />
                         <flux:error name="name" />
                     </flux:field>
                     <flux:field>
@@ -157,7 +150,7 @@
                     <p class="text-xs text-zinc-500">Enable a group to offer this category to it, and set each group's price. Leave a fee blank for Free.</p>
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
-                            <flux:checkbox wire:model.live="corporate_enabled" label="Offer to Corporate" />
+                            <flux:checkbox wire:model="corporate_enabled" label="Offer to Corporate" />
                             <div class="mt-3 grid grid-cols-2 gap-3">
                                 <flux:field>
                                     <flux:label>USD</flux:label>
@@ -170,7 +163,7 @@
                             </div>
                         </div>
                         <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
-                            <flux:checkbox wire:model.live="individual_enabled" label="Offer to Individual" />
+                            <flux:checkbox wire:model="individual_enabled" label="Offer to Individual" />
                             <div class="mt-3 grid grid-cols-2 gap-3">
                                 <flux:field>
                                     <flux:label>USD</flux:label>
@@ -202,15 +195,24 @@
             </div>
 
             {{-- Display --}}
-            <div class="grid grid-cols-1 gap-4 border-t border-zinc-100 pt-5 dark:border-zinc-800 sm:grid-cols-2">
-                <flux:field>
-                    <flux:label>Sort Order</flux:label>
-                    <flux:input type="number" wire:model="sort_order" />
-                    <flux:error name="sort_order" />
-                </flux:field>
-                <div class="flex items-end pb-1">
-                    <flux:checkbox wire:model="is_active" label="Active (visible to applicants)" />
+            <div class="space-y-4 border-t border-zinc-100 pt-5 dark:border-zinc-800">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <flux:field>
+                        <flux:label>Sort Order</flux:label>
+                        <flux:input type="number" wire:model="sort_order" />
+                        <flux:error name="sort_order" />
+                    </flux:field>
+                    <div class="flex items-end pb-1">
+                        <flux:checkbox wire:model="is_active" label="Active (visible to applicants)" />
+                    </div>
                 </div>
+                <label class="flex items-start gap-3 rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
+                    <flux:checkbox wire:model="price_on_request" />
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-zinc-800 dark:text-zinc-100">Show price as "On request"</p>
+                        <p class="text-xs text-zinc-500">When on, the public website and application form display <strong>On request</strong> instead of the figure — even if a price is set above.</p>
+                    </div>
+                </label>
             </div>
 
             <div class="flex justify-end gap-3 border-t border-zinc-100 pt-5 dark:border-zinc-800">

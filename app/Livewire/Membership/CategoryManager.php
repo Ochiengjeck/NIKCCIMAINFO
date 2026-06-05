@@ -40,6 +40,8 @@ class CategoryManager extends Component
 
     public string $individual_fee_ngn = '';
 
+    public bool $price_on_request = false;
+
     public bool $is_active = true;
 
     public int $sort_order = 0;
@@ -60,6 +62,7 @@ class CategoryManager extends Component
             'individual_enabled' => 'boolean',
             'individual_fee_usd' => 'nullable|numeric|min:0',
             'individual_fee_ngn' => 'nullable|numeric|min:0',
+            'price_on_request' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0',
         ];
@@ -99,6 +102,7 @@ class CategoryManager extends Component
         $this->individual_enabled = (bool) $category->individual_enabled;
         $this->individual_fee_usd = (string) ($category->individual_fee_usd ?? '');
         $this->individual_fee_ngn = (string) ($category->individual_fee_ngn ?? '');
+        $this->price_on_request = (bool) $category->price_on_request;
         $this->is_active = $category->is_active;
         $this->sort_order = $category->sort_order;
         $this->showForm = true;
@@ -150,6 +154,7 @@ class CategoryManager extends Component
         $this->individual_enabled = false;
         $this->individual_fee_usd = '';
         $this->individual_fee_ngn = '';
+        $this->price_on_request = false;
         $this->is_active = true;
         $this->sort_order = 0;
     }

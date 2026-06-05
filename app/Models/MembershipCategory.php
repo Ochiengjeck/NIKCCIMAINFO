@@ -18,7 +18,7 @@ class MembershipCategory extends Model
         'fee_usd', 'fee_ngn',
         'corporate_enabled', 'corporate_fee_usd', 'corporate_fee_ngn',
         'individual_enabled', 'individual_fee_usd', 'individual_fee_ngn',
-        'is_active', 'sort_order',
+        'price_on_request', 'is_active', 'sort_order',
     ];
 
     protected function casts(): array
@@ -32,6 +32,7 @@ class MembershipCategory extends Model
             'individual_enabled' => 'boolean',
             'individual_fee_usd' => 'decimal:2',
             'individual_fee_ngn' => 'decimal:2',
+            'price_on_request' => 'boolean',
             'is_active' => 'boolean',
         ];
     }
@@ -106,6 +107,10 @@ class MembershipCategory extends Model
      */
     public function priceLabelUsd(?string $group = null): string
     {
+        if ($this->price_on_request) {
+            return 'On request';
+        }
+
         $usd = (float) $this->feeUsd($group);
 
         if ($usd > 0) {

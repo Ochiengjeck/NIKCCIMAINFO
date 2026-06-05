@@ -68,6 +68,11 @@ class MembershipTiersTest extends TestCase
             'name' => 'Youth', 'slug' => 'youth', 'is_active' => true, 'sort_order' => 3,
         ]);
         $this->assertSame('Free', $freebie->priceLabelUsd());
+
+        // price_on_request forces "On request" even when a price is set.
+        $cat->update(['price_on_request' => true]);
+        $this->assertSame('On request', $cat->fresh()->priceLabelUsd());
+        $this->assertSame('On request', $cat->fresh()->priceLabelUsd('corporate'));
     }
 
     public function test_flat_apply_flow_captures_all_form_fields(): void
