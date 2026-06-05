@@ -44,6 +44,7 @@
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Category</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Version</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Status</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Visibility</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Uploaded By</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Date</th>
                     <th class="px-4 py-3"></th>
@@ -67,17 +68,54 @@
                                 {{ ucwords(str_replace('-', ' ', $doc->status)) }}
                             </span>
                         </td>
+                        <td class="px-4 py-3">
+                            @can('documents.approve')
+                                <button type="button" wire:click="togglePublic({{ $doc->id }})"
+                                    class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium transition
+                                        {{ $doc->is_public ? 'bg-brand-100 text-brand-700 hover:bg-brand-200' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200' }}"
+                                    title="Click to toggle public visibility">
+                                    {{ $doc->is_public ? 'Public' : 'Internal' }}
+                                </button>
+                            @else
+                                <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium
+                                    {{ $doc->is_public ? 'bg-brand-100 text-brand-700' : 'bg-zinc-100 text-zinc-600' }}">
+                                    {{ $doc->is_public ? 'Public' : 'Internal' }}
+                                </span>
+                            @endcan
+                        </td>
                         <td class="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">{{ $doc->uploader?->name ?? '—' }}</td>
                         <td class="px-4 py-3 text-sm text-zinc-500">{{ $doc->created_at->format('d M Y') }}</td>
                         <td class="px-4 py-3 text-right">
-                            @if($doc->status === 'approved')
-                                <flux:button size="sm" href="{{ route('admin.documents.download', $doc) }}" icon="arrow-down-tray">Download</flux:button>
-                            @endif
+                            <flux:dropdown position="bottom" align="end">
+                                <flux:button size="sm" variant="ghost" icon="ellipsis-horizontal" />
+                                <flux:menu>
+                                    <flux:menu.item :href="route('admin.documents.show', $doc)" wire:navigate icon="eye">View</flux:menu.item>
+                                    @if($doc->status === 'approved')
+                                        <flux:menu.item :href="route('admin.documents.download', $doc)" icon="arrow-down-tray">Download</flux:menu.item>
+                                    @endif
+                                    @can('documents.approve')
+                                        <flux:menu.separator />
+                                        @if($doc->status !== 'approved')
+                                            <flux:menu.item wire:click="approve({{ $doc->id }})" icon="check">Approve</flux:menu.item>
+                                        @endif
+                                        <flux:menu.item wire:click="togglePublic({{ $doc->id }})" icon="globe-alt">
+                                            {{ $doc->is_public ? 'Make Internal' : 'Make Public' }}
+                                        </flux:menu.item>
+                                        @if($doc->status !== 'archived')
+                                            <flux:menu.item wire:click="archive({{ $doc->id }})" wire:confirm="Archive this document?" icon="archive-box">Archive</flux:menu.item>
+                                        @endif
+                                    @endcan
+                                    @can('documents.delete')
+                                        <flux:menu.separator />
+                                        <flux:menu.item wire:click="destroy({{ $doc->id }})" wire:confirm="Delete this document permanently?" icon="trash" variant="danger">Delete</flux:menu.item>
+                                    @endcan
+                                </flux:menu>
+                            </flux:dropdown>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-zinc-500">No documents found.</td>
+                        <td colspan="8" class="px-4 py-8 text-center text-zinc-500">No documents found.</td>
                     </tr>
                 @endforelse
             </tbody>

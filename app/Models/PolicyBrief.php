@@ -12,7 +12,7 @@ class PolicyBrief extends Model
 
     protected $fillable = [
         'chapter_id', 'author_id', 'title', 'body',
-        'status', 'reviewer_id', 'published_at',
+        'file_media_item_id', 'status', 'reviewer_id', 'published_at',
     ];
 
     protected function casts(): array
@@ -35,5 +35,10 @@ class PolicyBrief extends Model
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewer_id');
+    }
+
+    public function file(): BelongsTo
+    {
+        return $this->belongsTo(MediaItem::class, 'file_media_item_id');
     }
 }

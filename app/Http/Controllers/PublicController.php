@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\CmsPage;
 use App\Models\Corridor;
+use App\Models\Document;
 use App\Models\Event;
 use App\Models\Investor;
 use App\Models\LeadershipProfile;
-use App\Models\MediaItem;
 use App\Models\Member;
 use App\Models\MembershipCategory;
 use App\Models\NewsArticle;
@@ -63,6 +63,15 @@ class PublicController extends Controller
         return view('public.news.show', compact('article'));
     }
 
+    public function policyBriefShow(\App\Models\PolicyBrief $brief): View
+    {
+        abort_unless($brief->status === 'published' && $brief->published_at, 404);
+
+        $brief->load(['file', 'author']);
+
+        return view('public.policy-brief', compact('brief'));
+    }
+
     public function leadership(): View
     {
         $profiles = LeadershipProfile::with('chapter')
@@ -76,7 +85,7 @@ class PublicController extends Controller
 
     public function downloads(): View
     {
-        $files = MediaItem::where('type', 'document')
+        $files = Document::public()
             ->latest()
             ->paginate(20);
 

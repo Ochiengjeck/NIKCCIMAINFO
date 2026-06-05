@@ -7,6 +7,7 @@ use App\Livewire\Audit\ActivityLog;
 use App\Livewire\Chatbot\ChatLogViewer;
 use App\Livewire\Chatbot\FaqEditor;
 use App\Livewire\Documents\DocumentApproval;
+use App\Livewire\Documents\DocumentDetail;
 use App\Livewire\Documents\DocumentLibrary;
 use App\Livewire\Documents\DocumentUploader;
 use App\Livewire\Events\AttendanceReport;
@@ -35,6 +36,7 @@ use App\Livewire\Membership\MemberProfile;
 use App\Livewire\Platforms\PlatformDetail;
 use App\Livewire\Platforms\PlatformManager;
 use App\Livewire\Policy\NtbManager;
+use App\Livewire\Policy\PolicyBriefDetail;
 use App\Livewire\Policy\PolicyBriefEditor;
 use App\Livewire\Policy\RooRepository;
 use App\Livewire\Policy\TradeStatusDashboard;
@@ -82,6 +84,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::prefix('policy')->name('policy.')->group(function () {
         Route::get('/ntbs', NtbManager::class)->name('ntbs');
         Route::get('/briefs', PolicyBriefEditor::class)->name('briefs');
+        Route::get('/briefs/{brief}', PolicyBriefDetail::class)->name('briefs.show');
         Route::get('/roo', RooRepository::class)->name('roo');
         Route::get('/trade-status', TradeStatusDashboard::class)->name('trade-status');
     });
@@ -122,6 +125,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
 
             return Storage::disk('local')->download($document->file_path, $document->title);
         })->name('download');
+        Route::get('/{document}', DocumentDetail::class)->name('show');
     });
 
     // Phase 9: KPIs

@@ -22,6 +22,8 @@ class Document extends Model
         'chapter_id',
         'title',
         'category',
+        'description',
+        'is_public',
         'file_path',
         'file_size',
         'mime_type',
@@ -38,7 +40,39 @@ class Document extends Model
         return [
             'approved_at' => 'datetime',
             'file_size' => 'integer',
+            'is_public' => 'boolean',
         ];
+    }
+
+    /**
+     * Documents that are approved AND flagged for the public website.
+     */
+    public function scopePublic($query)
+    {
+        return $query->where('status', 'approved')->where('is_public', true);
+    }
+
+    /**
+     * Lower-cased file extension derived from the stored path.
+     */
+    public function extension(): string
+    {
+        return strtolower(pathinfo($this->file_path, PATHINFO_EXTENSION));
+    }
+
+    /**
+     * Human-readable file size (mirrors MediaItem::humanSize()).
+     */
+    public function humanSize(): string
+    {
+        $bytes = (int) $this->file_size;
+        if ($bytes < 1024) {
+            return "{$bytes} B";
+        } elseif ($bytes < 1048576) {
+            return round($bytes / 1024, 1).' KB';
+        }
+
+        return round($bytes / 1048576, 1).' MB';
     }
 
     public function chapter(): BelongsTo

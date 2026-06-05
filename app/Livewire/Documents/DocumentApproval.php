@@ -28,6 +28,12 @@ class DocumentApproval extends Component
         session()->flash('success', "Document '{$document->title}' approved.");
     }
 
+    public function togglePublic(int $id): void
+    {
+        $document = Document::findOrFail($id);
+        $document->update(['is_public' => ! $document->is_public]);
+    }
+
     public function reject(int $id): void
     {
         $document = Document::findOrFail($id);

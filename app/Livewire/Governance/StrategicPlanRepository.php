@@ -41,13 +41,13 @@ class StrategicPlanRepository extends Component
         $mediaItem = MediaItem::findOrFail($this->fileMediaItemId);
 
         StrategicPlan::create([
-            'title'              => $this->title,
-            'fiscal_year'        => $this->fiscal_year,
-            'status'             => $this->status,
-            'file_path'          => $mediaItem->path,
+            'title' => $this->title,
+            'fiscal_year' => $this->fiscal_year,
+            'status' => $this->status,
+            'file_path' => $mediaItem->path,
             'file_media_item_id' => $this->fileMediaItemId,
-            'chapter_id'         => auth()->user()->chapter_id,
-            'uploaded_by'        => auth()->id(),
+            'chapter_id' => auth()->user()->chapter_id,
+            'uploaded_by' => auth()->id(),
         ]);
 
         $this->reset(['title', 'fiscal_year', 'status', 'fileMediaItemId']);

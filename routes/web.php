@@ -16,6 +16,7 @@ Route::get('/membership/apply', [PublicController::class, 'membershipApply'])->n
 Route::get('/events', [PublicController::class, 'events'])->name('events.index');
 Route::get('/events/{id}', [PublicController::class, 'eventShow'])->name('events.show');
 Route::get('/policy', \App\Livewire\Public\PolicySearch::class)->name('policy');
+Route::get('/policy/{brief}', [PublicController::class, 'policyBriefShow'])->name('policy.show');
 Route::get('/chapters/nigeria', [PublicController::class, 'chapterNigeria'])->name('chapters.nigeria');
 Route::get('/chapters/kenya', [PublicController::class, 'chapterKenya'])->name('chapters.kenya');
 Route::get('/news', [PublicController::class, 'news'])->name('news.index');
@@ -23,6 +24,23 @@ Route::get('/news/{slug}', [PublicController::class, 'newsShow'])->name('news.sh
 Route::get('/leadership', [PublicController::class, 'leadership'])->name('leadership');
 Route::get('/downloads', [PublicController::class, 'downloads'])->name('downloads');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
+
+// Public document / brief downloads — gated by the parent record's published state
+Route::get('/downloads/{document}/file', function (\App\Models\Document $document) {
+    abort_unless($document->is_public && $document->status === 'approved', 404);
+
+    $name = $document->title.'.'.$document->extension();
+
+    return \Illuminate\Support\Facades\Storage::disk('local')->download($document->file_path, $name);
+})->name('public.document.download');
+
+Route::get('/briefs/{brief}/file', function (\App\Models\PolicyBrief $brief) {
+    abort_unless($brief->status === 'published' && $brief->file, 404);
+
+    $item = $brief->file;
+
+    return \Illuminate\Support\Facades\Storage::disk($item->disk)->download($item->path, $item->original_filename);
+})->name('public.brief.download');
 
 // --- SEO ---
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');

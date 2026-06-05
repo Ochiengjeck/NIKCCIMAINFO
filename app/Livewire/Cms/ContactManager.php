@@ -58,8 +58,8 @@ class ContactManager extends Component
             ->paginate(20);
 
         $stats = [
-            'total'     => ContactInquiry::count(),
-            'new'       => ContactInquiry::where('status', 'new')->count(),
+            'total' => ContactInquiry::count(),
+            'new' => ContactInquiry::where('status', 'new')->count(),
             'responded' => ContactInquiry::where('status', 'responded')->count(),
         ];
 

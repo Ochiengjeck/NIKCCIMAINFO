@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Policy;
 
+use App\Concerns\ResolvesActingChapter;
 use App\Models\PolicyBrief;
 use App\Models\User;
 use Livewire\Component;
@@ -9,7 +10,7 @@ use Livewire\WithPagination;
 
 class PolicyBriefEditor extends Component
 {
-    use WithPagination;
+    use ResolvesActingChapter, WithPagination;
 
     public bool $showForm = false;
 
@@ -18,6 +19,8 @@ class PolicyBriefEditor extends Component
     public string $title = '';
 
     public string $body = '';
+
+    public ?int $file_media_item_id = null;
 
     public string $status = 'draft';
 
@@ -36,11 +39,13 @@ class PolicyBriefEditor extends Component
             $brief = PolicyBrief::findOrFail($id);
             $this->title = $brief->title;
             $this->body = $brief->body;
+            $this->file_media_item_id = $brief->file_media_item_id;
             $this->status = $brief->status;
             $this->reviewer_id = (string) ($brief->reviewer_id ?? '');
         } else {
             $this->title = '';
             $this->body = '';
+            $this->file_media_item_id = null;
             $this->status = 'draft';
             $this->reviewer_id = '';
         }
@@ -59,15 +64,15 @@ class PolicyBriefEditor extends Component
         $this->validate([
             'title' => 'required|string|max:255',
             'body' => 'required|string',
+            'file_media_item_id' => 'nullable|exists:media_items,id',
             'status' => 'required|in:draft,in-review,approved,published',
             'reviewer_id' => 'nullable|exists:users,id',
         ]);
 
         $data = [
-            'chapter_id' => auth()->user()->chapter_id,
-            'author_id' => auth()->id(),
             'title' => $this->title,
             'body' => $this->body,
+            'file_media_item_id' => $this->file_media_item_id,
             'status' => $this->status,
             'reviewer_id' => $this->reviewer_id ?: null,
         ];
@@ -75,7 +80,11 @@ class PolicyBriefEditor extends Component
         if ($this->editingId) {
             PolicyBrief::findOrFail($this->editingId)->update($data);
         } else {
-            PolicyBrief::create($data);
+            PolicyBrief::create([
+                ...$data,
+                'chapter_id' => $this->actingChapterId(),
+                'author_id' => auth()->id(),
+            ]);
         }
 
         $this->closeForm();
@@ -83,15 +92,36 @@ class PolicyBriefEditor extends Component
 
     public function publish(int $id): void
     {
+        $this->authorize('policy.publish');
+
         PolicyBrief::findOrFail($id)->update([
             'status' => 'published',
             'published_at' => now(),
         ]);
     }
 
+    public function unpublish(int $id): void
+    {
+        $this->authorize('policy.publish');
+
+        PolicyBrief::findOrFail($id)->update([
+            'status' => 'in-review',
+            'published_at' => null,
+        ]);
+    }
+
+    public function destroy(int $id): void
+    {
+        $this->authorize('policy.delete');
+
+        PolicyBrief::findOrFail($id)->delete();
+
+        session()->flash('success', 'Policy brief deleted.');
+    }
+
     public function render()
     {
-        $briefs = PolicyBrief::forChapter()->with(['author', 'reviewer'])->latest()->paginate(20);
+        $briefs = PolicyBrief::forChapter()->with(['author', 'reviewer', 'file'])->latest()->paginate(20);
         $reviewers = User::orderBy('name')->get();
 
         return view('livewire.policy.policy-brief-editor', [

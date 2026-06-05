@@ -38,6 +38,7 @@
                         <thead class="bg-zinc-50">
                             <tr>
                                 <th class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Document</th>
+                                <th class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Category</th>
                                 <th class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Type</th>
                                 <th class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Size</th>
                                 <th class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">Date</th>
@@ -47,18 +48,18 @@
                         <tbody class="divide-y divide-zinc-100">
                             @foreach($files as $file)
                                 @php
-                                    $ext = strtolower(pathinfo($file->original_filename, PATHINFO_EXTENSION));
+                                    $ext = $file->extension();
                                     $iconBg = match(true) {
                                         $ext === 'pdf'               => 'bg-crimson-50 text-crimson-500',
                                         in_array($ext, ['doc','docx'])  => 'bg-blue-50 text-blue-500',
-                                        in_array($ext, ['xls','xlsx'])  => 'bg-brand-50 text-brand-600',
+                                        in_array($ext, ['xls','xlsx','csv'])  => 'bg-brand-50 text-brand-600',
                                         in_array($ext, ['ppt','pptx'])  => 'bg-orange-50 text-orange-500',
                                         default                      => 'bg-zinc-50 text-zinc-500',
                                     };
                                     $extBadge = match(true) {
                                         $ext === 'pdf'               => 'bg-crimson-100 text-crimson-800',
                                         in_array($ext, ['doc','docx'])  => 'bg-blue-100 text-blue-700',
-                                        in_array($ext, ['xls','xlsx'])  => 'bg-brand-100 text-brand-700',
+                                        in_array($ext, ['xls','xlsx','csv'])  => 'bg-brand-100 text-brand-700',
                                         in_array($ext, ['ppt','pptx'])  => 'bg-orange-100 text-orange-700',
                                         default                      => 'bg-zinc-100 text-zinc-600',
                                     };
@@ -72,14 +73,17 @@
                                                 </svg>
                                             </div>
                                             <div class="min-w-0">
-                                                <p class="truncate text-sm font-medium text-zinc-900">
-                                                    {{ $file->alt_text ?? $file->original_filename }}
-                                                </p>
-                                                @if($file->alt_text && $file->alt_text !== $file->original_filename)
-                                                    <p class="truncate text-xs text-zinc-400">{{ $file->original_filename }}</p>
+                                                <p class="truncate text-sm font-medium text-zinc-900">{{ $file->title }}</p>
+                                                @if($file->description)
+                                                    <p class="truncate text-xs text-zinc-400">{{ $file->description }}</p>
                                                 @endif
                                             </div>
                                         </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600">
+                                            {{ ucwords(str_replace('-', ' ', $file->category)) }}
+                                        </span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase {{ $extBadge }}">
@@ -89,7 +93,7 @@
                                     <td class="px-6 py-4 text-sm text-zinc-500">{{ $file->humanSize() }}</td>
                                     <td class="px-6 py-4 text-sm text-zinc-500">{{ $file->created_at->format('d M Y') }}</td>
                                     <td class="px-6 py-4 text-right">
-                                        <a href="{{ $file->url() }}" target="_blank" download
+                                        <a href="{{ route('public.document.download', $file) }}"
                                            class="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-medium text-brand-700 transition hover:bg-brand-100">
                                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
