@@ -120,15 +120,17 @@ class BlogTest extends TestCase
         $category = BlogCategory::create(['name' => 'Insights', 'slug' => 'insights', 'sort_order' => 0]);
         $tag = BlogTag::create(['name' => 'Exports', 'slug' => 'exports']);
 
-        $inCategory = $this->makePost(['title' => 'Categorised Post', 'slug' => 'categorised-post', 'blog_category_id' => $category->id]);
+        // Excerpts render only in the main listing cards (the sidebar shows titles only),
+        // so they isolate the filtered result set from the "Recent Posts" sidebar.
+        $inCategory = $this->makePost(['title' => 'Categorised Post', 'slug' => 'categorised-post', 'blog_category_id' => $category->id, 'excerpt' => 'IN-CATEGORY-EXCERPT']);
         $inCategory->tags()->attach($tag->id);
-        $other = $this->makePost(['title' => 'Unrelated Post', 'slug' => 'unrelated-post']);
+        $this->makePost(['title' => 'Unrelated Post', 'slug' => 'unrelated-post', 'excerpt' => 'UNRELATED-EXCERPT']);
 
         $this->get(route('blog.category', $category->slug))
-            ->assertOk()->assertSee('Categorised Post')->assertDontSee('Unrelated Post');
+            ->assertOk()->assertSee('IN-CATEGORY-EXCERPT')->assertDontSee('UNRELATED-EXCERPT');
 
         $this->get(route('blog.tag', $tag->slug))
-            ->assertOk()->assertSee('Categorised Post')->assertDontSee('Unrelated Post');
+            ->assertOk()->assertSee('IN-CATEGORY-EXCERPT')->assertDontSee('UNRELATED-EXCERPT');
     }
 
     public function test_rss_feed_renders_published_posts(): void
