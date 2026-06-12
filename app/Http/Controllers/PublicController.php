@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogCategory;
+use App\Models\BlogPost;
+use App\Models\BlogTag;
 use App\Models\Chapter;
 use App\Models\CmsPage;
 use App\Models\Corridor;
@@ -11,9 +14,9 @@ use App\Models\Investor;
 use App\Models\LeadershipProfile;
 use App\Models\Member;
 use App\Models\MembershipCategory;
-use App\Models\NewsArticle;
 use App\Models\Ntb;
 use App\Models\TradeLead;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class PublicController extends Controller
@@ -22,7 +25,7 @@ class PublicController extends Controller
     {
         $page = CmsPage::where('slug', 'homepage')->first();
         $sectorsPage = CmsPage::where('slug', 'sectors')->first();
-        $latestNews = NewsArticle::published()->latest('published_at')->take(3)->get();
+        $latestNews = BlogPost::published()->with('category')->latest('published_at')->take(3)->get();
         $upcomingEvents = Event::public()->where('starts_at', '>=', now())->orderBy('starts_at')->limit(3)->get();
 
         $stats = [
@@ -46,22 +49,86 @@ class PublicController extends Controller
         return view('public.about', compact('page'));
     }
 
-    public function news(): View
+    public function blog(): View
     {
-        $articles = NewsArticle::published()
+        $articles = BlogPost::published()
+            ->with(['category', 'author'])
             ->latest('published_at')
-            ->paginate(12);
+            ->paginate(9);
 
-        return view('public.news.index', compact('articles'));
+        return view('public.blog.index', array_merge(
+            ['articles' => $articles, 'heading' => 'Blog', 'activeCategory' => null, 'activeTag' => null],
+            $this->blogSidebar(),
+        ));
     }
 
-    public function newsShow(string $slug): View
+    public function blogShow(string $slug): View
     {
-        $article = NewsArticle::published()
+        $article = BlogPost::published()
+            ->with(['category', 'author', 'tags', 'approvedComments'])
             ->where('slug', $slug)
             ->firstOrFail();
 
-        return view('public.news.show', compact('article'));
+        return view('public.blog.show', compact('article'));
+    }
+
+    public function blogCategory(string $slug): View
+    {
+        $category = BlogCategory::where('slug', $slug)->firstOrFail();
+
+        $articles = BlogPost::published()
+            ->with(['category', 'author'])
+            ->where('blog_category_id', $category->id)
+            ->latest('published_at')
+            ->paginate(9);
+
+        return view('public.blog.index', array_merge(
+            ['articles' => $articles, 'heading' => $category->name, 'activeCategory' => $category, 'activeTag' => null],
+            $this->blogSidebar(),
+        ));
+    }
+
+    public function blogTag(string $slug): View
+    {
+        $tag = BlogTag::where('slug', $slug)->firstOrFail();
+
+        $articles = $tag->posts()
+            ->where('status', 'published')
+            ->whereNotNull('published_at')
+            ->with(['category', 'author'])
+            ->latest('published_at')
+            ->paginate(9);
+
+        return view('public.blog.index', array_merge(
+            ['articles' => $articles, 'heading' => '#'.$tag->name, 'activeCategory' => null, 'activeTag' => $tag],
+            $this->blogSidebar(),
+        ));
+    }
+
+    public function blogFeed(): Response
+    {
+        $articles = BlogPost::published()
+            ->with('category')
+            ->latest('published_at')
+            ->take(30)
+            ->get();
+
+        return response()
+            ->view('public.blog.feed', ['articles' => $articles])
+            ->header('Content-Type', 'application/rss+xml; charset=UTF-8');
+    }
+
+    /** Shared sidebar data for blog listing pages. */
+    private function blogSidebar(): array
+    {
+        return [
+            'categories' => BlogCategory::withCount('publishedPosts')
+                ->orderBy('sort_order')->orderBy('name')->get()
+                ->filter(fn ($c) => $c->published_posts_count > 0)->values(),
+            'tags' => BlogTag::whereHas('posts', fn ($q) => $q->where('status', 'published')->whereNotNull('published_at'))
+                ->orderBy('name')->take(30)->get(),
+            'recent' => BlogPost::published()->latest('published_at')->take(5)->get(['id', 'title', 'slug', 'published_at']),
+        ];
     }
 
     public function policyBriefShow(\App\Models\PolicyBrief $brief): View

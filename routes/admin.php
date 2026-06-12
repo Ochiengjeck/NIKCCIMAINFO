@@ -180,7 +180,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     // Website CMS
     Route::prefix('cms')->name('cms.')->group(function () {
         Route::get('/pages', \App\Livewire\Cms\PageEditor::class)->name('pages');
-        Route::get('/news', \App\Livewire\Cms\NewsManager::class)->name('news');
+        Route::get('/blog', \App\Livewire\Cms\BlogManager::class)->name('blog');
+        Route::get('/blog/categories', \App\Livewire\Cms\BlogCategoryManager::class)->name('blog.categories');
+        Route::get('/blog/comments', \App\Livewire\Cms\BlogCommentModerator::class)->name('blog.comments');
+        Route::permanentRedirect('/news', '/admin/cms/blog')->name('news');
         Route::get('/leadership', \App\Livewire\Cms\LeadershipManager::class)->name('leadership');
         Route::get('/media', \App\Livewire\Cms\MediaLibrary::class)->name('media');
         Route::get('/contact', \App\Livewire\Cms\ContactManager::class)->name('contact');

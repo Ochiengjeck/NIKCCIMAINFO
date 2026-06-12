@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             CmsPagesSeeder::class,
             MembershipCategoriesSeeder::class,
+            BlogCategorySeeder::class,
         ]);
     }
 }

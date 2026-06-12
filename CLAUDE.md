@@ -85,7 +85,10 @@ Admin panel uses `layouts/admin.blade.php` → `layouts/admin/sidebar.blade.php`
 Shared validation rules in `app/Concerns/` — `PasswordValidationRules`, `ProfileValidationRules`, `ChapterScoped` — used by Fortify actions and Livewire components.
 
 ### Public Website & CMS
-Public pages are rendered through `PublicController` + the `layouts.website` layout (Blade `<x-layouts::website>`); a full-page Livewire component uses `->layout('layouts.website', [...])`. Content is editable via the admin CMS module (`app/Livewire/Cms/` — pages, news, leadership, media, contact). CMS/public models (`CmsPage`, `NewsArticle`, `LeadershipProfile`, `MediaItem`, `ContactInquiry`) deliberately do **not** use `ChapterScoped`.
+Public pages are rendered through `PublicController` + the `layouts.website` layout (Blade `<x-layouts::website>`); a full-page Livewire component uses `->layout('layouts.website', [...])`. Content is editable via the admin CMS module (`app/Livewire/Cms/` — pages, blog, leadership, media, contact). CMS/public models (`CmsPage`, `BlogPost`, `BlogCategory`, `BlogTag`, `BlogComment`, `LeadershipProfile`, `MediaItem`, `ContactInquiry`) deliberately do **not** use `ChapterScoped`.
+
+### Blog
+The blog (`app/Livewire/Cms/BlogManager.php`, `BlogCategoryManager`, `BlogCommentModerator`) manages `BlogPost`s with `BlogCategory`/`BlogTag` taxonomy and moderated `BlogComment`s. Public surface: `/blog` (listing + sidebar), `/blog/{slug}` (post + related + author bio + comments), `/blog/category/{slug}`, `/blog/tag/{slug}`, and the RSS feed at `/blog/feed`. Legacy `/news*` URLs 301-redirect to `/blog`. Comments default to `pending` and only show once approved via the moderator (gated by `cms.publish`). Seed default categories with `db:seed --class=BlogCategorySeeder`.
 
 ### Media Uploads
 All uploads flow through `MediaUploadController` (`POST /admin/media/upload`) via **direct XHR**, not Livewire `WithFileUploads`. Every upload becomes a `MediaItem` record (single source of truth); private files use `disk=local`, public files `disk=public`. Reuse the `<livewire:components.media-picker>` component (Upload + Library tabs) for any new file field — bind it with `wire:model` to an integer `*MediaItemId` property. The XHR layer requires the `<meta name="csrf-token">` tag in `partials/head.blade.php`.

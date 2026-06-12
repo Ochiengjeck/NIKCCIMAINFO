@@ -248,10 +248,28 @@
                         Pages
                     </a>
 
-                    @php $r = request()->routeIs('admin.cms.news'); @endphp
-                    <a href="{{ route('admin.cms.news') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                    @php $r = request()->routeIs('admin.cms.blog') && ! request()->routeIs('admin.cms.blog.*'); @endphp
+                    <a href="{{ route('admin.cms.blog') }}" wire:navigate class="{{ $r ? $a : $i }}">
                         <flux:icon name="newspaper" class="{{ $r ? $ai : $ii }}" />
-                        News &amp; Press
+                        Blog
+                    </a>
+
+                    @php $r = request()->routeIs('admin.cms.blog.categories'); @endphp
+                    <a href="{{ route('admin.cms.blog.categories') }}" wire:navigate class="{{ $r ? $a : $i }} pl-9">
+                        <flux:icon name="tag" class="{{ $r ? $ai : $ii }}" />
+                        Categories
+                    </a>
+
+                    @php
+                        $r = request()->routeIs('admin.cms.blog.comments');
+                        $pendingComments = \App\Models\BlogComment::where('status', 'pending')->count();
+                    @endphp
+                    <a href="{{ route('admin.cms.blog.comments') }}" wire:navigate class="{{ $r ? $a : $i }} pl-9">
+                        <flux:icon name="chat-bubble-left-right" class="{{ $r ? $ai : $ii }}" />
+                        Comments
+                        @if($pendingComments > 0)
+                            <span class="ml-auto inline-flex items-center rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">{{ $pendingComments }}</span>
+                        @endif
                     </a>
 
                     @php $r = request()->routeIs('admin.cms.leadership'); @endphp
