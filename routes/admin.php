@@ -183,7 +183,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
         Route::get('/blog', \App\Livewire\Cms\BlogManager::class)->name('blog');
         Route::get('/blog/categories', \App\Livewire\Cms\BlogCategoryManager::class)->name('blog.categories');
         Route::get('/blog/comments', \App\Livewire\Cms\BlogCommentModerator::class)->name('blog.comments');
-        Route::permanentRedirect('/news', '/admin/cms/blog')->name('news');
+        Route::get('/news', \App\Livewire\Cms\NewsManager::class)->name('news');
+        Route::get('/news/categories', \App\Livewire\Cms\NewsCategoryManager::class)->name('news.categories');
+        Route::get('/news/comments', \App\Livewire\Cms\NewsCommentModerator::class)->name('news.comments');
         Route::get('/leadership', \App\Livewire\Cms\LeadershipManager::class)->name('leadership');
         Route::get('/media', \App\Livewire\Cms\MediaLibrary::class)->name('media');
         Route::get('/contact', \App\Livewire\Cms\ContactManager::class)->name('contact');

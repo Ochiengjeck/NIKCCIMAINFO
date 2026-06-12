@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BlogPost;
 use App\Models\Event;
+use App\Models\NewsArticle;
 use Illuminate\Http\Response;
 
 class SeoController extends Controller
@@ -11,7 +12,7 @@ class SeoController extends Controller
     /** Static public routes to include in the sitemap. */
     private array $staticRoutes = [
         'home', 'about', 'pillars', 'trade', 'membership', 'membership.apply',
-        'events.index', 'blog.index', 'leadership', 'downloads', 'contact',
+        'events.index', 'blog.index', 'news.index', 'leadership', 'downloads', 'contact',
         'chapters.nigeria', 'chapters.kenya', 'policy',
     ];
 
@@ -32,6 +33,14 @@ class SeoController extends Controller
         foreach (BlogPost::published()->latest('published_at')->get() as $article) {
             $urls[] = [
                 'loc' => route('blog.show', $article->slug),
+                'lastmod' => optional($article->updated_at)->toAtomString(),
+                'priority' => '0.6',
+            ];
+        }
+
+        foreach (NewsArticle::published()->latest('published_at')->get() as $article) {
+            $urls[] = [
+                'loc' => route('news.show', $article->slug),
                 'lastmod' => optional($article->updated_at)->toAtomString(),
                 'priority' => '0.6',
             ];

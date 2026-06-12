@@ -145,12 +145,18 @@ class BlogTest extends TestCase
         $response->assertSee('<rss', false);
     }
 
-    public function test_legacy_news_urls_redirect_to_blog(): void
+    public function test_rss_feed_is_valid_when_empty(): void
     {
-        $post = $this->makePost(['slug' => 'redirect-target']);
+        // No posts at all — the feed must still return a valid, empty RSS channel.
+        $response = $this->get(route('blog.feed'));
 
-        $this->get('/news')->assertRedirect('/blog');
-        $this->get('/news/redirect-target')->assertRedirect(route('blog.show', 'redirect-target'));
+        $response->assertOk();
+        $this->assertStringContainsString('application/rss+xml', $response->headers->get('Content-Type'));
+        $response->assertSee('<rss', false);
+        $response->assertSee('<channel>', false);
+        $response->assertSee('</rss>', false);
+        $response->assertSee('<lastBuildDate>', false);
+        $response->assertDontSee('<item>', false);
     }
 
     public function test_blog_manager_creates_post_with_category_and_tags(): void

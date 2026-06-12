@@ -14,6 +14,9 @@ use App\Models\Investor;
 use App\Models\LeadershipProfile;
 use App\Models\Member;
 use App\Models\MembershipCategory;
+use App\Models\NewsArticle;
+use App\Models\NewsCategory;
+use App\Models\NewsTag;
 use App\Models\Ntb;
 use App\Models\TradeLead;
 use Illuminate\Http\Response;
@@ -128,6 +131,88 @@ class PublicController extends Controller
             'tags' => BlogTag::whereHas('posts', fn ($q) => $q->where('status', 'published')->whereNotNull('published_at'))
                 ->orderBy('name')->take(30)->get(),
             'recent' => BlogPost::published()->latest('published_at')->take(5)->get(['id', 'title', 'slug', 'published_at']),
+        ];
+    }
+
+    public function news(): View
+    {
+        $articles = NewsArticle::published()
+            ->with(['category', 'author'])
+            ->latest('published_at')
+            ->paginate(9);
+
+        return view('public.news.index', array_merge(
+            ['articles' => $articles, 'heading' => 'News', 'activeCategory' => null, 'activeTag' => null],
+            $this->newsSidebar(),
+        ));
+    }
+
+    public function newsShow(string $slug): View
+    {
+        $article = NewsArticle::published()
+            ->with(['category', 'author', 'tags', 'approvedComments'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return view('public.news.show', compact('article'));
+    }
+
+    public function newsCategory(string $slug): View
+    {
+        $category = NewsCategory::where('slug', $slug)->firstOrFail();
+
+        $articles = NewsArticle::published()
+            ->with(['category', 'author'])
+            ->where('news_category_id', $category->id)
+            ->latest('published_at')
+            ->paginate(9);
+
+        return view('public.news.index', array_merge(
+            ['articles' => $articles, 'heading' => $category->name, 'activeCategory' => $category, 'activeTag' => null],
+            $this->newsSidebar(),
+        ));
+    }
+
+    public function newsTag(string $slug): View
+    {
+        $tag = NewsTag::where('slug', $slug)->firstOrFail();
+
+        $articles = $tag->posts()
+            ->where('status', 'published')
+            ->whereNotNull('published_at')
+            ->with(['category', 'author'])
+            ->latest('published_at')
+            ->paginate(9);
+
+        return view('public.news.index', array_merge(
+            ['articles' => $articles, 'heading' => '#'.$tag->name, 'activeCategory' => null, 'activeTag' => $tag],
+            $this->newsSidebar(),
+        ));
+    }
+
+    public function newsFeed(): Response
+    {
+        $articles = NewsArticle::published()
+            ->with('category')
+            ->latest('published_at')
+            ->take(30)
+            ->get();
+
+        return response()
+            ->view('public.news.feed', ['articles' => $articles])
+            ->header('Content-Type', 'application/rss+xml; charset=UTF-8');
+    }
+
+    /** Shared sidebar data for news listing pages. */
+    private function newsSidebar(): array
+    {
+        return [
+            'categories' => NewsCategory::withCount('publishedPosts')
+                ->orderBy('sort_order')->orderBy('name')->get()
+                ->filter(fn ($c) => $c->published_posts_count > 0)->values(),
+            'tags' => NewsTag::whereHas('posts', fn ($q) => $q->where('status', 'published')->whereNotNull('published_at'))
+                ->orderBy('name')->take(30)->get(),
+            'recent' => NewsArticle::published()->latest('published_at')->take(5)->get(['id', 'title', 'slug', 'published_at']),
         ];
     }
 

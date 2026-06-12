@@ -26,9 +26,12 @@ Route::get('/blog/category/{slug}', [PublicController::class, 'blogCategory'])->
 Route::get('/blog/tag/{slug}', [PublicController::class, 'blogTag'])->name('blog.tag');
 Route::get('/blog/{slug}', [PublicController::class, 'blogShow'])->name('blog.show');
 
-// Legacy /news URLs → /blog (301, preserves SEO / external links)
-Route::permanentRedirect('/news', '/blog')->name('news.index');
-Route::get('/news/{slug}', fn (string $slug) => redirect()->route('blog.show', $slug, 301))->name('news.show');
+// --- News ---
+Route::get('/news', [PublicController::class, 'news'])->name('news.index');
+Route::get('/news/feed', [PublicController::class, 'newsFeed'])->name('news.feed');
+Route::get('/news/category/{slug}', [PublicController::class, 'newsCategory'])->name('news.category');
+Route::get('/news/tag/{slug}', [PublicController::class, 'newsTag'])->name('news.tag');
+Route::get('/news/{slug}', [PublicController::class, 'newsShow'])->name('news.show');
 Route::get('/leadership', [PublicController::class, 'leadership'])->name('leadership');
 Route::get('/downloads', [PublicController::class, 'downloads'])->name('downloads');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');

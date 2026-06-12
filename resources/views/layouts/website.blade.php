@@ -276,6 +276,13 @@
                         </div>
                     </div>
 
+                    {{-- News --}}
+                    <a href="{{ route('news.index') }}"
+                       class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
+                              {{ request()->routeIs('news.*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
+                        News
+                    </a>
+
                     {{-- Blog --}}
                     <a href="{{ route('blog.index') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
@@ -401,8 +408,12 @@
                         </a>
                     </div>
 
-                    {{-- Blog & Contact --}}
+                    {{-- News, Blog & Contact --}}
                     <div class="border-t border-zinc-100 my-1 pt-1">
+                        <a href="{{ route('news.index') }}"
+                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('news.*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            News
+                        </a>
                         <a href="{{ route('blog.index') }}"
                            class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('blog.*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             Blog
@@ -471,6 +482,7 @@
                             <a href="{{ route('about') }}" class="hover:text-white transition-colors">About</a>
                             <a href="{{ route('pillars') }}" class="hover:text-white transition-colors">Pillars</a>
                             <a href="{{ route('membership') }}" class="hover:text-white transition-colors">Membership</a>
+                            <a href="{{ route('news.index') }}" class="hover:text-white transition-colors">News</a>
                             <a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">Blog</a>
                             <a href="{{ route('downloads') }}" class="hover:text-white transition-colors">Downloads</a>
                             <a href="{{ route('leadership') }}" class="hover:text-white transition-colors">Leadership</a>

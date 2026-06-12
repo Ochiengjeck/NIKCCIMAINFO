@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             CmsPagesSeeder::class,
             MembershipCategoriesSeeder::class,
             BlogCategorySeeder::class,
+            NewsCategorySeeder::class,
+            ChatbotFaqSeeder::class,
         ]);
     }
 }

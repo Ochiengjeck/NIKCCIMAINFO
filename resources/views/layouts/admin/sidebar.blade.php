@@ -272,6 +272,30 @@
                         @endif
                     </a>
 
+                    @php $r = request()->routeIs('admin.cms.news') && ! request()->routeIs('admin.cms.news.*'); @endphp
+                    <a href="{{ route('admin.cms.news') }}" wire:navigate class="{{ $r ? $a : $i }}">
+                        <flux:icon name="megaphone" class="{{ $r ? $ai : $ii }}" />
+                        News
+                    </a>
+
+                    @php $r = request()->routeIs('admin.cms.news.categories'); @endphp
+                    <a href="{{ route('admin.cms.news.categories') }}" wire:navigate class="{{ $r ? $a : $i }} pl-9">
+                        <flux:icon name="tag" class="{{ $r ? $ai : $ii }}" />
+                        Categories
+                    </a>
+
+                    @php
+                        $r = request()->routeIs('admin.cms.news.comments');
+                        $pendingNewsComments = \App\Models\NewsComment::where('status', 'pending')->count();
+                    @endphp
+                    <a href="{{ route('admin.cms.news.comments') }}" wire:navigate class="{{ $r ? $a : $i }} pl-9">
+                        <flux:icon name="chat-bubble-left-right" class="{{ $r ? $ai : $ii }}" />
+                        Comments
+                        @if($pendingNewsComments > 0)
+                            <span class="ml-auto inline-flex items-center rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">{{ $pendingNewsComments }}</span>
+                        @endif
+                    </a>
+
                     @php $r = request()->routeIs('admin.cms.leadership'); @endphp
                     <a href="{{ route('admin.cms.leadership') }}" wire:navigate class="{{ $r ? $a : $i }}">
                         <flux:icon name="identification" class="{{ $r ? $ai : $ii }}" />
