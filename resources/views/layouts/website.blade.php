@@ -154,6 +154,45 @@
                         About
                     </a>
 
+                    {{-- Chapters dropdown --}}
+                    <div class="relative"
+                         x-data="{ open: false }"
+                         @mouseenter="open = true"
+                         @mouseleave="open = false"
+                         @click.outside="open = false">
+                        <button @click="open = !open"
+                                :aria-expanded="open"
+                                class="nav-link inline-flex items-center gap-1 rounded-lg px-4 py-2.5 text-base font-medium transition-colors
+                                       {{ request()->routeIs('chapters*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
+                            Chapters
+                            <svg class="h-3.5 w-3.5 transition-transform duration-150" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div x-show="open"
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 translate-y-1"
+                             class="absolute left-0 top-full mt-1 w-48 rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl"
+                             role="menu">
+                            <a href="{{ route('chapters.nigeria') }}"
+                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('chapters.nigeria') ? 'text-brand-700 bg-brand-50' : '' }}"
+                               role="menuitem">
+                                <span class="text-base leading-none">&#127475;&#127468;</span>
+                                <span class="font-medium">Nigeria Chapter</span>
+                            </a>
+                            <a href="{{ route('chapters.kenya') }}"
+                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('chapters.kenya') ? 'text-crimson-700 bg-crimson-50' : '' }}"
+                               role="menuitem">
+                                <span class="text-base leading-none">&#127472;&#127466;</span>
+                                <span class="font-medium">Kenya Chapter</span>
+                            </a>
+                        </div>
+                    </div>
+
                     {{-- What We Do dropdown --}}
                     <div class="relative"
                          x-data="{ open: false }"
@@ -223,21 +262,7 @@
                         </div>
                     </div>
 
-                    {{-- Membership --}}
-                    <a href="{{ route('membership') }}"
-                       class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
-                        Membership
-                    </a>
-
-                    {{-- Events --}}
-                    <a href="{{ route('events.index') }}"
-                       class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('events*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
-                        Events
-                    </a>
-
-                    {{-- Chapters dropdown --}}
+                    {{-- News & Events dropdown --}}
                     <div class="relative"
                          x-data="{ open: false }"
                          @mouseenter="open = true"
@@ -246,8 +271,8 @@
                         <button @click="open = !open"
                                 :aria-expanded="open"
                                 class="nav-link inline-flex items-center gap-1 rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                                       {{ request()->routeIs('chapters*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
-                            Chapters
+                                       {{ request()->routeIs('news.*', 'blog.*', 'events*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
+                            News & Events
                             <svg class="h-3.5 w-3.5 transition-transform duration-150" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
@@ -259,35 +284,58 @@
                              x-transition:leave="transition ease-in duration-100"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 top-full mt-1 w-48 rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl"
+                             class="absolute left-0 top-full mt-1 w-56 rounded-xl border border-zinc-200 bg-white py-2 shadow-xl"
                              role="menu">
-                            <a href="{{ route('chapters.nigeria') }}"
-                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('chapters.nigeria') ? 'text-brand-700 bg-brand-50' : '' }}"
+                            <a href="{{ route('news.index') }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('news.*') ? 'text-brand-700 bg-brand-50' : '' }}"
                                role="menuitem">
-                                <span class="text-base leading-none">&#127475;&#127468;</span>
-                                <span class="font-medium">Nigeria Chapter</span>
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100 text-brand-700 shrink-0">
+                                    {{-- Megaphone / news icon --}}
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <span class="block font-medium">News</span>
+                                    <span class="block text-xs text-zinc-400">Press releases & announcements</span>
+                                </span>
                             </a>
-                            <a href="{{ route('chapters.kenya') }}"
-                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('chapters.kenya') ? 'text-crimson-700 bg-crimson-50' : '' }}"
+                            <a href="{{ route('blog.index') }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('blog.*') ? 'text-brand-700 bg-brand-50' : '' }}"
                                role="menuitem">
-                                <span class="text-base leading-none">&#127472;&#127466;</span>
-                                <span class="font-medium">Kenya Chapter</span>
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-100 text-brand-700 shrink-0">
+                                    {{-- Pencil / blog icon --}}
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <span class="block font-medium">Blog</span>
+                                    <span class="block text-xs text-zinc-400">Insights & editorial</span>
+                                </span>
+                            </a>
+                            <a href="{{ route('events.index') }}"
+                               class="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors {{ request()->routeIs('events*') ? 'text-brand-700 bg-brand-50' : '' }}"
+                               role="menuitem">
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 shrink-0">
+                                    {{-- Calendar / events icon --}}
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </span>
+                                <span>
+                                    <span class="block font-medium">Events & Missions</span>
+                                    <span class="block text-xs text-zinc-400">Forums, missions & networking</span>
+                                </span>
                             </a>
                         </div>
                     </div>
 
-                    {{-- News --}}
-                    <a href="{{ route('news.index') }}"
+                    {{-- Membership --}}
+                    <a href="{{ route('membership') }}"
                        class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('news.*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
-                        News
-                    </a>
-
-                    {{-- Blog --}}
-                    <a href="{{ route('blog.index') }}"
-                       class="rounded-lg px-4 py-2.5 text-base font-medium transition-colors
-                              {{ request()->routeIs('blog.*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
-                        Blog
+                              {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' }}">
+                        Membership
                     </a>
 
                     {{-- Contact --}}
@@ -357,6 +405,19 @@
                         About
                     </a>
 
+                    {{-- Chapters section --}}
+                    <div class="border-t border-zinc-100 my-1 pt-1">
+                        <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">Chapters</p>
+                        <a href="{{ route('chapters.nigeria') }}"
+                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.nigeria') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            <span class="text-base leading-none">&#127475;&#127468;</span> Nigeria Chapter
+                        </a>
+                        <a href="{{ route('chapters.kenya') }}"
+                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.kenya') ? 'bg-crimson-50 text-crimson-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            <span class="text-base leading-none">&#127472;&#127466;</span> Kenya Chapter
+                        </a>
+                    </div>
+
                     {{-- What We Do section --}}
                     <div class="border-t border-zinc-100 my-1 pt-1">
                         <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">What We Do</p>
@@ -383,33 +444,9 @@
                         </a>
                     </div>
 
-                    {{-- Membership & Events --}}
+                    {{-- News & Events section --}}
                     <div class="border-t border-zinc-100 my-1 pt-1">
-                        <a href="{{ route('membership') }}"
-                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
-                            Membership
-                        </a>
-                        <a href="{{ route('events.index') }}"
-                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('events*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
-                            Events & Missions
-                        </a>
-                    </div>
-
-                    {{-- Chapters section --}}
-                    <div class="border-t border-zinc-100 my-1 pt-1">
-                        <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">Chapters</p>
-                        <a href="{{ route('chapters.nigeria') }}"
-                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.nigeria') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
-                            <span class="text-base leading-none">&#127475;&#127468;</span> Nigeria Chapter
-                        </a>
-                        <a href="{{ route('chapters.kenya') }}"
-                           class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('chapters.kenya') ? 'bg-crimson-50 text-crimson-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
-                            <span class="text-base leading-none">&#127472;&#127466;</span> Kenya Chapter
-                        </a>
-                    </div>
-
-                    {{-- News, Blog & Contact --}}
-                    <div class="border-t border-zinc-100 my-1 pt-1">
+                        <p class="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-zinc-400">News & Events</p>
                         <a href="{{ route('news.index') }}"
                            class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('news.*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             News
@@ -417,6 +454,18 @@
                         <a href="{{ route('blog.index') }}"
                            class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('blog.*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
                             Blog
+                        </a>
+                        <a href="{{ route('events.index') }}"
+                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('events*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            Events & Missions
+                        </a>
+                    </div>
+
+                    {{-- Membership & Contact --}}
+                    <div class="border-t border-zinc-100 my-1 pt-1">
+                        <a href="{{ route('membership') }}"
+                           class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('membership*') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
+                            Membership
                         </a>
                         <a href="{{ route('contact') }}"
                            class="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors block {{ request()->routeIs('contact') ? 'bg-brand-50 text-brand-700' : 'text-zinc-700 hover:bg-zinc-50' }}">
