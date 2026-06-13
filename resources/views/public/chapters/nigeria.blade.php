@@ -8,7 +8,15 @@
     phone         : Phone number
     office_hours  : Office hours (NEW KEY)
     initiatives   : Comma-separated national initiatives
+
+    CONTACT DETAILS (address/email/phone) are GLOBAL — Admin → Settings → Contact Details
+    (nigeria_address/phone/email) — same source the contact page & footer read.
 --}}
+@php
+    $chapterAddress = \App\Models\SystemSetting::get('nigeria_address', 'Abuja, Federal Capital Territory, Federal Republic of Nigeria');
+    $chapterEmail   = \App\Models\SystemSetting::get('nigeria_email', 'nigeria@nikccima.org');
+    $chapterPhone   = \App\Models\SystemSetting::get('nigeria_phone', '');
+@endphp
 <x-layouts::website
     :title="$page?->meta_title ?: 'Nigeria Chapter — NiKCCIMA'"
     :meta-description="$page?->meta_description ?: $page?->section('description', 'The Nigeria Chapter of NiKCCIMA — leadership, initiatives and events driving AfCFTA corridor trade from Abuja.')">
@@ -105,7 +113,7 @@
                     </div>
                     <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-400">Address</p>
                     <p class="text-sm text-zinc-700">
-                        {{ $page?->section('address', 'Abuja, Federal Capital Territory, Nigeria') }}
+                        {{ $chapterAddress }}
                     </p>
                 </div>
 
@@ -117,14 +125,14 @@
                         </svg>
                     </div>
                     <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-400">Email</p>
-                    <a href="mailto:{{ $page?->section('email', 'nigeria@nikccima.org') }}"
+                    <a href="mailto:{{ $chapterEmail }}"
                        class="text-sm font-medium text-brand-700 transition hover:text-brand-800 hover:underline">
-                        {{ $page?->section('email', 'nigeria@nikccima.org') }}
+                        {{ $chapterEmail }}
                     </a>
                 </div>
 
                 {{-- Phone (only if set) --}}
-                @if($page?->section('phone'))
+                @if($chapterPhone)
                     <div class="rounded-2xl border border-zinc-200 bg-white p-6">
                         <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50">
                             <svg class="h-5 w-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -132,7 +140,7 @@
                             </svg>
                         </div>
                         <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-400">Phone</p>
-                        <p class="text-sm font-medium text-zinc-700">{{ $page->section('phone') }}</p>
+                        <p class="text-sm font-medium text-zinc-700">{{ $chapterPhone }}</p>
                     </div>
                 @endif
 

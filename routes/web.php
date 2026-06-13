@@ -57,6 +57,16 @@ Route::get('/briefs/{brief}/file', function (\App\Models\PolicyBrief $brief) {
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 
+// XSL stylesheet that renders the RSS feeds (/blog/feed, /news/feed) as a styled
+// page in browsers. Served via a route so the content-type is always XML-correct
+// (a static .xsl can be served as octet-stream on some hosts, which breaks XSLT).
+Route::get('/feed.xsl', function () {
+    return response(file_get_contents(resource_path('feed.xsl')), 200, [
+        'Content-Type' => 'text/xsl; charset=UTF-8',
+        'Cache-Control' => 'public, max-age=86400',
+    ]);
+})->name('feed.style');
+
 // --- Auth dashboard (Fortify) ---
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
