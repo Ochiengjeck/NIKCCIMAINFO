@@ -13,7 +13,7 @@
 --}}
 <div
     wire:ignore
-    {{ $attributes }}
+    {{ $attributes->merge(['class' => 'trix-field']) }}
     x-data="{
         html: @js($value),
         init() {
@@ -33,6 +33,6 @@
     <trix-editor
         input="{{ $inputId }}"
         x-ref="editor"
-        class="trix-content min-h-[220px] rounded-lg border border-zinc-200 bg-white text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+        class="trix-content"
     ></trix-editor>
 </div>

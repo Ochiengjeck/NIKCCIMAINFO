@@ -121,6 +121,101 @@ header.is-hero-top .header-icon-btn:hover {
     background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
+/* ============================================================
+   Trix rich-text editor — cohesive, high-contrast container
+   Wraps the auto-injected <trix-toolbar> + <trix-editor> as one
+   bordered field with a distinct toolbar strip. Works in light
+   and dark mode (default Trix icons are dark SVGs — inverted in dark).
+   ============================================================ */
+.trix-field {
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-zinc-300);
+    background-color: #ffffff;
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.dark .trix-field {
+    border-color: var(--color-zinc-700);
+    background-color: var(--color-zinc-900);
+}
+.trix-field:focus-within {
+    border-color: var(--color-brand-400);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-brand-400) 22%, transparent);
+}
+
+/* Toolbar strip */
+.trix-field trix-toolbar {
+    background-color: var(--color-zinc-50);
+    border-bottom: 1px solid var(--color-zinc-200);
+    padding: 0.4rem 0.6rem;
+}
+.dark .trix-field trix-toolbar {
+    background-color: var(--color-zinc-800);
+    border-bottom-color: var(--color-zinc-700);
+}
+.trix-field trix-toolbar .trix-button-row {
+    align-items: center;
+}
+.trix-field trix-toolbar .trix-button-group {
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-zinc-200);
+    margin-bottom: 0;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+.dark .trix-field trix-toolbar .trix-button-group {
+    border-color: var(--color-zinc-700);
+    background-color: var(--color-zinc-900);
+}
+.trix-field trix-toolbar .trix-button {
+    border-bottom: none;
+    background: transparent;
+    color: var(--color-zinc-600);
+}
+.trix-field trix-toolbar .trix-button:not(:first-child) {
+    border-left: 1px solid var(--color-zinc-200);
+}
+.dark .trix-field trix-toolbar .trix-button:not(:first-child) {
+    border-left-color: var(--color-zinc-700);
+}
+.trix-field trix-toolbar .trix-button:hover {
+    background-color: var(--color-zinc-100);
+}
+.dark .trix-field trix-toolbar .trix-button:hover {
+    background-color: var(--color-zinc-800);
+}
+.trix-field trix-toolbar .trix-button.trix-active {
+    background-color: var(--color-brand-100);
+    color: var(--color-brand-700);
+}
+.dark .trix-field trix-toolbar .trix-button.trix-active {
+    background-color: color-mix(in oklab, var(--color-brand-500) 25%, transparent);
+    color: var(--color-brand-200);
+}
+/* Default Trix icons are black SVGs — make them visible in dark mode */
+.dark .trix-field trix-toolbar .trix-button--icon::before {
+    filter: invert(1);
+    opacity: 0.85;
+}
+
+/* Editor body */
+.trix-field trix-editor {
+    min-height: 220px;
+    padding: 0.85rem 1rem;
+    border: 0;
+    background-color: transparent;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-zinc-900);
+}
+.dark .trix-field trix-editor {
+    color: #ffffff;
+}
+.trix-field trix-editor:empty:not(:focus)::before,
+.trix-field trix-editor .trix-placeholder {
+    color: var(--color-zinc-400);
+}
+
 @layer utilities {
     .shimmer {
         background: linear-gradient(
