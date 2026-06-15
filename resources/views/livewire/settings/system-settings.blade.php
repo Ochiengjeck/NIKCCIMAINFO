@@ -298,6 +298,56 @@
         </div>
     </div>
 
+    {{-- ===== CERTIFICATE SIGNATORIES ===== --}}
+    <div class="mt-8 max-w-xl">
+        <div class="mb-4">
+            <flux:heading size="lg">Certificate Signatories</flux:heading>
+            <flux:subheading>Names and titles printed under the signature lines on the membership certificate. Leave a name blank to show only the title.</flux:subheading>
+        </div>
+
+        <div class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
+            <form wire:submit="saveCertificate" class="space-y-6">
+                {{-- Signatory 1 (left) --}}
+                <div class="space-y-4">
+                    <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Left Signatory</p>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <flux:field>
+                            <flux:label>Name</flux:label>
+                            <flux:input wire:model="certSig1Name" placeholder="e.g. Dr. Jane Doe" />
+                            <flux:error name="certSig1Name" />
+                        </flux:field>
+                        <flux:field>
+                            <flux:label>Title</flux:label>
+                            <flux:input wire:model="certSig1Title" placeholder="Chapter President" />
+                            <flux:error name="certSig1Title" />
+                        </flux:field>
+                    </div>
+                </div>
+
+                {{-- Signatory 2 (right) --}}
+                <div class="space-y-4 border-t border-zinc-100 pt-6 dark:border-zinc-800">
+                    <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Right Signatory</p>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <flux:field>
+                            <flux:label>Name</flux:label>
+                            <flux:input wire:model="certSig2Name" placeholder="e.g. Amb. John Smith" />
+                            <flux:error name="certSig2Name" />
+                        </flux:field>
+                        <flux:field>
+                            <flux:label>Title</flux:label>
+                            <flux:input wire:model="certSig2Title" placeholder="Director General" />
+                            <flux:error name="certSig2Title" />
+                        </flux:field>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <flux:button type="submit" variant="primary" icon="check">Save Signatories</flux:button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- ===== SEO & ANALYTICS ===== --}}
     <div class="mt-8 max-w-xl">
         <div class="mb-4">

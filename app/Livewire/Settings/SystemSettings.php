@@ -34,6 +34,15 @@ class SystemSettings extends Component
 
     public string $mapEmbedUrl = '';
 
+    // Certificate signatories (printed on the membership certificate)
+    public string $certSig1Name = '';
+
+    public string $certSig1Title = '';
+
+    public string $certSig2Name = '';
+
+    public string $certSig2Title = '';
+
     // SEO & analytics
     public string $seoDefaultDescription = '';
 
@@ -60,6 +69,11 @@ class SystemSettings extends Component
         $this->kenyaPhone = $settings->get('kenya_phone', '');
         $this->kenyaEmail = $settings->get('kenya_email', 'kenya@nikccima.org');
         $this->mapEmbedUrl = $settings->get('map_embed_url', '');
+
+        $this->certSig1Name = $settings->get('cert_sig1_name', '');
+        $this->certSig1Title = $settings->get('cert_sig1_title', 'Chapter President');
+        $this->certSig2Name = $settings->get('cert_sig2_name', '');
+        $this->certSig2Title = $settings->get('cert_sig2_title', 'Director General');
 
         $this->seoDefaultDescription = $settings->get('seo_default_description', '');
         $this->shareImagePath = $settings->get('seo_share_image', '');
@@ -114,6 +128,25 @@ class SystemSettings extends Component
         $settings->set('map_embed_url', $this->mapEmbedUrl, 'contact');
 
         session()->flash('success', 'Contact details saved successfully.');
+    }
+
+    public function saveCertificate(SettingsService $settings): void
+    {
+        $this->authorize('settings.edit');
+
+        $this->validate([
+            'certSig1Name' => 'nullable|string|max:120',
+            'certSig1Title' => 'nullable|string|max:120',
+            'certSig2Name' => 'nullable|string|max:120',
+            'certSig2Title' => 'nullable|string|max:120',
+        ]);
+
+        $settings->set('cert_sig1_name', $this->certSig1Name, 'certificate');
+        $settings->set('cert_sig1_title', $this->certSig1Title, 'certificate');
+        $settings->set('cert_sig2_name', $this->certSig2Name, 'certificate');
+        $settings->set('cert_sig2_title', $this->certSig2Title, 'certificate');
+
+        session()->flash('success', 'Certificate signatories saved successfully.');
     }
 
     public function saveSeo(SettingsService $settings): void
