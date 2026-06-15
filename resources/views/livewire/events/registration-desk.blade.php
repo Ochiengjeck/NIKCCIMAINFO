@@ -17,6 +17,10 @@
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Ticket #</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Name</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Email</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Organisation</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Designation</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">WhatsApp</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Post-OOC11 2026</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Ticket Type</th>
                     <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Status</th>
                     <th class="px-4 py-3"></th>
@@ -28,6 +32,13 @@
                     <td class="px-4 py-3 font-mono text-sm">{{ $reg->ticket_number }}</td>
                     <td class="px-4 py-3 font-medium">{{ $reg->attendee_name }}</td>
                     <td class="px-4 py-3 text-sm text-zinc-500">{{ $reg->attendee_email }}</td>
+                    <td class="px-4 py-3 text-sm text-zinc-500">{{ $reg->organisation ?: '—' }}</td>
+                    <td class="px-4 py-3 text-sm text-zinc-500">{{ $reg->designation ?: '—' }}</td>
+                    <td class="px-4 py-3 text-sm text-zinc-500">{{ $reg->whatsapp_number ?: '—' }}</td>
+                    <td class="px-4 py-3 text-sm">
+                        @if($reg->ooc11_engagement)<span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800">Yes</span>
+                        @else<span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-zinc-100 text-zinc-600">No</span>@endif
+                    </td>
                     <td class="px-4 py-3 text-sm">{{ $reg->ticket?->name ?? 'General' }}</td>
                     <td class="px-4 py-3">
                         @if($reg->checked_in_at)<span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800">Checked In {{ $reg->checked_in_at->format('H:i') }}</span>

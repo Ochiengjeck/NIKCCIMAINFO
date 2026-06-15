@@ -68,7 +68,7 @@
 
             {{-- OOC11 engagement Yes/No --}}
             <div>
-                <label class="block text-sm font-medium text-zinc-700 mb-2">Call for posting OOC11 engagement?</label>
+                <label class="block text-sm font-medium text-zinc-700 mb-2">Call to NIKCCIMA post-OOC11 2026 Engagement</label>
                 <div class="flex items-center gap-6">
                     <label class="inline-flex items-center gap-2 cursor-pointer">
                         <input wire:model="ooc11_engagement" type="radio" value="1"

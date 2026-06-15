@@ -81,11 +81,11 @@
                         </div>
 
                         @if($event->registration_enabled)
-                            <a href="#register"
+                            <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-registration'))"
                                class="mt-8 inline-flex items-center gap-2 rounded-xl bg-crimson-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-crimson-700 hover:shadow-xl">
                                 Register Now
                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                            </a>
+                            </button>
                         @endif
                     </div>
 
@@ -146,11 +146,11 @@
                 </div>
 
                 @if($event->registration_enabled)
-                    <a href="#register"
+                    <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-registration'))"
                        class="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-crimson-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-crimson-700 hover:shadow-xl">
                         Register Now
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                    </a>
+                    </button>
                 @endif
             </div>
         </section>
@@ -193,13 +193,6 @@
                                     </a>
                                 @endforeach
                             </div>
-                        </div>
-                    @endif
-
-                    {{-- On-site registration (per-event toggle) --}}
-                    @if($event->registration_enabled)
-                        <div id="register" class="mt-12 scroll-mt-24 rounded-2xl border border-crimson-100 bg-crimson-50/40 p-6 sm:p-8">
-                            <livewire:public.event-register :event="$event" :key="'event-register-'.$event->id" />
                         </div>
                     @endif
 
@@ -353,5 +346,39 @@
             </div>
         </div>
     </section>
+
+    {{-- ===================== REGISTRATION MODAL ===================== --}}
+    @if($event->registration_enabled)
+        <div x-data="{ open: false }"
+             x-on:open-registration.window="open = true"
+             x-on:keydown.escape.window="open = false"
+             x-effect="document.body.style.overflow = open ? 'hidden' : ''"
+             x-cloak>
+            {{-- Overlay --}}
+            <div x-show="open"
+                 x-transition.opacity
+                 class="fixed inset-0 z-[60] bg-zinc-950/70 backdrop-blur-sm"
+                 x-on:click="open = false"
+                 aria-hidden="true"></div>
+
+            {{-- Dialog --}}
+            <div x-show="open"
+                 x-transition
+                 class="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto p-4 sm:items-center sm:p-6"
+                 role="dialog" aria-modal="true" aria-label="Event registration">
+                <div x-on:click.stop
+                     class="relative my-8 w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-zinc-200 sm:p-8">
+                    {{-- Close --}}
+                    <button type="button" x-on:click="open = false"
+                            class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700"
+                            aria-label="Close">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+
+                    <livewire:public.event-register :event="$event" :key="'event-register-'.$event->id" />
+                </div>
+            </div>
+        </div>
+    @endif
 
 </x-layouts::website>
