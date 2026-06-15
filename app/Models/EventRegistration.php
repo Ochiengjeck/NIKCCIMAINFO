@@ -9,13 +9,15 @@ class EventRegistration extends Model
 {
     protected $fillable = [
         'event_id', 'ticket_id', 'member_id', 'attendee_name',
-        'attendee_email', 'ticket_number', 'checked_in_at', 'transaction_id',
+        'attendee_email', 'organisation', 'designation', 'whatsapp_number',
+        'ooc11_engagement', 'ticket_number', 'checked_in_at', 'transaction_id',
     ];
 
     protected function casts(): array
     {
         return [
             'checked_in_at' => 'datetime',
+            'ooc11_engagement' => 'boolean',
         ];
     }
 

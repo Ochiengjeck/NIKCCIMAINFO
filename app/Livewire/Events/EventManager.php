@@ -30,6 +30,8 @@ class EventManager extends Component
 
     public string $max_capacity = '';
 
+    public bool $registration_enabled = false;
+
     public string $status = 'draft';
 
     public ?int $chapter_id = null;
@@ -61,6 +63,7 @@ class EventManager extends Component
             'starts_at' => 'required|date',
             'ends_at' => 'required|date|after:starts_at',
             'max_capacity' => 'nullable|integer|min:1',
+            'registration_enabled' => 'boolean',
             'status' => 'required|in:draft,published,ongoing,completed,cancelled',
             'chapter_id' => 'required|exists:chapters,id',
             'featuredImageId' => 'nullable|exists:media_items,id',
@@ -99,6 +102,7 @@ class EventManager extends Component
         $this->starts_at = $e->starts_at->format('Y-m-d\TH:i');
         $this->ends_at = $e->ends_at->format('Y-m-d\TH:i');
         $this->max_capacity = $e->max_capacity ?? '';
+        $this->registration_enabled = (bool) $e->registration_enabled;
         $this->status = $e->status;
 
         // Resolve stored paths back to MediaItem IDs for the pickers
@@ -215,6 +219,7 @@ class EventManager extends Component
         $this->starts_at = '';
         $this->ends_at = '';
         $this->max_capacity = '';
+        $this->registration_enabled = false;
         $this->status = 'draft';
         $this->featuredImageId = null;
         $this->brochureId = null;

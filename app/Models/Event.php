@@ -15,7 +15,7 @@ class Event extends Model
         'chapter_id', 'organizer_id', 'title', 'type', 'description',
         'featured_image', 'gallery', 'brochure_path', 'brochure_name',
         'inquiry_channels',
-        'venue', 'starts_at', 'ends_at', 'max_capacity', 'status',
+        'venue', 'starts_at', 'ends_at', 'max_capacity', 'registration_enabled', 'status',
     ];
 
     protected function casts(): array
@@ -25,6 +25,7 @@ class Event extends Model
             'ends_at' => 'datetime',
             'gallery' => 'array',
             'inquiry_channels' => 'array',
+            'registration_enabled' => 'boolean',
         ];
     }
 

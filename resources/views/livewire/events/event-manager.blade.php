@@ -33,6 +33,12 @@
             <flux:field><flux:label>Venue</flux:label><flux:input wire:model="venue" /></flux:field>
             <flux:field><flux:label>Max Capacity</flux:label><flux:input type="number" wire:model="max_capacity" /></flux:field>
             <flux:field class="sm:col-span-2">
+                <flux:label>On-site Registration</flux:label>
+                <flux:checkbox wire:model="registration_enabled" label="Enable the registration form on the public event page" />
+                <flux:description>When on, visitors see a “Register Now” button and a registration form on this event’s page. The external Register / RSVP link (under Inquiry Channels) works independently.</flux:description>
+                <flux:error name="registration_enabled" />
+            </flux:field>
+            <flux:field class="sm:col-span-2">
                 <flux:label>Description</flux:label>
                 <x-trix-editor state-path="description" :value="$description" wire:key="event-desc-{{ $editingId ?? 'new' }}" />
                 <flux:error name="description" />

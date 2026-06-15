@@ -79,6 +79,14 @@
                                 </span>
                             @endif
                         </div>
+
+                        @if($event->registration_enabled)
+                            <a href="#register"
+                               class="mt-8 inline-flex items-center gap-2 rounded-xl bg-crimson-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-crimson-700 hover:shadow-xl">
+                                Register Now
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                            </a>
+                        @endif
                     </div>
 
                     {{-- Right: the full flyer --}}
@@ -136,6 +144,14 @@
                         </span>
                     @endif
                 </div>
+
+                @if($event->registration_enabled)
+                    <a href="#register"
+                       class="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-crimson-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-crimson-700 hover:shadow-xl">
+                        Register Now
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                @endif
             </div>
         </section>
     @endif
@@ -177,6 +193,13 @@
                                     </a>
                                 @endforeach
                             </div>
+                        </div>
+                    @endif
+
+                    {{-- On-site registration (per-event toggle) --}}
+                    @if($event->registration_enabled)
+                        <div id="register" class="mt-12 scroll-mt-24 rounded-2xl border border-crimson-100 bg-crimson-50/40 p-6 sm:p-8">
+                            <livewire:public.event-register :event="$event" :key="'event-register-'.$event->id" />
                         </div>
                     @endif
 
