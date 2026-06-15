@@ -5,6 +5,7 @@ namespace App\Livewire\Events;
 use App\Models\Chapter;
 use App\Models\Event;
 use App\Models\MediaItem;
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -36,6 +37,8 @@ class EventManager extends Component
 
     public ?int $chapter_id = null;
 
+    public ?int $organizer_id = null;
+
     public bool $canSelectChapter = false;
 
     /** Poster / featured image MediaItem ID (via MediaPicker) */
@@ -66,6 +69,7 @@ class EventManager extends Component
             'registration_enabled' => 'boolean',
             'status' => 'required|in:draft,published,ongoing,completed,cancelled',
             'chapter_id' => 'required|exists:chapters,id',
+            'organizer_id' => 'required|exists:users,id',
             'featuredImageId' => 'nullable|exists:media_items,id',
             'brochureId' => 'nullable|exists:media_items,id',
             'galleryPickerId' => 'nullable|exists:media_items,id',
@@ -82,6 +86,7 @@ class EventManager extends Component
         $this->authorize('events.view');
         $this->canSelectChapter = auth()->user()->hasRole(['super-admin', 'global-secretariat', 'global-governing-council']);
         $this->chapter_id = auth()->user()->chapter_id;
+        $this->organizer_id = auth()->id();
     }
 
     public function create(): void
@@ -95,6 +100,7 @@ class EventManager extends Component
         $e = Event::findOrFail($id);
         $this->editingId = $e->id;
         $this->chapter_id = $e->chapter_id;
+        $this->organizer_id = $e->organizer_id;
         $this->title = $e->title;
         $this->type = $e->type;
         $this->description = $e->description ?? '';
@@ -162,7 +168,7 @@ class EventManager extends Component
         }
 
         $data = $this->validate();
-        $data['organizer_id'] = auth()->id();
+        $data['organizer_id'] = $this->organizer_id ?: auth()->id();
 
         // Resolve picker selections (MediaItem IDs) to stored paths
         $data['featured_image'] = $this->featuredImageId
@@ -212,6 +218,7 @@ class EventManager extends Component
     {
         $this->editingId = null;
         $this->chapter_id = auth()->user()->chapter_id;
+        $this->organizer_id = auth()->id();
         $this->title = '';
         $this->type = 'flagship';
         $this->description = '';
@@ -233,6 +240,7 @@ class EventManager extends Component
         return view('livewire.events.event-manager', [
             'events' => \App\Models\Event::forChapter()->with('organizer')->latest()->paginate(15),
             'chapters' => $this->canSelectChapter ? Chapter::orderBy('name')->get() : collect(),
+            'users' => User::orderBy('name')->get(['id', 'name', 'email']),
         ])->layout('layouts.admin');
     }
 }

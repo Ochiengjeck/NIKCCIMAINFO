@@ -28,6 +28,16 @@
             <flux:field class="sm:col-span-2"><flux:label>Title</flux:label><flux:input wire:model="title" /><flux:error name="title" /></flux:field>
             <flux:field><flux:label>Type</flux:label><flux:select wire:model="type"><option value="flagship">Flagship</option><option value="trade-mission">Trade Mission</option><option value="sector-forum">Sector Forum</option></flux:select></flux:field>
             <flux:field><flux:label>Status</flux:label><flux:select wire:model="status"><option value="draft">Draft</option><option value="published">Published</option><option value="ongoing">Ongoing</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></flux:select></flux:field>
+            <flux:field class="sm:col-span-2">
+                <flux:label>Organizer</flux:label>
+                <flux:select wire:model="organizer_id">
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                    @endforeach
+                </flux:select>
+                <flux:description>Defaults to you. Change it to credit another staff member as the event organiser (shown on the public event page).</flux:description>
+                <flux:error name="organizer_id" />
+            </flux:field>
             <flux:field><flux:label>Starts At</flux:label><flux:input type="datetime-local" wire:model="starts_at" /><flux:error name="starts_at" /></flux:field>
             <flux:field><flux:label>Ends At</flux:label><flux:input type="datetime-local" wire:model="ends_at" /><flux:error name="ends_at" /></flux:field>
             <flux:field><flux:label>Venue</flux:label><flux:input wire:model="venue" /></flux:field>
