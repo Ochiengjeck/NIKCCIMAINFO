@@ -34,6 +34,9 @@ class BlogManager extends Component
     /** MediaItem ID selected via MediaPicker */
     public ?int $featuredImageId = null;
 
+    /** Optional downloadable document (MediaItem ID) attached to the post */
+    public ?int $documentMediaItemId = null;
+
     public string $search = '';
 
     public string $statusFilter = '';
@@ -63,6 +66,10 @@ class BlogManager extends Component
                 $mediaItem = MediaItem::where('path', $post->featured_image)->first();
                 $this->featuredImageId = $mediaItem?->id;
             }
+
+            if ($post->document_path) {
+                $this->documentMediaItemId = MediaItem::where('path', $post->document_path)->value('id');
+            }
         }
     }
 
@@ -85,10 +92,15 @@ class BlogManager extends Component
             'body' => 'required|string',
             'status' => 'required|in:draft,published',
             'featuredImageId' => 'nullable|exists:media_items,id',
+            'documentMediaItemId' => 'nullable|exists:media_items,id',
         ]);
 
         $imagePath = $this->featuredImageId
             ? MediaItem::find($this->featuredImageId)?->path
+            : null;
+
+        $document = $this->documentMediaItemId
+            ? MediaItem::find($this->documentMediaItemId)
             : null;
 
         $slug = $this->editingId
@@ -103,6 +115,9 @@ class BlogManager extends Component
             'body' => $this->body,
             'status' => $this->status,
             'featured_image' => $imagePath,
+            'document_path' => $document?->path,
+            'document_name' => $document?->original_filename,
+            'document_size' => $document?->size,
             'author_id' => auth()->id(),
             'published_at' => $this->status === 'published' ? now() : null,
         ];
@@ -179,6 +194,7 @@ class BlogManager extends Component
         $this->body = '';
         $this->status = 'draft';
         $this->featuredImageId = null;
+        $this->documentMediaItemId = null;
     }
 
     public function render()

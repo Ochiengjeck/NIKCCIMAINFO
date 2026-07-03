@@ -181,18 +181,87 @@
 
                     {{-- Photo gallery --}}
                     @if(!empty($event->gallery))
-                        <div class="mt-12 border-t border-zinc-100 pt-10">
+                        @php
+                            $galleryUrls = collect($event->gallery)
+                                ->map(fn ($p) => \Illuminate\Support\Facades\Storage::disk('public')->url($p))
+                                ->values()
+                                ->all();
+                        @endphp
+                        <div class="mt-12 border-t border-zinc-100 pt-10"
+                             x-data="{
+                                 open: false,
+                                 index: 0,
+                                 images: @js($galleryUrls),
+                                 show(i) { this.index = i; this.open = true; },
+                                 next() { this.index = (this.index + 1) % this.images.length; },
+                                 prev() { this.index = (this.index - 1 + this.images.length) % this.images.length; },
+                                 filename() { try { return decodeURIComponent(this.images[this.index].split('/').pop().split('?')[0]); } catch (e) { return 'photo'; } }
+                             }"
+                             x-on:keydown.window="if (open) { if ($event.key === 'ArrowRight') next(); if ($event.key === 'ArrowLeft') prev(); }"
+                             x-on:keydown.escape.window="open = false"
+                             x-effect="document.body.style.overflow = open ? 'hidden' : ''">
                             <h2 class="mb-6 font-serif text-2xl font-bold text-zinc-900">Gallery</h2>
                             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                                @foreach($event->gallery as $image)
-                                    @php $imgUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($image); @endphp
-                                    <a href="{{ $imgUrl }}" target="_blank" rel="noopener"
-                                       class="group block overflow-hidden rounded-xl border border-zinc-100 shadow-sm">
-                                        <img src="{{ $imgUrl }}" alt="{{ $event->title }} photo"
+                                @foreach($galleryUrls as $i => $imgUrl)
+                                    <button type="button" x-on:click="show({{ $i }})"
+                                            class="group block overflow-hidden rounded-xl border border-zinc-100 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+                                        <img src="{{ $imgUrl }}" alt="{{ $event->title }} photo {{ $i + 1 }}"
                                              class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105" />
-                                    </a>
+                                    </button>
                                 @endforeach
                             </div>
+
+                            {{-- Lightbox --}}
+                            <template x-teleport="body">
+                                <div x-show="open" x-cloak class="fixed inset-0 z-[80]" role="dialog" aria-modal="true" aria-label="Event photo">
+                                    {{-- Backdrop --}}
+                                    <div x-show="open" x-transition.opacity
+                                         class="absolute inset-0 bg-zinc-950/90 backdrop-blur-sm"
+                                         x-on:click="open = false" aria-hidden="true"></div>
+
+                                    {{-- Content --}}
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-8" x-on:click="open = false">
+                                        {{-- Top bar --}}
+                                        <div class="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4 text-white sm:p-5" x-on:click.stop>
+                                            <span class="rounded-full bg-white/10 px-3 py-1 text-sm font-medium tabular-nums"
+                                                  x-text="(index + 1) + ' / ' + images.length"></span>
+                                            <div class="flex items-center gap-2">
+                                                <a :href="images[index]" :download="filename()"
+                                                   class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20">
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                    </svg>
+                                                    <span class="hidden sm:inline">Download</span>
+                                                </a>
+                                                <button type="button" x-on:click="open = false"
+                                                        class="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                                                        aria-label="Close">
+                                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {{-- Prev --}}
+                                        <button type="button" x-show="images.length > 1" x-on:click.stop="prev()"
+                                                class="absolute left-3 top-1/2 z-[81] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 sm:left-6 sm:h-12 sm:w-12"
+                                                aria-label="Previous photo">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                                        </button>
+
+                                        {{-- Image --}}
+                                        <img :src="images[index]" :alt="'{{ $event->title }} photo ' + (index + 1)"
+                                             x-on:click.stop
+                                             class="max-h-[82vh] max-w-full rounded-lg object-contain shadow-2xl" />
+
+                                        {{-- Next --}}
+                                        <button type="button" x-show="images.length > 1" x-on:click.stop="next()"
+                                                class="absolute right-3 top-1/2 z-[81] flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 sm:right-6 sm:h-12 sm:w-12"
+                                                aria-label="Next photo">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
                     @endif
 

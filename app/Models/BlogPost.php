@@ -20,6 +20,9 @@ class BlogPost extends Model
         'excerpt',
         'body',
         'featured_image',
+        'document_path',
+        'document_name',
+        'document_size',
         'status',
         'author_id',
         'published_at',
@@ -64,6 +67,40 @@ class BlogPost extends Model
         }
 
         return Storage::disk('public')->url($this->featured_image);
+    }
+
+    public function hasDocument(): bool
+    {
+        return ! empty($this->document_path);
+    }
+
+    public function documentUrl(): ?string
+    {
+        if (! $this->document_path) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->document_path);
+    }
+
+    /** Human-friendly document size (B/KB/MB), or empty string if unknown. */
+    public function documentHumanSize(): string
+    {
+        $bytes = (int) $this->document_size;
+
+        if ($bytes <= 0) {
+            return '';
+        }
+
+        if ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 1).' MB';
+        }
+
+        if ($bytes >= 1024) {
+            return number_format($bytes / 1024, 0).' KB';
+        }
+
+        return $bytes.' B';
     }
 
     /** Estimated reading time in minutes (≈200 words/min). */

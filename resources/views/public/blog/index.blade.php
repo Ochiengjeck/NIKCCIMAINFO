@@ -57,6 +57,14 @@
                                                 <a href="{{ route('blog.category', $article->category->slug) }}" class="text-xs font-semibold uppercase tracking-widest text-crimson-700 bg-crimson-50 px-2 py-0.5 rounded hover:bg-crimson-100">{{ $article->category->name }}</a>
                                             @endif
                                             <span class="text-xs text-zinc-400">{{ $article->published_at?->format('d M Y') }}</span>
+                                            @if($article->hasDocument())
+                                                <span class="inline-flex items-center gap-1 rounded bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700" title="Includes a downloadable document">
+                                                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                    </svg>
+                                                    Doc
+                                                </span>
+                                            @endif
                                         </div>
 
                                         <h4 class="text-lg font-bold font-serif text-zinc-900 mb-3 line-clamp-2 leading-snug">

@@ -79,6 +79,32 @@
             {{-- Body --}}
             <div class="prose prose-zinc max-w-none">{!! $article->body !!}</div>
 
+            {{-- Attached document --}}
+            @if($article->hasDocument())
+                <div class="mt-8 flex flex-col gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex min-w-0 items-start gap-3">
+                        <span class="mt-0.5 flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </span>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-zinc-900">Attached document</p>
+                            <p class="mt-0.5 truncate text-xs text-zinc-500">
+                                {{ $article->document_name }}@if($article->documentHumanSize()) &middot; {{ $article->documentHumanSize() }}@endif
+                            </p>
+                        </div>
+                    </div>
+                    <a href="{{ $article->documentUrl() }}" download="{{ $article->document_name }}"
+                       class="inline-flex flex-none items-center gap-1.5 rounded-lg bg-brand-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-800">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download
+                    </a>
+                </div>
+            @endif
+
             {{-- Tags --}}
             @if($article->tags->isNotEmpty())
                 <div class="mt-8 flex flex-wrap gap-2">

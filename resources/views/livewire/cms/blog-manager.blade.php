@@ -84,6 +84,20 @@
                     <flux:error name="featuredImageId" />
                 </flux:field>
 
+                <flux:field>
+                    <flux:label>Document (optional)</flux:label>
+                    <flux:description>Attach a downloadable file (PDF, Word, Excel, PowerPoint). Readers get a Download button on the post.</flux:description>
+                    <livewire:components.media-picker
+                        wire:model="documentMediaItemId"
+                        disk="public"
+                        type="document"
+                        folder="cms/blog"
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                        :key="'blog-doc-picker-' . ($editingId ?? 'new')"
+                    />
+                    <flux:error name="documentMediaItemId" />
+                </flux:field>
+
                 <div class="flex gap-2 pt-2">
                     <flux:button type="submit" variant="primary" icon="check">Save Post</flux:button>
                     <flux:button wire:click="closeForm()" variant="ghost">Cancel</flux:button>
