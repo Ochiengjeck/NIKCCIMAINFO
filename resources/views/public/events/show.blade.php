@@ -196,6 +196,51 @@
                         </div>
                     @endif
 
+                    {{-- Resources & downloads --}}
+                    @if($event->resources->isNotEmpty())
+                        <div class="mt-12 border-t border-zinc-100 pt-10">
+                            <h2 class="mb-6 font-serif text-2xl font-bold text-zinc-900">Resources &amp; Downloads</h2>
+                            <ul class="space-y-3">
+                                @foreach($event->resources as $resource)
+                                    <li class="flex flex-col gap-3 rounded-xl border border-zinc-200 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                                        <div class="flex min-w-0 items-start gap-3">
+                                            <span class="mt-0.5 flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                </svg>
+                                            </span>
+                                            <div class="min-w-0">
+                                                <p class="truncate font-medium text-zinc-900">{{ $resource->title }}</p>
+                                                <p class="mt-0.5 truncate text-xs text-zinc-500">
+                                                    {{ $resource->file_name }}@if($resource->humanSize()) &middot; {{ $resource->humanSize() }}@endif
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-none items-center gap-3">
+                                            @if($resource->is_paid)
+                                                <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">{{ $resource->priceLabel() }}</span>
+                                                <a href="{{ route('contact') }}"
+                                                   class="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-medium text-brand-700 transition hover:bg-brand-100">
+                                                    Contact to purchase
+                                                </a>
+                                            @else
+                                                <span class="inline-flex items-center rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-800">Free</span>
+                                                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($resource->file_path) }}"
+                                                   download="{{ $resource->file_name }}"
+                                                   class="inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-800">
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                    </svg>
+                                                    Download
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="mt-12 border-t border-zinc-100 pt-6">
                         <a href="{{ route('events.index') }}"
                            class="inline-flex items-center gap-2 text-sm font-medium text-brand-700 transition hover:text-brand-900">

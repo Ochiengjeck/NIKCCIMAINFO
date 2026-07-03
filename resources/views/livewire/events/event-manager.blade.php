@@ -243,6 +243,76 @@
                 </div>
             </section>
 
+            {{-- ---- Section: Event Resources ---- --}}
+            <section class="px-6 py-6">
+                <div class="grid gap-6 lg:grid-cols-[220px_1fr]">
+                    <div>
+                        <h3 class="text-sm font-semibold text-zinc-900 dark:text-white">Event Resources</h3>
+                        <p class="mt-1 text-xs leading-relaxed text-zinc-500">Optional documents &amp; presentations from the event (PDF, Word, Excel, PowerPoint). Mark each as free to download or paid.</p>
+                    </div>
+                    <flux:field>
+                        <div class="space-y-4">
+                            @forelse($resources as $i => $r)
+                                <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="flex-1 space-y-3">
+                                            <flux:field>
+                                                <flux:label>Title</flux:label>
+                                                <flux:input wire:model="resources.{{ $i }}.title" placeholder="e.g. Keynote Slides" />
+                                                <flux:error name="resources.{{ $i }}.title" />
+                                            </flux:field>
+
+                                            <flux:field>
+                                                <flux:label>File</flux:label>
+                                                <livewire:components.media-picker
+                                                    wire:model="resources.{{ $i }}.mediaItemId"
+                                                    disk="public"
+                                                    type="document"
+                                                    folder="cms/events"
+                                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                                                    :key="'event-resource-' . ($editingId ?? 'new') . '-' . $i"
+                                                />
+                                                <flux:error name="resources.{{ $i }}.mediaItemId" />
+                                            </flux:field>
+
+                                            <div class="flex flex-wrap items-end gap-4">
+                                                <flux:checkbox wire:model.live="resources.{{ $i }}.is_paid" label="Paid resource" />
+
+                                                @if(!empty($r['is_paid']))
+                                                    <flux:field class="w-32">
+                                                        <flux:label>Price</flux:label>
+                                                        <flux:input type="number" step="0.01" min="0" wire:model="resources.{{ $i }}.price" placeholder="0.00" />
+                                                        <flux:error name="resources.{{ $i }}.price" />
+                                                    </flux:field>
+                                                    <flux:field class="w-28">
+                                                        <flux:label>Currency</flux:label>
+                                                        <flux:select wire:model="resources.{{ $i }}.currency">
+                                                            <option value="USD">USD</option>
+                                                            <option value="NGN">NGN</option>
+                                                            <option value="KES">KES</option>
+                                                        </flux:select>
+                                                        <flux:error name="resources.{{ $i }}.currency" />
+                                                    </flux:field>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <flux:button type="button" wire:click="removeResource({{ $i }})" variant="ghost" icon="trash" size="sm" class="text-red-500" />
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="rounded-xl border border-dashed border-zinc-200 px-4 py-6 text-center text-sm text-zinc-500 dark:border-zinc-700">
+                                    No resources yet — this section is optional.
+                                </div>
+                            @endforelse
+                        </div>
+
+                        <div class="mt-3">
+                            <flux:button type="button" wire:click="addResource" icon="plus" size="sm" variant="ghost">Add resource</flux:button>
+                        </div>
+                    </flux:field>
+                </div>
+            </section>
+
             {{-- ---- Sticky footer actions ---- --}}
             <div class="flex items-center justify-end gap-3 border-t border-zinc-200 bg-zinc-50/70 px-6 py-4 dark:border-zinc-700 dark:bg-zinc-800/50">
                 <flux:button wire:click="cancel" variant="ghost">Cancel</flux:button>

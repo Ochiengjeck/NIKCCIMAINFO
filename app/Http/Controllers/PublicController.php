@@ -305,7 +305,7 @@ class PublicController extends Controller
 
     public function eventShow(int $id): View
     {
-        $event = Event::public()->with('organizer')->findOrFail($id);
+        $event = Event::public()->with(['organizer', 'resources'])->findOrFail($id);
 
         return view('public.events.show', compact('event'));
     }

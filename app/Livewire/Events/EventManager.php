@@ -56,6 +56,9 @@ class EventManager extends Component
     /** Inquiry channels — list of ['type' => email|phone|whatsapp|url, 'value' => '...'] */
     public array $inquiryChannels = [];
 
+    /** Event resources — list of ['title', 'mediaItemId', 'is_paid', 'price', 'currency'] */
+    public array $resources = [];
+
     protected function rules(): array
     {
         return [
@@ -78,6 +81,12 @@ class EventManager extends Component
             'inquiryChannels' => 'array',
             'inquiryChannels.*.type' => 'required|in:email,phone,whatsapp,url',
             'inquiryChannels.*.value' => 'required|string|max:255',
+            'resources' => 'array',
+            'resources.*.title' => 'required|string|max:255',
+            'resources.*.mediaItemId' => 'required|exists:media_items,id',
+            'resources.*.is_paid' => 'boolean',
+            'resources.*.price' => 'nullable|numeric|min:0',
+            'resources.*.currency' => 'required|in:USD,NGN,KES',
         ];
     }
 
@@ -124,6 +133,14 @@ class EventManager extends Component
         $this->galleryPickerId = null;
         $this->inquiryChannels = $e->inquiry_channels ?? [];
 
+        $this->resources = $e->resources()->orderBy('sort_order')->get()->map(fn ($r) => [
+            'title' => $r->title,
+            'mediaItemId' => MediaItem::where('path', $r->file_path)->value('id'),
+            'is_paid' => (bool) $r->is_paid,
+            'price' => $r->price !== null ? (string) $r->price : '',
+            'currency' => $r->currency ?? 'USD',
+        ])->all();
+
         $this->showForm = true;
     }
 
@@ -136,6 +153,23 @@ class EventManager extends Component
     {
         unset($this->inquiryChannels[$index]);
         $this->inquiryChannels = array_values($this->inquiryChannels);
+    }
+
+    public function addResource(): void
+    {
+        $this->resources[] = [
+            'title' => '',
+            'mediaItemId' => null,
+            'is_paid' => false,
+            'price' => '',
+            'currency' => 'USD',
+        ];
+    }
+
+    public function removeResource(int $index): void
+    {
+        unset($this->resources[$index]);
+        $this->resources = array_values($this->resources);
     }
 
     public function addGalleryImage(): void
@@ -195,17 +229,50 @@ class EventManager extends Component
             ->all();
 
         // Not real columns — strip the transient/picker-only validation keys
-        unset($data['featuredImageId'], $data['brochureId'], $data['galleryPickerId'], $data['galleryIds'], $data['inquiryChannels']);
+        unset($data['featuredImageId'], $data['brochureId'], $data['galleryPickerId'], $data['galleryIds'], $data['inquiryChannels'], $data['resources']);
 
         if ($this->editingId) {
-            Event::findOrFail($this->editingId)->update($data);
+            $event = Event::findOrFail($this->editingId);
+            $event->update($data);
             session()->flash('success', 'Event updated.');
         } else {
-            Event::create($data);
+            $event = Event::create($data);
             session()->flash('success', 'Event created.');
         }
+
+        $this->syncResources($event);
+
         $this->resetForm();
         $this->showForm = false;
+    }
+
+    /**
+     * Replace the event's resources with the current form rows, resolving each
+     * selected MediaItem to its stored path/name.
+     */
+    private function syncResources(Event $event): void
+    {
+        $event->resources()->delete();
+
+        foreach ($this->resources as $i => $r) {
+            if (empty($r['mediaItemId']) || ! ($item = MediaItem::find($r['mediaItemId']))) {
+                continue;
+            }
+
+            $paid = (bool) ($r['is_paid'] ?? false);
+
+            $event->resources()->create([
+                'title' => $r['title'] ?: $item->original_filename,
+                'file_path' => $item->path,
+                'file_name' => $item->original_filename,
+                'mime_type' => $item->mime_type,
+                'size' => $item->size,
+                'is_paid' => $paid,
+                'price' => $paid ? ($r['price'] !== '' ? $r['price'] : null) : null,
+                'currency' => $r['currency'] ?? 'USD',
+                'sort_order' => $i,
+            ]);
+        }
     }
 
     public function cancel(): void
@@ -233,6 +300,7 @@ class EventManager extends Component
         $this->galleryIds = [];
         $this->galleryPickerId = null;
         $this->inquiryChannels = [];
+        $this->resources = [];
     }
 
     public function render()

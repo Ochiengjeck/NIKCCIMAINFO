@@ -62,4 +62,9 @@ class Event extends Model
     {
         return $this->hasMany(EventSponsor::class);
     }
+
+    public function resources(): HasMany
+    {
+        return $this->hasMany(EventResource::class)->orderBy('sort_order');
+    }
 }
