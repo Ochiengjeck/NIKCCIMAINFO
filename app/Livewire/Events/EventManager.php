@@ -191,11 +191,19 @@ class EventManager extends Component
         $this->resources = array_values($this->resources);
     }
 
-    public function addGalleryImage(): void
+    /**
+     * Auto-add to the gallery the moment a file is picked or uploaded — fires
+     * when the MediaPicker syncs its selection into $galleryPickerId. Removes
+     * the fragile two-step "select then click Add" flow.
+     */
+    public function updatedGalleryPickerId($value): void
     {
-        if ($this->galleryPickerId && ! in_array($this->galleryPickerId, $this->galleryIds, true)) {
-            $this->galleryIds[] = $this->galleryPickerId;
+        $id = (int) $value;
+
+        if ($id > 0 && ! in_array($id, $this->galleryIds, true)) {
+            $this->galleryIds[] = $id;
         }
+
         $this->galleryPickerId = null;
     }
 

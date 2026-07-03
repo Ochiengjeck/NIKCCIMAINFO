@@ -54,6 +54,51 @@ class EventResourceTest extends TestCase
         ]);
     }
 
+    private function makeMedia(Chapter $chapter, User $user, string $name, string $type, string $mime): MediaItem
+    {
+        return MediaItem::create([
+            'chapter_id' => $chapter->id,
+            'filename' => 'g-'.$name,
+            'original_filename' => $name,
+            'path' => 'cms/events/g-'.$name,
+            'disk' => 'public',
+            'mime_type' => $mime,
+            'size' => 500000,
+            'type' => $type,
+            'uploaded_by' => $user->id,
+        ]);
+    }
+
+    public function test_gallery_auto_adds_images_and_pdfs_on_pick(): void
+    {
+        $chapter = Chapter::create(['name' => 'Nigeria', 'code' => 'NGA', 'country' => 'Nigeria']);
+        $user = $this->seedAdmin($chapter);
+        $this->actingAs($user);
+
+        $event = $this->makeEvent($chapter, $user);
+        $image = $this->makeMedia($chapter, $user, 'photo.jpg', 'image', 'image/jpeg');
+        $pdf = $this->makeMedia($chapter, $user, 'programme.pdf', 'document', 'application/pdf');
+
+        Livewire::test(EventManager::class)
+            ->call('edit', $event->id)
+            // picking an image auto-adds it (updatedGalleryPickerId hook) and resets the picker
+            ->set('galleryPickerId', $image->id)
+            ->assertSet('galleryPickerId', null)
+            ->assertCount('galleryIds', 1)
+            // a PDF is accepted into the gallery too
+            ->set('galleryPickerId', $pdf->id)
+            ->assertCount('galleryIds', 2)
+            // picking the same file again does not duplicate it
+            ->set('galleryPickerId', $image->id)
+            ->assertCount('galleryIds', 2)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $gallery = $event->fresh()->gallery;
+        $this->assertContains('cms/events/g-photo.jpg', $gallery);
+        $this->assertContains('cms/events/g-programme.pdf', $gallery);
+    }
+
     public function test_add_resource_via_picker_persists_free_and_paid_rows(): void
     {
         $chapter = Chapter::create(['name' => 'Nigeria', 'code' => 'NGA', 'country' => 'Nigeria']);

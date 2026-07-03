@@ -182,16 +182,23 @@
                     {{-- Photo gallery --}}
                     @if(!empty($event->gallery))
                         @php
-                            $galleryUrls = collect($event->gallery)
-                                ->map(fn ($p) => \Illuminate\Support\Facades\Storage::disk('public')->url($p))
-                                ->values()
-                                ->all();
+                            $galleryItems = collect($event->gallery)->map(function ($p) {
+                                $ext = strtolower(pathinfo(parse_url($p, PHP_URL_PATH) ?? $p, PATHINFO_EXTENSION));
+
+                                return [
+                                    'url' => \Illuminate\Support\Facades\Storage::disk('public')->url($p),
+                                    'is_pdf' => $ext === 'pdf',
+                                    'name' => basename($p),
+                                ];
+                            })->values();
+                            // Images-only URL list drives the lightbox (PDFs are not part of the carousel).
+                            $galleryImageUrls = $galleryItems->where('is_pdf', false)->pluck('url')->values()->all();
                         @endphp
                         <div class="mt-12 border-t border-zinc-100 pt-10"
                              x-data="{
                                  open: false,
                                  index: 0,
-                                 images: @js($galleryUrls),
+                                 images: @js($galleryImageUrls),
                                  show(i) { this.index = i; this.open = true; },
                                  next() { this.index = (this.index + 1) % this.images.length; },
                                  prev() { this.index = (this.index - 1 + this.images.length) % this.images.length; },
@@ -202,12 +209,25 @@
                              x-effect="document.body.style.overflow = open ? 'hidden' : ''">
                             <h2 class="mb-6 font-serif text-2xl font-bold text-zinc-900">Gallery</h2>
                             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                                @foreach($galleryUrls as $i => $imgUrl)
-                                    <button type="button" x-on:click="show({{ $i }})"
-                                            class="group block overflow-hidden rounded-xl border border-zinc-100 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
-                                        <img src="{{ $imgUrl }}" alt="{{ $event->title }} photo {{ $i + 1 }}"
-                                             class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105" />
-                                    </button>
+                                @php $imgIdx = 0; @endphp
+                                @foreach($galleryItems as $item)
+                                    @if($item['is_pdf'])
+                                        <a href="{{ $item['url'] }}" target="_blank" rel="noopener"
+                                           class="group flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-center shadow-sm transition hover:border-brand-300 hover:bg-brand-50">
+                                            <svg class="h-10 w-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            </svg>
+                                            <span class="w-full truncate text-xs font-medium text-zinc-700">{{ $item['name'] }}</span>
+                                            <span class="text-xs font-semibold text-brand-700">View / Download</span>
+                                        </a>
+                                    @else
+                                        <button type="button" x-on:click="show({{ $imgIdx }})"
+                                                class="group block overflow-hidden rounded-xl border border-zinc-100 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+                                            <img src="{{ $item['url'] }}" alt="{{ $event->title }} photo {{ $imgIdx + 1 }}"
+                                                 class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105" />
+                                        </button>
+                                        @php $imgIdx++; @endphp
+                                    @endif
                                 @endforeach
                             </div>
 

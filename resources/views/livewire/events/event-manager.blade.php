@@ -140,10 +140,10 @@
                             <flux:error name="featuredImageId" />
                         </flux:field>
 
-                        {{-- Photo gallery --}}
+                        {{-- Gallery (images + PDFs) --}}
                         <flux:field>
-                            <flux:label>Photo Gallery</flux:label>
-                            <flux:description>Add images one at a time — they appear in a gallery on the event page.</flux:description>
+                            <flux:label>Gallery</flux:label>
+                            <flux:description>Add photos and PDFs — each file is added as soon as you upload or choose it. On the event page, images open in a lightbox and PDFs show as a view/download card.</flux:description>
 
                             @if($galleryIds)
                                 <div class="mb-3 grid grid-cols-3 gap-3 sm:grid-cols-5">
@@ -151,7 +151,16 @@
                                         @php $gItem = \App\Models\MediaItem::find($gid); @endphp
                                         @if($gItem)
                                             <div class="group relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
-                                                <img src="{{ $gItem->url() }}" alt="{{ $gItem->alt_text }}" class="aspect-square w-full object-cover" />
+                                                @if($gItem->type === 'image')
+                                                    <img src="{{ $gItem->url() }}" alt="{{ $gItem->alt_text }}" class="aspect-square w-full object-cover" />
+                                                @else
+                                                    <div class="flex aspect-square w-full flex-col items-center justify-center gap-1 bg-zinc-50 p-2 text-center dark:bg-zinc-800">
+                                                        <svg class="h-8 w-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                        </svg>
+                                                        <span class="w-full truncate text-[10px] text-zinc-500">{{ $gItem->original_filename }}</span>
+                                                    </div>
+                                                @endif
                                                 <button type="button" wire:click="removeGalleryImage({{ $gid }})"
                                                     class="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-white opacity-0 transition group-hover:opacity-100"
                                                     title="Remove">
@@ -163,19 +172,14 @@
                                 </div>
                             @endif
 
-                            <div class="flex items-end gap-3">
-                                <div class="flex-1">
-                                    <livewire:components.media-picker
-                                        wire:model="galleryPickerId"
-                                        disk="public"
-                                        type="image"
-                                        folder="cms/events"
-                                        accept="image/*"
-                                        :key="'event-gallery-' . ($editingId ?? 'new') . '-' . count($galleryIds)"
-                                    />
-                                </div>
-                                <flux:button type="button" wire:click="addGalleryImage" icon="plus" size="sm">Add to gallery</flux:button>
-                            </div>
+                            <livewire:components.media-picker
+                                wire:model="galleryPickerId"
+                                disk="public"
+                                type=""
+                                folder="cms/events"
+                                accept="image/*,application/pdf"
+                                :key="'event-gallery-' . ($editingId ?? 'new') . '-' . count($galleryIds)"
+                            />
                         </flux:field>
 
                         {{-- Brochure (PDF) --}}
