@@ -251,28 +251,21 @@
                         <p class="mt-1 text-xs leading-relaxed text-zinc-500">Optional documents &amp; presentations from the event (PDF, Word, Excel, PowerPoint). Mark each as free to download or paid.</p>
                     </div>
                     <flux:field>
+                        {{-- Existing / added resource rows --}}
                         <div class="space-y-4">
                             @forelse($resources as $i => $r)
                                 <div class="rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
                                     <div class="flex items-start justify-between gap-3">
                                         <div class="flex-1 space-y-3">
+                                            <div class="flex items-center gap-2 text-xs text-zinc-500">
+                                                <flux:icon.document-text class="h-4 w-4 flex-none" />
+                                                <span class="truncate">{{ $r['file_name'] ?? $r['file_path'] }}</span>
+                                            </div>
+
                                             <flux:field>
                                                 <flux:label>Title</flux:label>
                                                 <flux:input wire:model="resources.{{ $i }}.title" placeholder="e.g. Keynote Slides" />
                                                 <flux:error name="resources.{{ $i }}.title" />
-                                            </flux:field>
-
-                                            <flux:field>
-                                                <flux:label>File</flux:label>
-                                                <livewire:components.media-picker
-                                                    wire:model="resources.{{ $i }}.mediaItemId"
-                                                    disk="public"
-                                                    type="document"
-                                                    folder="cms/events"
-                                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
-                                                    :key="'event-resource-' . ($editingId ?? 'new') . '-' . $i"
-                                                />
-                                                <flux:error name="resources.{{ $i }}.mediaItemId" />
                                             </flux:field>
 
                                             <div class="flex flex-wrap items-end gap-4">
@@ -306,8 +299,23 @@
                             @endforelse
                         </div>
 
-                        <div class="mt-3">
-                            <flux:button type="button" wire:click="addResource" icon="plus" size="sm" variant="ghost">Add resource</flux:button>
+                        {{-- Add-one picker (mirrors the gallery flow) --}}
+                        <div class="mt-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
+                            <flux:label>Add a file (PDF, Word, Excel, PowerPoint)</flux:label>
+                            <div class="mt-2 flex items-end gap-3">
+                                <div class="flex-1">
+                                    <livewire:components.media-picker
+                                        wire:model="resourcePickerId"
+                                        disk="public"
+                                        type="document"
+                                        folder="cms/events"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                                        :key="'event-resource-picker-' . ($editingId ?? 'new') . '-' . count($resources)"
+                                    />
+                                </div>
+                                <flux:button type="button" wire:click="addResource" icon="plus" size="sm">Add resource</flux:button>
+                            </div>
+                            <flux:error name="resourcePickerId" />
                         </div>
                     </flux:field>
                 </div>

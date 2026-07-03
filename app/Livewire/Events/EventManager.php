@@ -56,8 +56,11 @@ class EventManager extends Component
     /** Inquiry channels — list of ['type' => email|phone|whatsapp|url, 'value' => '...'] */
     public array $inquiryChannels = [];
 
-    /** Event resources — list of ['title', 'mediaItemId', 'is_paid', 'price', 'currency'] */
+    /** Event resources — rows of ['title','file_path','file_name','mime_type','size','is_paid','price','currency'] */
     public array $resources = [];
+
+    /** Transient "add one" resource-file picker binding (MediaItem ID) */
+    public ?int $resourcePickerId = null;
 
     protected function rules(): array
     {
@@ -81,9 +84,10 @@ class EventManager extends Component
             'inquiryChannels' => 'array',
             'inquiryChannels.*.type' => 'required|in:email,phone,whatsapp,url',
             'inquiryChannels.*.value' => 'required|string|max:255',
+            'resourcePickerId' => 'nullable|exists:media_items,id',
             'resources' => 'array',
             'resources.*.title' => 'required|string|max:255',
-            'resources.*.mediaItemId' => 'required|exists:media_items,id',
+            'resources.*.file_path' => 'required|string',
             'resources.*.is_paid' => 'boolean',
             'resources.*.price' => 'nullable|numeric|min:0',
             'resources.*.currency' => 'required|in:USD,NGN,KES',
@@ -135,11 +139,15 @@ class EventManager extends Component
 
         $this->resources = $e->resources()->orderBy('sort_order')->get()->map(fn ($r) => [
             'title' => $r->title,
-            'mediaItemId' => MediaItem::where('path', $r->file_path)->value('id'),
+            'file_path' => $r->file_path,
+            'file_name' => $r->file_name,
+            'mime_type' => $r->mime_type,
+            'size' => $r->size,
             'is_paid' => (bool) $r->is_paid,
             'price' => $r->price !== null ? (string) $r->price : '',
             'currency' => $r->currency ?? 'USD',
         ])->all();
+        $this->resourcePickerId = null;
 
         $this->showForm = true;
     }
@@ -157,13 +165,24 @@ class EventManager extends Component
 
     public function addResource(): void
     {
+        if (! $this->resourcePickerId || ! ($item = MediaItem::find($this->resourcePickerId))) {
+            $this->addError('resourcePickerId', 'Choose or upload a file first.');
+
+            return;
+        }
+
         $this->resources[] = [
-            'title' => '',
-            'mediaItemId' => null,
+            'title' => $item->original_filename,
+            'file_path' => $item->path,
+            'file_name' => $item->original_filename,
+            'mime_type' => $item->mime_type,
+            'size' => $item->size,
             'is_paid' => false,
             'price' => '',
             'currency' => 'USD',
         ];
+
+        $this->resourcePickerId = null;
     }
 
     public function removeResource(int $index): void
@@ -229,7 +248,7 @@ class EventManager extends Component
             ->all();
 
         // Not real columns — strip the transient/picker-only validation keys
-        unset($data['featuredImageId'], $data['brochureId'], $data['galleryPickerId'], $data['galleryIds'], $data['inquiryChannels'], $data['resources']);
+        unset($data['featuredImageId'], $data['brochureId'], $data['galleryPickerId'], $data['galleryIds'], $data['inquiryChannels'], $data['resources'], $data['resourcePickerId']);
 
         if ($this->editingId) {
             $event = Event::findOrFail($this->editingId);
@@ -255,18 +274,18 @@ class EventManager extends Component
         $event->resources()->delete();
 
         foreach ($this->resources as $i => $r) {
-            if (empty($r['mediaItemId']) || ! ($item = MediaItem::find($r['mediaItemId']))) {
+            if (empty($r['file_path'])) {
                 continue;
             }
 
             $paid = (bool) ($r['is_paid'] ?? false);
 
             $event->resources()->create([
-                'title' => $r['title'] ?: $item->original_filename,
-                'file_path' => $item->path,
-                'file_name' => $item->original_filename,
-                'mime_type' => $item->mime_type,
-                'size' => $item->size,
+                'title' => $r['title'] ?: ($r['file_name'] ?? 'Resource'),
+                'file_path' => $r['file_path'],
+                'file_name' => $r['file_name'] ?? basename($r['file_path']),
+                'mime_type' => $r['mime_type'] ?? null,
+                'size' => $r['size'] ?? null,
                 'is_paid' => $paid,
                 'price' => $paid ? ($r['price'] !== '' ? $r['price'] : null) : null,
                 'currency' => $r['currency'] ?? 'USD',
@@ -301,6 +320,7 @@ class EventManager extends Component
         $this->galleryPickerId = null;
         $this->inquiryChannels = [];
         $this->resources = [];
+        $this->resourcePickerId = null;
     }
 
     public function render()
