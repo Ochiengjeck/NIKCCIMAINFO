@@ -66,6 +66,23 @@ Handled by **Laravel Fortify** (`FortifyServiceProvider`). Auth views are regist
 
 The app has two distinct surfaces: the **public website** (guest, no auth) served from `web.php`, and the **backoffice/admin panel** served from `admin.php`. Public Livewire components (`app/Livewire/Public/`) never call `$this->authorize()`.
 
+### Backoffice Modules
+`routes/admin.php` is organized as numbered "Phase" groups, each mapping to an `app/Livewire/{Module}/` directory of the same name (PascalCase) and a route prefix (kebab-case of the module):
+- **Membership** — categories, applications, members, PDF certificates
+- **Trade** — leads, deal pipeline, corridors, investors, B2B matchmaking
+- **Policy** — NTBs, policy briefs, Rules of Origin repository, trade-status dashboard
+- **Finance** — transactions, invoices, budgets, expenses, revenue reports
+- **Events** — event manager, registration desk, attendance, sponsors
+- **Governance** — strategic plans, MOUs, diplomatic engagements, board resolutions, voting
+- **Documents** — library, uploader, approval workflow, downloads
+- **Kpi** — executive dashboard, chapter comparison, pillar scorecard
+- **Platforms** — technical platform manager/detail
+- **Chatbot** — FAQ editor, chat log viewer
+- **Reports** — report generator (Excel exports)
+- **Audit** — activity log viewer
+- **System** — users, roles, chapters, general settings, SMTP (also under `routes/settings.php`'s own `system/settings` prefix)
+- **Cms** — the website CMS (pages, blog, news, leadership, media, contact) — see Public Website & CMS below
+
 ### Frontend Stack
 Vite bundles `resources/css/app.css` (Tailwind 4) and `resources/js/app.js`. Layouts live in `resources/views/layouts/` — `app.blade.php` with sidebar/header partials for authenticated pages, `auth/` layouts for guest pages.
 
