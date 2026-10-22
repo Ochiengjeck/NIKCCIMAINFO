@@ -1,9 +1,19 @@
 @php
-    // Intentionally avoids DB/SystemSetting lookups — this page must render even
-    // when maintenance mode was triggered by a migration or DB outage.
     $retryAfter = $exception?->getHeaders()['Retry-After'] ?? null;
     $customMessage = $exception?->getMessage();
     $hasMessage = $customMessage && $customMessage !== 'Service Unavailable' && ! str_contains($customMessage, 'Illuminate\\');
+
+    // Best-effort logo lookup — falls back to the "NK" badge if the DB is
+    // unreachable (e.g. maintenance triggered mid-migration or by a DB outage).
+    $logoUrl = null;
+    try {
+        $siteLogo = \App\Models\SystemSetting::get('site_logo');
+        if ($siteLogo) {
+            $logoUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($siteLogo);
+        }
+    } catch (\Throwable $e) {
+        // ignore — use fallback badge
+    }
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -79,13 +89,12 @@
                 box-shadow: 0 8px 20px -6px rgba(28, 97, 35, .45);
             }
 
-            .eyebrow {
-                margin: 0 0 0.5rem;
-                font-size: 0.75rem;
-                font-weight: 600;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                color: var(--crimson-700);
+            .logo-img {
+                display: block;
+                height: 4.5rem;
+                width: auto;
+                margin: 0 auto 1.5rem;
+                object-fit: contain;
             }
 
             h1 {
@@ -166,15 +175,18 @@
     </head>
     <body>
         <main class="card" role="main">
-            <div class="badge" aria-hidden="true">NK</div>
+            @if($logoUrl)
+                <img src="{{ $logoUrl }}" alt="NiKCCIMA" class="logo-img" />
+            @else
+                <div class="badge" aria-hidden="true">NK</div>
+            @endif
 
-            <p class="eyebrow">Scheduled Maintenance</p>
-            <h1>We're upgrading NiKCCIMA</h1>
+            <h1>We'll be right back</h1>
             <p class="lead">
                 @if($hasMessage)
                     {{ $customMessage }}
                 @else
-                    The Backoffice Panel and website are briefly offline while we apply updates. We'll be back online shortly — thank you for your patience.
+                    Down for maintenance.
                 @endif
             </p>
 
