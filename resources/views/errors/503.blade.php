@@ -18,6 +18,18 @@
     // Drop a PNG/SVG at public/images/maintenance-illustration.* to show it here.
     $illustrationPath = public_path('images/maintenance-illustration.png');
     $hasIllustration = file_exists($illustrationPath);
+
+    // Same favicon lookup as partials/head.blade.php — kept consistent so the
+    // browser tab icon doesn't fall back to the default Laravel icon while down.
+    $siteIconUrl = null;
+    try {
+        $siteIcon = \App\Models\SystemSetting::get('site_icon');
+        if ($siteIcon) {
+            $siteIconUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($siteIcon);
+        }
+    } catch (\Throwable $e) {
+        // ignore — use default favicon files
+    }
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +38,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Down for Maintenance — NiKCCIMA</title>
         <meta name="robots" content="noindex,nofollow" />
+
+        @if($siteIconUrl)
+            <link rel="icon" href="{{ $siteIconUrl }}" type="image/png">
+            <link rel="apple-touch-icon" href="{{ $siteIconUrl }}">
+        @else
+            <link rel="icon" href="/favicon.ico" sizes="any">
+            <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        @endif
+
         @if($retryAfter)
             <meta http-equiv="refresh" content="{{ (int) $retryAfter }}" />
         @endif
